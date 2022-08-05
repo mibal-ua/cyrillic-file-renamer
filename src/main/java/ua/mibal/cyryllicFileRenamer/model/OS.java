@@ -22,8 +22,24 @@ package ua.mibal.cyryllicFileRenamer.model;
  */
 public enum OS {
 
-    LINUX,
+    UNIX('/', System.getProperty("user.home") + "/path/to/catalog/"),
 
-    WINDOWS
+    WINDOWS('\\', System.getProperty("user.home") + "\\path\\to\\catalog\\");
 
+    private final char border;
+    private final String examplePath;
+
+    OS(final char border, final String examplePath) {
+        this.border = border;
+        this.examplePath = examplePath;
+    }
+
+
+    public char getBorder() {
+        return border;
+    }
+
+    public String getExamplePath() {
+        return examplePath;
+    }
 }
