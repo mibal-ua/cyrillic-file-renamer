@@ -19,12 +19,14 @@ package ua.mibal.cyryllicFileRenamer;
 import ua.mibal.cyryllicFileRenamer.component.ArgumentParser;
 import ua.mibal.cyryllicFileRenamer.component.DataPrinter;
 import ua.mibal.cyryllicFileRenamer.component.InputReader;
+import ua.mibal.cyryllicFileRenamer.component.console.ConsoleDataPrinter;
+import ua.mibal.cyryllicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyryllicFileRenamer.model.OS;
 
 import java.io.File;
 
 import static java.lang.String.format;
-import static ua.mibal.cyryllicFileRenamer.model.OS.LINUX;
+import static ua.mibal.cyryllicFileRenamer.model.OS.UNIX;
 import static ua.mibal.cyryllicFileRenamer.model.OS.WINDOWS;
 
 /**
@@ -33,51 +35,49 @@ import static ua.mibal.cyryllicFileRenamer.model.OS.WINDOWS;
  */
 public class Application {
 
-    private DataPrinter dataPrinter;
+    private final DataPrinter dataPrinter = new ConsoleDataPrinter();
 
-    private InputReader inputReader;
+    private final InputReader inputReader = new ConsoleInputReader();
 
 
+    private final OS OS = getOS();
 
     private static String pathToCatalog;
 
-    private static String systemPath;
-
-    private static char borders;
-
-    private static String examplePath;
-
-
-
-    private String[] russianAlphabet = {};
-
-    private String[] ukrainianAlphabet;
-
-    private String[] latinAlphabet;
 
     public Application(final String[] args) {
         if (!(args.length == 0)) {
             pathToCatalog = new ArgumentParser().parse(args);
         }
-        constructOSDifferences();
-
-    }
-
-    private void constructOSDifferences() {
-        OS os = getOS();
-        if (os == LINUX) {
-            //
-        } else if (os == WINDOWS) {
-            //
-        } else {
-            //error
-        }
-        //construct borders, examplePath and home
+        if (OS == null)
+            throw new IllegalArgumentException();
     }
 
     private OS getOS() {
-        //return OS enum
-        return null;
+        String system = System.getProperty("os.name").toLowerCase();
+        if (system.contains("win")) {
+            return WINDOWS;
+        } else if (system.contains("nix") || system.contains("nux")
+                   || system.contains("aix") || system.contains("mac")) {
+            return UNIX;
+        } else {
+            while (true) {
+                dataPrinter.printErrorMessage("""
+                        Unknown OS System. If this system is Unix, enter 'unix', or 'win' if Windows.""");
+                String userSystem = inputReader.read().trim();
+                if (userSystem.equalsIgnoreCase("unix")) {
+                    return UNIX;
+                } else if (userSystem.equalsIgnoreCase("win")) {
+                    return WINDOWS;
+                } else {
+                    dataPrinter.printInfoMessage(format("""
+                            OS '%s' is not valid.""", userSystem
+                    ));
+                    throw new IllegalArgumentException();
+                }
+            }
+        }
+
     }
 
     public void start() {
@@ -89,10 +89,10 @@ public class Application {
                     pathToCatalog = userPath;
                     break;
                 } else {
-                    dataPrinter.printInfoMessage(format("""
-                            Path '%s' is not valid. You must enter path like this:
-                            %s""", examplePath
-                    ));
+                    dataPrinter.printInfoMessage(format(
+                            "Path '%s' is not valid. You must enter path like this:" + '\n' +
+                            OS.getExamplePath() + '\n', userPath)
+                    );
                 }
             }
         }
@@ -125,17 +125,45 @@ public class Application {
         return false;
     }
 
-    private char convertFromUA(char ch){
+    private char convertFromUA(char ch) {
 
-        switch (ch){
-            case 'і' : return 'i';
+        switch (ch) {
+            case 'г':
+                return 'h';
+            case 'Г':
+                return 'H';
+            case 'ґ':
+                return 'g';
+            case 'Ґ':
+                return 'G';
+            case 'і':
+                return 'i';
+            case 'І':
+                return 'I';
+            default:
+                return convertFromRU(ch);
         }
-        return convertFromRU(ch);
     }
 
-    private char convertFromRU(char ch){
-        switch (ch){
-            case 'и' : return 'i';
+    private char convertFromRU(char ch) {
+        switch (ch) {
+            case 'А':
+                return 'A';
+            case 'Б':
+                return 'B';
+            case 'В':
+                return 'V';
+            case 'Г':
+                return 'G';
+            case 'Д':
+                return 'D';
+            case 'Е':
+                return 'E';
+            //case 'Ё':return 'YO';
+            //case 'Ж': return 'ZH';
+
+            case 'и':
+                return 'i';
         }
         return ch;
     }
