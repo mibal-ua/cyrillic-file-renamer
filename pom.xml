@@ -20,7 +20,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ua.mibal</groupId>
-    <artifactId>cyrrylic-file-renamer</artifactId>
+    <artifactId>cyrillic-file-renamer</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <url>https://t.me/mibal_ua</url>
@@ -44,9 +44,9 @@
         </license>
     </licenses>
     <scm>
-        <connection>scm:git:git://github.com/cyrrylic-file-renamer.git</connection>
-        <developerConnection>scm:git:ssh://github.com:cyrrylic-file-renamer.git</developerConnection>
-        <url>http://github.com/cyrrylic-file-renamer/tree/master</url>
+        <connection>scm:git:git://github.com/cyrillic-file-renamer.git</connection>
+        <developerConnection>scm:git:ssh://github.com:cyrillic-file-renamer.git</developerConnection>
+        <url>http://github.com/cyrillic-file-renamer/tree/master</url>
     </scm>
 
     <properties>
