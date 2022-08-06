@@ -16,13 +16,58 @@
  */
 package ua.mibal.cyryllicFileRenamer.component;
 
+import ua.mibal.cyryllicFileRenamer.model.Lang;
+import ua.mibal.cyryllicFileRenamer.model.OS;
+
+import static ua.mibal.cyryllicFileRenamer.model.Lang.RU;
+import static ua.mibal.cyryllicFileRenamer.model.Lang.UA;
+import static ua.mibal.cyryllicFileRenamer.model.OS.UNIX;
+import static ua.mibal.cyryllicFileRenamer.model.OS.WINDOWS;
+
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
 public class ArgumentParser {
 
-    public String parse(String[] args) {
-        return null;
+    private String path;
+
+    private Lang lang;
+
+    private OS OS;
+
+    public void parse(String[] args) {
+        if (args[0].equalsIgnoreCase("this")) {
+            this.path = System.getProperty("user.dir");
+        } else {
+            this.path = args[0];
+        }
+        if (args.length >= 2) {
+            if (args[1].equalsIgnoreCase(UA.name())) {
+                lang = UA;
+            } else if (args[1].equalsIgnoreCase(RU.name())) {
+                lang = RU;
+            }
+        }
+        if (args.length >= 3) {
+            if (args[2].equalsIgnoreCase(UNIX.name())) {
+                OS = UNIX;
+            } else if (args[1].equalsIgnoreCase(WINDOWS.name())) {
+                OS = WINDOWS;
+            }
+        }
+        // add some parameters in future
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public Lang getLang() {
+        return lang;
+    }
+
+    public OS getOS() {
+        return OS;
     }
 }
