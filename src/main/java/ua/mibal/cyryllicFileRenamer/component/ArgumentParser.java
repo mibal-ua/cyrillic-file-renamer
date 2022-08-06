@@ -19,6 +19,9 @@ package ua.mibal.cyryllicFileRenamer.component;
 import ua.mibal.cyryllicFileRenamer.model.Lang;
 import ua.mibal.cyryllicFileRenamer.model.OS;
 
+import java.io.File;
+
+import static java.lang.String.format;
 import static ua.mibal.cyryllicFileRenamer.model.Lang.RU;
 import static ua.mibal.cyryllicFileRenamer.model.Lang.UA;
 import static ua.mibal.cyryllicFileRenamer.model.OS.UNIX;
@@ -37,26 +40,27 @@ public class ArgumentParser {
     private OS OS;
 
     public void parse(String[] args) {
-        if (args[0].equalsIgnoreCase("this")) {
-            this.path = System.getProperty("user.dir");
-        } else {
-            this.path = args[0];
-        }
-        if (args.length >= 2) {
-            if (args[1].equalsIgnoreCase(UA.name())) {
-                lang = UA;
-            } else if (args[1].equalsIgnoreCase(RU.name())) {
-                lang = RU;
+        // add more parameters in future
+        for (final String arg : args) {
+            if (arg.equalsIgnoreCase("this")) {
+                this.path = System.getProperty("user.dir");
+            } else if (arg.equalsIgnoreCase(UA.name()) || arg.equalsIgnoreCase(RU.name())) {
+                lang = Lang.valueOf(arg.toUpperCase());
+            } else if (arg.equalsIgnoreCase(UNIX.name()) || arg.equalsIgnoreCase(WINDOWS.name())) {
+                OS = ua.mibal.cyryllicFileRenamer.model.OS.valueOf(arg.toUpperCase());
+            } else if (isThisAPath(arg)) {
+                this.path = arg;
+            } else {
+                throw new IllegalArgumentException(format("Incorrect argument '%s'.", arg));
             }
         }
-        if (args.length >= 3) {
-            if (args[2].equalsIgnoreCase(UNIX.name())) {
-                OS = UNIX;
-            } else if (args[1].equalsIgnoreCase(WINDOWS.name())) {
-                OS = WINDOWS;
-            }
+    }
+
+    private boolean isThisAPath(final String arg) {
+        if (!(arg.contains("\\") || arg.contains("/"))) {
+            return false;
         }
-        // add some parameters in future
+        return new File(arg).exists();
     }
 
     public String getPath() {
