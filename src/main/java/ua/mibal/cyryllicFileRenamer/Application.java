@@ -22,9 +22,17 @@ import ua.mibal.cyryllicFileRenamer.component.InputReader;
 import ua.mibal.cyryllicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyryllicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyryllicFileRenamer.model.DynaStringArray;
+import ua.mibal.cyryllicFileRenamer.model.Lang;
 import ua.mibal.cyryllicFileRenamer.model.OS;
+import ua.mibal.cyryllicFileRenamer.model.exception.IllegalNameException;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.Scanner;
 
 import static java.lang.String.format;
 import static ua.mibal.cyryllicFileRenamer.model.OS.UNIX;
@@ -41,19 +49,28 @@ public class Application {
     private final InputReader inputReader = new ConsoleInputReader();
 
 
-    private final OS OS = getOS();
+    private static OS OS;
 
     private static String pathToCatalog;
+
+    private static Lang lang;
 
 
     public Application(final String[] args) {
         if (args.length != 0) {
             ArgumentParser parser = new ArgumentParser();
             parser.parse(args);
+            OS = parser.getOS();
+            if (OS == null) {
+                OS = getOS();
+                if (OS == null) {
+                    throw new IllegalArgumentException("Unknown OS.");
+                }
+            }
             pathToCatalog = correctAndTestPath(parser.getPath());
+            lang = parser.getLang();
         }
-        if (OS == null)
-            throw new IllegalArgumentException();
+
     }
 
     private OS getOS() {
@@ -64,36 +81,26 @@ public class Application {
                    || system.contains("aix") || system.contains("mac")) {
             return UNIX;
         } else {
-            while (true) {
-                dataPrinter.printErrorMessage("""
-                        Unknown OS System. If this system is Unix, enter 'unix', or 'win' if Windows.""");
-                String userSystem = inputReader.read().trim();
-                if (userSystem.equalsIgnoreCase("unix")) {
-                    return UNIX;
-                } else if (userSystem.equalsIgnoreCase("win")) {
-                    return WINDOWS;
-                } else {
-                    dataPrinter.printInfoMessage(format("""
-                            OS '%s' is not valid.""", userSystem
-                    ));
-                    throw new IllegalArgumentException();
-                }
-            }
+            dataPrinter.printErrorMessage("Unknown OS System.");
+            exit();
+            return null;
         }
-
     }
 
     public void start() {
-        // welcome info
-        // only ru and ua
-        while (true) {
+        // TODO welcome info
+
+        // if (lang == null)
+        // out "only ru and ua"
+        boolean success = false;
+        do {
             if (pathToCatalog == null) {
                 dataPrinter.printInfoMessage("Enter path to catalog with files:");
                 while (true) {
                     String userPath = inputReader.read().trim();
                     dataPrinter.printInfoMessage("");
                     if (userPath.equalsIgnoreCase("/exit"))
-                        System.exit(0);
+                        exit();
                     String normalUserPath = correctAndTestPath(userPath);
                     if (normalUserPath != null) {
                         pathToCatalog = normalUserPath;
@@ -107,21 +114,45 @@ public class Application {
                 }
             }
 
+            // if lang == nul
+            // lang dependence
+            // lang choice
             File directory = new File(pathToCatalog);
-            File[] files = directory.listFiles();
-            DynaStringArray incorrectNames = new DynaStringArray();
+            File[] directoryFiles = directory.listFiles();
+            File newDirectory = new File(pathToCatalog + "/renamedToLatin");
+            newDirectory.mkdir();
             DynaStringArray nonProcessedFiles = new DynaStringArray();
             DynaStringArray reasonsOfNonProcessedFiles = new DynaStringArray();
 
-            if (files != null) {
-                for (final File file : files) {
-                    if (isCyrillicName(file.getName())) {
-                        // change chars to latin alphabet
+            if (directoryFiles != null) {
+                for (final File file : directoryFiles) {
+                    String oldName = file.getName();
+                    if (!oldName.equals(newDirectory.getName())) {
+                        if (oldName.charAt(0) != '.') {
+                            String newName = null;
+                            try {
+                                newName = translateName(oldName);
+                            } catch (IllegalNameException e) {
+                                nonProcessedFiles.add(oldName);
+                                reasonsOfNonProcessedFiles.add(e.getMessage());
+                                continue;
+                            }
+                            try {
+                                Files.copy(file.toPath(), Path.of((newDirectory.toPath() + "/" + newName)));
+                            } catch (IOException e) {
+                                nonProcessedFiles.add(oldName);
+                                String exceptionReason = e.getClass().getSimpleName();
+                                if (e.getClass() == FileAlreadyExistsException.class) {
+                                    reasonsOfNonProcessedFiles.add("File already renamed");
+                                } else {
+                                    reasonsOfNonProcessedFiles.add(exceptionReason);
+                                }
+                            }
+                        } else {
+                            nonProcessedFiles.add(oldName);
+                            reasonsOfNonProcessedFiles.add("File have hidden name");
+                        }
 
-                        // nonProcessedFiles.add()
-                        // reasonsOfNonProcessedFiles.add()
-                    } else {
-                        incorrectNames.add(file.toString());
                     }
                 }
             } else {
@@ -130,23 +161,14 @@ public class Application {
                 pathToCatalog = null;
                 continue;
             }
-            if (incorrectNames.length() + nonProcessedFiles.length() == files.length) {
-                dataPrinter.printErrorMessage("All files are not renamed by the next reasons:");
+            if (nonProcessedFiles.length() == directoryFiles.length - 1) {
+                dataPrinter.printErrorMessage("All files are not renamed by the next reasons:" + '\n');
             } else {
-                dataPrinter.printInfoMessage("Files renamed successfully.");
-            }
-
-            if (incorrectNames.length() != 0) {
-                dataPrinter.printErrorMessage("The next " + incorrectNames.length() + " files have incorrect names:");
-                String[] incorrectNamesArray = incorrectNames.toArray();
-                for (int i = 0; i < incorrectNamesArray.length; i++) {
-                    final String name = incorrectNamesArray[i];
-                    dataPrinter.printErrorMessage((i + 1) + ". " + name + ";");
-                }
-                dataPrinter.printErrorMessage("");
+                dataPrinter.printInfoMessage("Files renamed successfully." + '\n');
+                success = true;
             }
             if (nonProcessedFiles.length() != 0) {
-                dataPrinter.printErrorMessage("The next " + incorrectNames.length() + " files have problems:");
+                dataPrinter.printErrorMessage("The next " + nonProcessedFiles.length() + " files have problems:");
                 String[] nonProcessedFilesArray = nonProcessedFiles.toArray();
                 String[] reasonsOfNonProcessedFilesArray = reasonsOfNonProcessedFiles.toArray();
                 for (int i = 0; i < reasonsOfNonProcessedFiles.length(); i++) {
@@ -156,9 +178,28 @@ public class Application {
                 }
                 dataPrinter.printErrorMessage("");
             }
-            dataPrinter.printInfoMessage("You can exit with '/exit' command.");
+            if (!success) {
+                dataPrinter.printInfoMessage("You can exit with '/exit' command.");
+            }
             pathToCatalog = null;
+        } while (!success);
+        exit();
+    }
+
+    private void exit() {
+        System.out.println("Press any key to exit...");
+        new Scanner(System.in).nextLine();
+        System.exit(0);
+    }
+
+    private String translateName(final String name) throws IllegalNameException {
+        //main logic of renaming
+        //throw exception if illegal name
+        String symbols = "ççç";
+        if (Objects.equals(name, "123")) {
+            throw new IllegalNameException(format("Name '%s' have illegal symbols: %s", name, symbols));
         }
+        return (name + "newName");
     }
 
     private String correctAndTestPath(final String userPath) {
@@ -174,11 +215,6 @@ public class Application {
                     "File '%s' is not exists", userPathBuilder));
             return null;
         }
-    }
-
-    private boolean isCyrillicName(final String name) {
-        // if one of symbols is not russian or english or symbol
-        return false;
     }
 
     private char convertFromUA(char ch) {
