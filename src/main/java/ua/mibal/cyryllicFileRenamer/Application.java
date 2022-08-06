@@ -35,6 +35,8 @@ import java.util.Objects;
 import java.util.Scanner;
 
 import static java.lang.String.format;
+import static ua.mibal.cyryllicFileRenamer.model.Lang.RU;
+import static ua.mibal.cyryllicFileRenamer.model.Lang.UA;
 import static ua.mibal.cyryllicFileRenamer.model.OS.UNIX;
 import static ua.mibal.cyryllicFileRenamer.model.OS.WINDOWS;
 
@@ -57,6 +59,16 @@ public class Application {
 
 
     public Application(final String[] args) {
+        final String TEXT_BOLD = "\033[1m";
+        final String TEXT_RESET = "\u001B[0m";
+
+        dataPrinter.printInfoMessage("-------------||" + TEXT_BOLD + " The Cyrillic file renamer application " + TEXT_RESET + "||------------- ");
+        dataPrinter.printInfoMessage("""
+                -                         made with love ❤                          -
+                - #StandWithUkraine 🇺🇦                                              -
+                - author:@mibal_ua                                                  -
+                ---------------------------------------------------------------------
+                """);
         if (args.length != 0) {
             ArgumentParser parser = new ArgumentParser();
             parser.parse(args);
@@ -70,7 +82,10 @@ public class Application {
             pathToCatalog = correctAndTestPath(parser.getPath());
             lang = parser.getLang();
         }
-
+        OS = getOS();
+        if (OS == null) {
+            throw new IllegalArgumentException("Unknown OS.");
+        }
     }
 
     private OS getOS() {
@@ -88,10 +103,6 @@ public class Application {
     }
 
     public void start() {
-        // TODO welcome info
-
-        // if (lang == null)
-        // out "only ru and ua"
         boolean success = false;
         do {
             if (pathToCatalog == null) {
@@ -107,16 +118,30 @@ public class Application {
                         break;
                     } else {
                         dataPrinter.printInfoMessage(
-                                "You must enter path like this:" + '\n' +
+                                "You must enter path like this: " +
                                 OS.getExamplePath() + '\n'
                         );
                     }
                 }
             }
+            if (lang == null) {
+                while (true) {
+                    dataPrinter.printInfoMessage("Enter language of files: 'RU' or 'UA'");
+                    String userLang = inputReader.read().trim();
+                    dataPrinter.printInfoMessage("");
+                    if (userLang.equalsIgnoreCase("/exit")) {
+                        exit();
+                    } else if (userLang.equalsIgnoreCase(RU.name()) || userLang.equalsIgnoreCase(UA.name())) {
+                        lang = Lang.valueOf(userLang.toUpperCase());
+                        break;
+                    } else {
+                        dataPrinter.printInfoMessage(format(
+                                "You enter unsupported language '%s'." + '\n', userLang
+                        ));
+                    }
+                }
+            }
 
-            // if lang == nul
-            // lang dependence
-            // lang choice
             File directory = new File(pathToCatalog);
             File[] directoryFiles = directory.listFiles();
             File newDirectory = new File(pathToCatalog + "/renamedToLatin");
@@ -193,7 +218,7 @@ public class Application {
     }
 
     private String translateName(final String name) throws IllegalNameException {
-        //main logic of renaming
+        //TODO main logic of renaming
         //throw exception if illegal name
         String symbols = "ççç";
         if (Objects.equals(name, "123")) {
@@ -203,16 +228,21 @@ public class Application {
     }
 
     private String correctAndTestPath(final String userPath) {
-        StringBuilder userPathBuilder = new StringBuilder(userPath);
-        char border = OS.getBorder();
-        if (userPathBuilder.charAt(0) != border) {
-            userPathBuilder.insert(0, border);
-        }
-        if (new File(userPathBuilder.toString()).exists()) {
-            return userPathBuilder.toString();
+        if (userPath != null) {
+            StringBuilder userPathBuilder = new StringBuilder(userPath);
+            char border = OS.getBorder();
+            if (userPathBuilder.charAt(0) != border) {
+                userPathBuilder.insert(0, border);
+            }
+            if (new File(userPathBuilder.toString()).exists()) {
+                dataPrinter.printInfoMessage("Directory path successfully set." + '\n');
+                return userPathBuilder.toString();
+            } else {
+                dataPrinter.printErrorMessage(format(
+                        "Directory '%s' is not exists.", userPathBuilder));
+                return null;
+            }
         } else {
-            dataPrinter.printErrorMessage(format(
-                    "File '%s' is not exists", userPathBuilder));
             return null;
         }
     }
