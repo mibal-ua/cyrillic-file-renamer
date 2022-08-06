@@ -21,6 +21,7 @@ import ua.mibal.cyryllicFileRenamer.component.DataPrinter;
 import ua.mibal.cyryllicFileRenamer.component.InputReader;
 import ua.mibal.cyryllicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyryllicFileRenamer.component.console.ConsoleInputReader;
+import ua.mibal.cyryllicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyryllicFileRenamer.model.OS;
 
 import java.io.File;
@@ -46,8 +47,10 @@ public class Application {
 
 
     public Application(final String[] args) {
-        if (!(args.length == 0)) {
-            pathToCatalog = new ArgumentParser().parse(args);
+        if (args.length != 0) {
+            ArgumentParser parser = new ArgumentParser();
+            parser.parse(args);
+            pathToCatalog = correctAndTestPath(parser.getPath());
         }
         if (OS == null)
             throw new IllegalArgumentException();
@@ -81,47 +84,100 @@ public class Application {
     }
 
     public void start() {
-        if (pathToCatalog == null) {
-            while (true) {
+        // welcome info
+        // only ru and ua
+        while (true) {
+            if (pathToCatalog == null) {
                 dataPrinter.printInfoMessage("Enter path to catalog with files:");
-                String userPath = inputReader.read().trim();
-                if (userPathIsValid(userPath)) {
-                    pathToCatalog = userPath;
-                    break;
-                } else {
-                    dataPrinter.printInfoMessage(format(
-                            "Path '%s' is not valid. You must enter path like this:" + '\n' +
-                            OS.getExamplePath() + '\n', userPath)
-                    );
+                while (true) {
+                    String userPath = inputReader.read().trim();
+                    dataPrinter.printInfoMessage("");
+                    if (userPath.equalsIgnoreCase("/exit"))
+                        System.exit(0);
+                    String normalUserPath = correctAndTestPath(userPath);
+                    if (normalUserPath != null) {
+                        pathToCatalog = normalUserPath;
+                        break;
+                    } else {
+                        dataPrinter.printInfoMessage(
+                                "You must enter path like this:" + '\n' +
+                                OS.getExamplePath() + '\n'
+                        );
+                    }
                 }
             }
-        }
 
-        File directory = new File(pathToCatalog);
-        File[] files = directory.listFiles();
-        if (files != null) {
-            String[] incorrectNames = new String[files.length];
-            int i = 0;
-            for (final File file : files) {
-                if (isCyrillicName(file.getName())) {
-                    //change chars to latin alphabet
-                } else {
-                    incorrectNames[i++] = file.toString();
+            File directory = new File(pathToCatalog);
+            File[] files = directory.listFiles();
+            DynaStringArray incorrectNames = new DynaStringArray();
+            DynaStringArray nonProcessedFiles = new DynaStringArray();
+            DynaStringArray reasonsOfNonProcessedFiles = new DynaStringArray();
+
+            if (files != null) {
+                for (final File file : files) {
+                    if (isCyrillicName(file.getName())) {
+                        // change chars to latin alphabet
+
+                        // nonProcessedFiles.add()
+                        // reasonsOfNonProcessedFiles.add()
+                    } else {
+                        incorrectNames.add(file.toString());
+                    }
                 }
+            } else {
+                dataPrinter.printErrorMessage(format(
+                        "Problems with files in directory '%s'." + '\n', pathToCatalog));
+                pathToCatalog = null;
+                continue;
             }
+            if (incorrectNames.length() + nonProcessedFiles.length() == files.length) {
+                dataPrinter.printErrorMessage("All files are not renamed by the next reasons:");
+            } else {
+                dataPrinter.printInfoMessage("Files renamed successfully.");
+            }
+
+            if (incorrectNames.length() != 0) {
+                dataPrinter.printErrorMessage("The next " + incorrectNames.length() + " files have incorrect names:");
+                String[] incorrectNamesArray = incorrectNames.toArray();
+                for (int i = 0; i < incorrectNamesArray.length; i++) {
+                    final String name = incorrectNamesArray[i];
+                    dataPrinter.printErrorMessage((i + 1) + ". " + name + ";");
+                }
+                dataPrinter.printErrorMessage("");
+            }
+            if (nonProcessedFiles.length() != 0) {
+                dataPrinter.printErrorMessage("The next " + incorrectNames.length() + " files have problems:");
+                String[] nonProcessedFilesArray = nonProcessedFiles.toArray();
+                String[] reasonsOfNonProcessedFilesArray = reasonsOfNonProcessedFiles.toArray();
+                for (int i = 0; i < reasonsOfNonProcessedFiles.length(); i++) {
+                    final String name = nonProcessedFilesArray[i];
+                    final String reason = reasonsOfNonProcessedFilesArray[i];
+                    dataPrinter.printErrorMessage((i + 1) + ". " + name + ": " + reason + ";");
+                }
+                dataPrinter.printErrorMessage("");
+            }
+            dataPrinter.printInfoMessage("You can exit with '/exit' command.");
+            pathToCatalog = null;
+        }
+    }
+
+    private String correctAndTestPath(final String userPath) {
+        StringBuilder userPathBuilder = new StringBuilder(userPath);
+        char border = OS.getBorder();
+        if (userPathBuilder.charAt(0) != border) {
+            userPathBuilder.insert(0, border);
+        }
+        if (new File(userPathBuilder.toString()).exists()) {
+            return userPathBuilder.toString();
         } else {
-            dataPrinter.printErrorMessage("//");
+            dataPrinter.printErrorMessage(format(
+                    "File '%s' is not exists", userPathBuilder));
+            return null;
         }
-
     }
 
     private boolean isCyrillicName(final String name) {
         // if one of symbols is not russian or english or symbol
-        return false;
-    }
-
-    private boolean userPathIsValid(final String userPath) {
-
         return false;
     }
 
