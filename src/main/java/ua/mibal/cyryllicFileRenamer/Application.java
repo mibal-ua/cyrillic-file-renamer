@@ -237,7 +237,9 @@ public class Application {
         }
     }
 
-    private String translateName(final String oldName) throws IllegalNameException {
+    private String translateName(String oldName) throws IllegalNameException {
+        String[] result = getSeparateExtensionAndName(oldName);
+        oldName = result[0];
         String[] words = getWordsFromName(oldName);
 
         Lambda universalTranslator = null;
@@ -310,7 +312,26 @@ public class Application {
         if(newName.toString().equals(oldName)){
             throw new IllegalNameException(format("Name '%s' already renamed.", oldName));
         }
-        return newName.toString();
+        return newName.append(result[1]).toString();
+    }
+
+    private String[] getSeparateExtensionAndName(final String oldName) {
+        String name;
+        String extension;
+        int index = -1;
+        for (int i = 0; i < oldName.length(); i++) {
+            if(oldName.charAt(i) == '.'){
+                index = i;
+            }
+        }
+        if(index == -1){
+            name = oldName;
+            extension = "";
+        } else {
+            name = oldName.substring(0, index);
+            extension = oldName.substring(index);
+        }
+        return new String[]{name, extension};
     }
 
 
