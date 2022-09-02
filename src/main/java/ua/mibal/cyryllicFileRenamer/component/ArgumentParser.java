@@ -17,15 +17,12 @@
 package ua.mibal.cyryllicFileRenamer.component;
 
 import ua.mibal.cyryllicFileRenamer.model.Lang;
-import ua.mibal.cyryllicFileRenamer.model.OS;
 
 import java.io.File;
 
 import static java.lang.String.format;
 import static ua.mibal.cyryllicFileRenamer.model.Lang.RU;
 import static ua.mibal.cyryllicFileRenamer.model.Lang.UA;
-import static ua.mibal.cyryllicFileRenamer.model.OS.UNIX;
-import static ua.mibal.cyryllicFileRenamer.model.OS.WINDOWS;
 
 /**
  * @author Michael Balakhon
@@ -37,8 +34,6 @@ public class ArgumentParser {
 
     private Lang lang;
 
-    private OS OS;
-
     public void parse(String[] args) {
         // add more parameters in future
         for (final String arg : args) {
@@ -46,8 +41,6 @@ public class ArgumentParser {
                 this.path = System.getProperty("user.dir");
             } else if (arg.equalsIgnoreCase(UA.name()) || arg.equalsIgnoreCase(RU.name())) {
                 lang = Lang.valueOf(arg.toUpperCase());
-            } else if (arg.equalsIgnoreCase(UNIX.name()) || arg.equalsIgnoreCase(WINDOWS.name())) {
-                OS = ua.mibal.cyryllicFileRenamer.model.OS.valueOf(arg.toUpperCase());
             } else if (isThisAPath(arg)) {
                 this.path = arg;
             } else {
@@ -69,9 +62,5 @@ public class ArgumentParser {
 
     public Lang getLang() {
         return lang;
-    }
-
-    public OS getOS() {
-        return OS;
     }
 }
