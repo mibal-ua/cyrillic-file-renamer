@@ -21,7 +21,6 @@ import ua.mibal.cyryllicFileRenamer.component.DataPrinter;
 import ua.mibal.cyryllicFileRenamer.component.InputReader;
 import ua.mibal.cyryllicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyryllicFileRenamer.component.console.ConsoleInputReader;
-import ua.mibal.cyryllicFileRenamer.model.Border;
 import ua.mibal.cyryllicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyryllicFileRenamer.model.Lang;
 import ua.mibal.cyryllicFileRenamer.model.OS;
@@ -35,6 +34,7 @@ import java.nio.file.Path;
 import java.util.Scanner;
 
 import static java.lang.String.format;
+import static ua.mibal.cyryllicFileRenamer.model.Border.*;
 import static ua.mibal.cyryllicFileRenamer.model.Lang.RU;
 import static ua.mibal.cyryllicFileRenamer.model.Lang.UA;
 import static ua.mibal.cyryllicFileRenamer.model.OS.UNIX;
@@ -57,20 +57,17 @@ public class Application {
 
     private static Lang lang;
 
-    private static Border border;
-
+    final String TEXT_BOLD = "\033[1m";
+    final String TEXT_RESET = "\u001B[0m";
 
     public Application(final String[] args) {
-        final String TEXT_BOLD = "\033[1m";
-        final String TEXT_RESET = "\u001B[0m";
         dataPrinter.printInfoMessage("");
         dataPrinter.printInfoMessage("-------------||" + TEXT_BOLD + " The Cyrillic file renamer application " + TEXT_RESET + "||------------- ");
         dataPrinter.printInfoMessage("""
                 -                         made with love ❤                          -
                 - #StandWithUkraine🇺🇦                                               -
                 - author: @mibal_ua                                                 -
-                ---------------------------------------------------------------------
-                """);
+                ---------------------------------------------------------------------""");
         if (args.length != 0) {
             ArgumentParser parser = new ArgumentParser();
             parser.parse(args);
@@ -125,6 +122,8 @@ public class Application {
                         );
                     }
                 }
+            } else {
+                dataPrinter.printInfoMessage("Path: " + pathToCatalog);
             }
             if (lang == null) {
                 while (true) {
@@ -142,25 +141,23 @@ public class Application {
                         ));
                     }
                 }
+            } else {
+                dataPrinter.printInfoMessage("Language: " + lang.name());
             }
 
             File directory = new File(pathToCatalog);
             File[] directoryFiles = directory.listFiles();
             File newDirectory = new File(pathToCatalog + "/renamedToLatin");
-            if (newDirectory.mkdir()) {
-                //TODO out successful
-            } else {
-                //TODO out unsuccessful
-            }
+            newDirectory.mkdir();
             DynaStringArray nonProcessedFiles = new DynaStringArray();
             DynaStringArray reasonsOfNonProcessedFiles = new DynaStringArray();
 
             if (directoryFiles != null) {
                 for (final File file : directoryFiles) {
                     String oldName = file.getName(); //this is name with extension
-                    if (!oldName.equals(newDirectory.getName())) {
+                    if (!oldName.equals(newDirectory.getName()) && !oldName.equals(".DS_Store")) {
                         if (oldName.charAt(0) != '.') {
-                            String newName = null;
+                            String newName;
                             try {
                                 newName = translateName(oldName);
                             } catch (IllegalNameException e) {
@@ -195,7 +192,7 @@ public class Application {
             if (nonProcessedFiles.length() == directoryFiles.length - 1) {
                 dataPrinter.printErrorMessage("All files are not renamed by the next reasons:" + '\n');
             } else {
-                dataPrinter.printInfoMessage("Files renamed successfully." + '\n');
+                dataPrinter.printInfoMessage('\n' + TEXT_BOLD + "Files renamed successfully." + TEXT_RESET);
                 success = true;
             }
             if (nonProcessedFiles.length() != 0) {
@@ -225,7 +222,6 @@ public class Application {
                 userPathBuilder.insert(0, border);
             }
             if (new File(userPathBuilder.toString()).exists()) {
-                dataPrinter.printInfoMessage("Directory path successfully set." + '\n');
                 return userPathBuilder.toString();
             } else {
                 dataPrinter.printErrorMessage(format(
@@ -239,61 +235,48 @@ public class Application {
 
     private String translateName(String oldName) throws IllegalNameException {
         String[] result = getSeparateExtensionAndName(oldName);
-        oldName = result[0];
-        String[] words = getWordsFromName(oldName);
-
-        Lambda universalTranslator = null;
+        String name = result[0];
+        String extension = result[1];
+        String[] words = getWordsFromName(name);
+        Lambda translatorForUsualCases;
         if (lang == RU) {
-            universalTranslator = this::convertFromRU;
+            translatorForUsualCases = this::convertFromRU;
         } else if (lang == UA) {
-            universalTranslator = this::convertFromUA;
+            translatorForUsualCases = this::convertFromUA;
         } else {
             throw new IllegalArgumentException("Incorrect Language.");
         }
-
         String[] newNameArray = new String[words.length];
         int count = 0;
         for (final String word : words) {
             StringBuilder newWord = new StringBuilder();
-            // StringBuilder illegalSymbols = new StringBuilder();
-            String newLetter = "";
+            String newLetter;
             for (int i = 0; i < word.length(); i++) {
                 String letter = String.valueOf(word.charAt(i));
                 if (!charIsCyrillic(letter)) { // checking if letter is latin
                     newLetter = letter;
-                } else if (lang == RU) {
-                    if (letter.equalsIgnoreCase("Е") ||
-                        letter.equalsIgnoreCase("Ё") ||
-                        letter.equalsIgnoreCase("Й") ||
-                        letter.equalsIgnoreCase("Ю") ||
-                        letter.equalsIgnoreCase("Я")) {
-                        if (i == 0) {
-                            newLetter = translateSpecialRussianSymbolsOnTheStartAndAfterGolosnykh(letter);
-                        } else if (isGolosnyy(oldName.charAt(i - 1))) {
-                            newLetter = translateSpecialRussianSymbolsOnTheStartAndAfterGolosnykh(letter);
-                        } else {
-                            newLetter = universalTranslator.translate(letter);
-                        }
-                    } else {
-                        //usual algorithm
-                        newLetter = universalTranslator.translate(letter);
-                    }
-                } else if (lang == UA) {
+                } else {
                     if (letter.equalsIgnoreCase("Є") ||
                         letter.equalsIgnoreCase("Ї") ||
+                        letter.equalsIgnoreCase("Е") ||
                         letter.equalsIgnoreCase("Й") ||
                         letter.equalsIgnoreCase("Ю") ||
                         letter.equalsIgnoreCase("Я")) {
                         if (i == 0) {
-                            newLetter = translateSpecialUkrainianSymbolsOnTheStartAndAfterGolosnykh(letter);
-                        } else if (isGolosnyy(oldName.charAt(i - 1))) {
-                            newLetter = translateSpecialUkrainianSymbolsOnTheStartAndAfterGolosnykh(letter);
+                            newLetter = translateSpecialSymbols(letter);
+                        } else if (isGolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1))) {
+                            newLetter = translateSpecialSymbols(letter);
                         } else {
-                            newLetter = universalTranslator.translate(letter);
+                            newLetter = translatorForUsualCases.translate(letter);
                         }
+                    } else if (i != 0 && lang == RU && letter.equalsIgnoreCase("И") &&
+                               isShyplyachyy(word.charAt(i - 1))) {
+                        newLetter = Character.isUpperCase(letter.charAt(0)) ? "Y" : "y";
+                    } else if (i != 0 && lang == UA && letter.equalsIgnoreCase("Г") &&
+                               String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
+                        newLetter = Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
                     } else {
-                        //usual algorithm
-                        newLetter = universalTranslator.translate(letter);
+                        newLetter = translatorForUsualCases.translate(letter);
                     }
                 }
                 newWord.append(newLetter);
@@ -301,18 +284,22 @@ public class Application {
             newNameArray[count++] = newWord.toString();
         }
         StringBuilder newName = new StringBuilder();
-        String borderString = border.getBorder();
-        for (int i = 0; i < newNameArray.length; i++) {
-            final String name = newNameArray[i];
-            newName.append(name);
-            if (i != newNameArray.length - 1) {
-                newName.append(borderString);
-            }
+        for (final String word : newNameArray) {
+            newName.append(word);
         }
-        if(newName.toString().equals(oldName)){
-            throw new IllegalNameException(format("Name '%s' already renamed.", oldName));
+        if (newName.toString().equals(name)) {
+            throw new IllegalNameException(format("File '%s' already renamed.", name));
         }
-        return newName.append(result[1]).toString();
+        return newName.append(extension).toString();
+    }
+
+    private boolean isZnakMyakshenniaOrElse(final char charAt) {
+        return (charAt == '\'' || Character.toLowerCase(charAt) == 'ь' || Character.toLowerCase(charAt) == 'ъ');
+    }
+
+    private boolean isShyplyachyy(final char charAt) {
+        char ch = Character.toUpperCase(charAt);
+        return (ch == 'Ж' || ch == 'Ш' || ch == 'Щ');
     }
 
     private String[] getSeparateExtensionAndName(final String oldName) {
@@ -320,11 +307,11 @@ public class Application {
         String extension;
         int index = -1;
         for (int i = 0; i < oldName.length(); i++) {
-            if(oldName.charAt(i) == '.'){
+            if (oldName.charAt(i) == '.') {
                 index = i;
             }
         }
-        if(index == -1){
+        if (index == -1) {
             name = oldName;
             extension = "";
         } else {
@@ -336,35 +323,74 @@ public class Application {
 
 
     private String[] getWordsFromName(final String oldName) {
-        // TODO logic of bordering name to names array
-        // set border value and return array
-        return new String[0];
+        if (oldName.length() <= 1) {
+            return oldName.length() == 1 ?
+                    new String[]{String.valueOf(oldName.charAt(0))} :
+                    new String[]{""};
+        }
+
+        String[] borders = {HYPHENMINUS.getBorder(), ENDASH.getBorder(), EMDASH.getBorder(),
+                MINUS.getBorder(), SPACE.getBorder(), UNDERSCORE.getBorder(), DOT.getBorder()};
+
+        DynaStringArray dynaResult = new DynaStringArray();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < oldName.length(); i++) {
+            boolean isThisABorder = false;
+            char cha = oldName.charAt(i);
+            String ch = String.valueOf(cha);
+            for (final String border : borders) {
+                if (ch.equals(border)) {
+                    dynaResult.add(stringBuilder.append(ch).toString());
+                    stringBuilder = new StringBuilder();
+                    isThisABorder = true;
+                }
+            }
+            if (!isThisABorder) {
+                if ((i != (oldName.length() - 1)) && Character.isUpperCase(oldName.charAt(i + 1))) {
+                    dynaResult.add(stringBuilder.append(ch).toString());
+                    stringBuilder = new StringBuilder();
+                } else {
+                    stringBuilder.append(ch);
+                }
+            }
+
+        }
+        dynaResult.add(stringBuilder.toString());
+        return dynaResult.toArray();
     }
 
     private boolean isGolosnyy(final char ch) {
         String character = String.valueOf(ch);
         String[] golosniChars = {"Є", "Е", "Є", "И", "І", "Ї", "О", "У", "Ю", "Я", "Ы", "Э"};
         for (final String golosniChar : golosniChars) {
-            if(character.equalsIgnoreCase(golosniChar)){
+            if (character.equalsIgnoreCase(golosniChar)) {
                 return true;
             }
         }
         return false;
     }
 
-    private String translateSpecialUkrainianSymbolsOnTheStartAndAfterGolosnykh(final String ch) {
-        //TODO
-        return "";
-    }
+    //Ukrainian an ru
+    private String translateSpecialSymbols(String ch) {
+        boolean isUpper = Character.isUpperCase(ch.charAt(0));
+        ch = ch.toUpperCase();
+        String result = switch (ch) {
+            case "Е", "Э" -> "Ye";
+            case "Ї" -> "Yi";
+            case "Й" -> "Y";
+            case "Ю" -> "Yu";
+            case "Я" -> "Ya";
+            default -> null;
+        };
+        return isUpper ? result : result.toLowerCase();
 
-    private String translateSpecialRussianSymbolsOnTheStartAndAfterGolosnykh(final String ch) {
-        //TODO
-        return "";
     }
 
     private boolean charIsCyrillic(final String character) {
         char ch = character.charAt(0);
-        return (('А' <= ch & ch <= 'п') || ('р' <= ch && ch <= 'ї'));
+        return (('А' <= ch && ch <= 'я') ||
+                (ch == 'ґ') || (ch == 'Ґ') || (ch == 'і') || (ch == 'І') || (ch == 'ї') ||
+                (ch == 'Ї') || (ch == 'ё') || (ch == 'Ё') || (ch == 'є') || (ch == 'Є'));
     }
 
     @FunctionalInterface
@@ -373,54 +399,58 @@ public class Application {
         String translate(String ch);
     }
 
-
-    //TODO usual chars
     private String convertFromUA(String ch) {
-/*
-        switch (ch) {
-            case 'г':
-                return 'h';
-            case 'Г':
-                return 'H';
-            case 'ґ':
-                return 'g';
-            case 'Ґ':
-                return 'G';
-            case 'і':
-                return 'i';
-            case 'І':
-                return 'I';
-        }
-
-
-    */return null;
+        boolean isUpper = Character.isUpperCase(ch.charAt(0));
+        String character = ch.toUpperCase();
+        String result = switch (character) {
+            case "А" -> "A";
+            case "Б" -> "B";
+            case "В" -> "V";
+            case "Г" -> "H";
+            case "Ґ" -> "G";
+            case "Д" -> "D";
+            case "Е" -> "E";
+            case "Є" -> "Ie";
+            case "Ж" -> "Zh";
+            case "З" -> "Z";
+            case "И" -> "Y";
+            case "І", "Ї", "Й" -> "I";
+            case "К" -> "K";
+            case "Л" -> "L";
+            case "М" -> "M";
+            case "Н" -> "N";
+            case "О" -> "O";
+            case "П" -> "P";
+            case "Р" -> "R";
+            case "С" -> "S";
+            case "Т" -> "T";
+            case "У" -> "U";
+            case "Ф" -> "F";
+            case "Х" -> "Kh";
+            case "Ц" -> "Ts";
+            case "Ч" -> "Ch";
+            case "Ш" -> "Sh";
+            case "Щ" -> "Shch";
+            case "Ь" -> "";
+            case "Ю" -> "Iu";
+            case "Я" -> "Ia";
+            default -> null;
+        };
+        return isUpper ? result : result.toLowerCase();
     }
 
-    private String convertFromRU(String ch) {
-        /*
-        switch (ch) {
-            case 'А':
-                return 'A';
-            case 'Б':
-                return 'B';
-            case 'В':
-                return 'V';
-            case 'Г':
-                return 'G';
-            case 'Д':
-                return 'D';
-            case 'Е':
-                return 'E';
-            //case 'Ё':return 'YO';
-            //case 'Ж': return 'ZH';
-
-            case 'и':
-                return 'i';
-        }
-        return ch;
-
-         */
-        return null;
+    private String convertFromRU(final String ch) {
+        boolean isUpper = Character.isUpperCase(ch.charAt(0));
+        String character = ch.toUpperCase();
+        String result = switch (character) {
+            case "Г" -> "G";
+            case "Е", "Э" -> "E";
+            case "Ё" -> "Yo";
+            case "И" -> "I";
+            case "Й" -> "Y";
+            default -> convertFromUA(ch);
+        };
+        return isUpper ? result : result.toLowerCase();
     }
 
     private void exit() {
