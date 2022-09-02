@@ -16,9 +16,7 @@
  */
 package ua.mibal.cyryllicFileRenamer;
 
-import ua.mibal.cyryllicFileRenamer.component.ArgumentParser;
-import ua.mibal.cyryllicFileRenamer.component.DataPrinter;
-import ua.mibal.cyryllicFileRenamer.component.InputReader;
+import ua.mibal.cyryllicFileRenamer.component.*;
 import ua.mibal.cyryllicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyryllicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyryllicFileRenamer.model.DynaStringArray;
@@ -37,8 +35,6 @@ import static java.lang.String.format;
 import static ua.mibal.cyryllicFileRenamer.model.Border.*;
 import static ua.mibal.cyryllicFileRenamer.model.Lang.RU;
 import static ua.mibal.cyryllicFileRenamer.model.Lang.UA;
-import static ua.mibal.cyryllicFileRenamer.model.OS.UNIX;
-import static ua.mibal.cyryllicFileRenamer.model.OS.WINDOWS;
 
 /**
  * @author Michael Balakhon
@@ -50,6 +46,9 @@ public class Application {
 
     private final InputReader inputReader = new ConsoleInputReader();
 
+    private final OSDetector osDetector = new OSDetector();
+
+    private final PathOperator pathOperator = new PathOperator();
 
     private static OS OS;
 
@@ -61,41 +60,18 @@ public class Application {
     final String TEXT_RESET = "\u001B[0m";
 
     public Application(final String[] args) {
-        dataPrinter.printWelcomeMessage();
         if (args.length != 0) {
             ArgumentParser parser = new ArgumentParser();
             parser.parse(args);
-            OS = parser.getOS();
-            if (OS == null) {
-                OS = getOS();
-                if (OS == null) {
-                    throw new IllegalArgumentException("Unknown OS.");
-                }
-            }
-            pathToCatalog = correctAndTestPath(parser.getPath());
+            pathToCatalog = pathOperator.testPath(parser.getPath());
             lang = parser.getLang();
         }
-        OS = getOS();
-        if (OS == null) {
-            throw new IllegalArgumentException("Unknown OS.");
-        }
+        OS = osDetector.detectOS();
     }
 
-    private OS getOS() {
-        String system = System.getProperty("os.name").toLowerCase();
-        if (system.contains("win")) {
-            return WINDOWS;
-        } else if (system.contains("nix") || system.contains("nux")
-                   || system.contains("aix") || system.contains("mac")) {
-            return UNIX;
-        } else {
-            dataPrinter.printErrorMessage("Unknown OS System.");
-            exit();
-            return null;
-        }
-    }
 
     public void start() {
+        dataPrinter.printWelcomeMessage();
         boolean success = false;
         do {
             if (pathToCatalog == null) {
@@ -105,7 +81,7 @@ public class Application {
                     dataPrinter.printInfoMessage("");
                     if (userPath.equalsIgnoreCase("/exit"))
                         exit();
-                    String normalUserPath = correctAndTestPath(userPath);
+                    String normalUserPath = testPath(userPath);
                     if (normalUserPath != null) {
                         pathToCatalog = normalUserPath;
                         break;
@@ -208,7 +184,7 @@ public class Application {
         exit();
     }
 
-    private String correctAndTestPath(final String userPath) {
+    private String testPath(final String userPath) {
         if (userPath != null) {
             StringBuilder userPathBuilder = new StringBuilder(userPath);
             char border = OS.getBorder();
