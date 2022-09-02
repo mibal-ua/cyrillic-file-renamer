@@ -27,4 +27,6 @@ public interface DataPrinter {
     void printErrorMessage(String message);
 
     void printWelcomeMessage();
+
+    void exit();
 }
