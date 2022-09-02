@@ -19,6 +19,8 @@ package ua.mibal.cyryllicFileRenamer.component.console;
 
 import ua.mibal.cyryllicFileRenamer.component.DataPrinter;
 
+import java.util.Scanner;
+
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
@@ -45,5 +47,12 @@ public class ConsoleDataPrinter implements DataPrinter {
                 - #StandWithUkraine                                                 -
                 - author: @mibal_ua                                                 -
                 ---------------------------------------------------------------------""");
+    }
+
+    @Override
+    public void exit() {
+        System.out.println("Press any key to exit...");
+        new Scanner(System.in).nextLine();
+        System.exit(0);
     }
 }
