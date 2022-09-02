@@ -34,4 +34,16 @@ public class ConsoleDataPrinter implements DataPrinter {
     public void printErrorMessage(final String message) {
         System.err.println(message);
     }
+
+    @Override
+    public void printWelcomeMessage() {
+        System.out.println("""
+                                
+                -------------||\033[1m The Cyrillic file renamer application \u001B[0m||-------------
+                -                         made with love ❤                          -
+                -                                                                   -
+                - #StandWithUkraine                                                 -
+                - author: @mibal_ua                                                 -
+                ---------------------------------------------------------------------""");
+    }
 }

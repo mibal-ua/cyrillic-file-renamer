@@ -61,13 +61,7 @@ public class Application {
     final String TEXT_RESET = "\u001B[0m";
 
     public Application(final String[] args) {
-        dataPrinter.printInfoMessage("");
-        dataPrinter.printInfoMessage("-------------||" + TEXT_BOLD + " The Cyrillic file renamer application " + TEXT_RESET + "||------------- ");
-        dataPrinter.printInfoMessage("""
-                -                         made with love ❤                          -
-                - #StandWithUkraine🇺🇦                                               -
-                - author: @mibal_ua                                                 -
-                ---------------------------------------------------------------------""");
+        dataPrinter.printWelcomeMessage();
         if (args.length != 0) {
             ArgumentParser parser = new ArgumentParser();
             parser.parse(args);
