@@ -35,7 +35,7 @@ public enum Border {
 
     UNDERSCORE("_"),
 
-    CAMELCASE("");
+    DOT(".");
 
     private final String border;
 
