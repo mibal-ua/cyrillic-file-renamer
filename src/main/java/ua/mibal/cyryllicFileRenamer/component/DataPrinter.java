@@ -16,6 +16,8 @@
  */
 package ua.mibal.cyryllicFileRenamer.component;
 
+import java.io.File;
+
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
@@ -27,6 +29,8 @@ public interface DataPrinter {
     void printErrorMessage(String message);
 
     void printWelcomeMessage();
+
+    void printNonProcessedFiles(String[] nonProcessedFiles, String[] reasonsOfNonProcessedFiles, File[] directoryFiles);
 
     void exit();
 }
