@@ -19,6 +19,7 @@ package ua.mibal.cyryllicFileRenamer.component.console;
 
 import ua.mibal.cyryllicFileRenamer.component.DataPrinter;
 
+import java.io.File;
 import java.util.Scanner;
 
 /**
@@ -54,5 +55,30 @@ public class ConsoleDataPrinter implements DataPrinter {
         System.out.println("Press any key to exit...");
         new Scanner(System.in).nextLine();
         System.exit(0);
+    }
+
+    @Override
+    public void printNonProcessedFiles(final String[] nonProcessedFiles, final String[] reasonsOfNonProcessedFiles, File[] directoryFiles) {
+        int count = 0;
+        for (final File directoryFile : directoryFiles) {
+            String name = directoryFile.getName();
+            if (name.equals("renamedToLatin") || name.equals(".DS_Store")) {
+                count++;
+            }
+        }
+        if (nonProcessedFiles.length == directoryFiles.length - count) {
+            printErrorMessage("All files are not renamed by the next reasons:");
+        } else {
+            printInfoMessage("\n\033[1mFiles renamed successfully.\u001B[0m");
+        }
+        if (nonProcessedFiles.length != 0) {
+            printErrorMessage("The next " + nonProcessedFiles.length + " files have problems:");
+            for (int i = 0; i < reasonsOfNonProcessedFiles.length; i++) {
+                final String name = nonProcessedFiles[i];
+                final String reason = reasonsOfNonProcessedFiles[i];
+                printErrorMessage((i + 1) + ". " + name + ": " + reason + ";");
+            }
+            printErrorMessage("");
+        }
     }
 }
