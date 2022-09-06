@@ -14,15 +14,15 @@
  * limitations under the License.
  *
  */
-package ua.mibal.cyryllicFileRenamer.component;
+package ua.mibal.cyrillicFileRenamer.component;
 
-import ua.mibal.cyryllicFileRenamer.model.Lang;
+import ua.mibal.cyrillicFileRenamer.model.Lang;
 
 import java.io.File;
 
 import static java.lang.String.format;
-import static ua.mibal.cyryllicFileRenamer.model.Lang.RU;
-import static ua.mibal.cyryllicFileRenamer.model.Lang.UA;
+import static ua.mibal.cyrillicFileRenamer.model.Lang.RU;
+import static ua.mibal.cyrillicFileRenamer.model.Lang.UA;
 
 /**
  * @author Michael Balakhon

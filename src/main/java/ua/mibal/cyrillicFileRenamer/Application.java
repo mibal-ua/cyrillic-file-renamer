@@ -14,15 +14,15 @@
  * limitations under the License.
  *
  */
-package ua.mibal.cyryllicFileRenamer;
+package ua.mibal.cyrillicFileRenamer;
 
-import ua.mibal.cyryllicFileRenamer.component.*;
-import ua.mibal.cyryllicFileRenamer.component.console.ConsoleDataPrinter;
-import ua.mibal.cyryllicFileRenamer.component.console.ConsoleInputReader;
-import ua.mibal.cyryllicFileRenamer.model.DynaStringArray;
-import ua.mibal.cyryllicFileRenamer.model.Lang;
-import ua.mibal.cyryllicFileRenamer.model.OS;
-import ua.mibal.cyryllicFileRenamer.model.exception.IllegalNameException;
+import ua.mibal.cyrillicFileRenamer.component.*;
+import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
+import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
+import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
+import ua.mibal.cyrillicFileRenamer.model.Lang;
+import ua.mibal.cyrillicFileRenamer.model.OS;
+import ua.mibal.cyrillicFileRenamer.model.exception.IllegalNameException;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +31,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static java.lang.String.format;
-import static ua.mibal.cyryllicFileRenamer.model.Lang.RU;
-import static ua.mibal.cyryllicFileRenamer.model.Lang.UA;
+import static ua.mibal.cyrillicFileRenamer.model.Lang.RU;
+import static ua.mibal.cyrillicFileRenamer.model.Lang.UA;
 
 /**
  * @author Michael Balakhon

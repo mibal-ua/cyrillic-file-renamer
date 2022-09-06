@@ -15,7 +15,7 @@
  *
  */
 
-package ua.mibal.cyryllicFileRenamer.component;
+package ua.mibal.cyrillicFileRenamer.component;
 
 import java.io.File;
 

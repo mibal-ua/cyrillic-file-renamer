@@ -14,23 +14,16 @@
  * limitations under the License.
  *
  */
-package ua.mibal.cyryllicFileRenamer.component;
 
-import java.io.File;
+package ua.mibal.cyrillicFileRenamer.model.exception;
 
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public interface DataPrinter {
+public class IllegalNameException extends Exception{
 
-    void printInfoMessage(String message);
-
-    void printErrorMessage(String message);
-
-    void printWelcomeMessage();
-
-    void printNonProcessedFiles(String[] nonProcessedFiles, String[] reasonsOfNonProcessedFiles, File[] directoryFiles);
-
-    void exit();
+    public IllegalNameException(final String message) {
+        super(message);
+    }
 }

@@ -15,35 +15,27 @@
  *
  */
 
-package ua.mibal.cyryllicFileRenamer.model;
+package ua.mibal.cyrillicFileRenamer.component;
+
+import ua.mibal.cyrillicFileRenamer.model.OS;
+
+import static ua.mibal.cyrillicFileRenamer.model.OS.UNIX;
+import static ua.mibal.cyrillicFileRenamer.model.OS.WINDOWS;
 
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public enum Border {
-
-    HYPHENMINUS("-"),
-
-    ENDASH("–"),
-
-    EMDASH("—"),
-
-    MINUS("−"),
-
-    SPACE(" "),
-
-    UNDERSCORE("_"),
-
-    DOT(".");
-
-    private final String border;
-
-    Border(final String border) {
-        this.border = border;
-    }
-
-    public String getBorder() {
-        return border;
+public class OSDetector {
+    public static OS detectOS() {
+        String system = System.getProperty("os.name").toLowerCase();
+        if (system.contains("win")) {
+            return WINDOWS;
+        } else if (system.contains("nix") || system.contains("nux")
+                   || system.contains("aix") || system.contains("mac")) {
+            return UNIX;
+        } else {
+            return null;
+        }
     }
 }

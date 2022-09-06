@@ -1,11 +1,11 @@
 /*
- * Copyright 2022 http://t.me/mibal_ua
+ * Copyright (c) 2022. http://t.me/mibal_ua
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
- * You may not use this file except in compliance with the License.
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,16 +15,20 @@
  *
  */
 
-package ua.mibal.cyryllicFileRenamer;
+package ua.mibal.cyrillicFileRenamer.component.console;
+
+import ua.mibal.cyrillicFileRenamer.component.InputReader;
+
+import java.util.Scanner;
 
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public class Launcher {
+public class ConsoleInputReader implements InputReader {
 
-    public static void main(String[] args) {
-        Application application = new Application(args);
-        application.start();
+    @Override
+    public String read() {
+        return new Scanner(System.in).nextLine().trim();
     }
 }

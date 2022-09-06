@@ -15,9 +15,9 @@
  *
  */
 
-package ua.mibal.cyryllicFileRenamer.component.console;
+package ua.mibal.cyrillicFileRenamer.component.console;
 
-import ua.mibal.cyryllicFileRenamer.component.DataPrinter;
+import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
 
 import java.io.File;
 import java.util.Scanner;

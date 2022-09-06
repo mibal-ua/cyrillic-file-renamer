@@ -15,7 +15,7 @@
  *
  */
 
-package ua.mibal.cyryllicFileRenamer.model;
+package ua.mibal.cyrillicFileRenamer.model;
 
 import java.util.Arrays;
 

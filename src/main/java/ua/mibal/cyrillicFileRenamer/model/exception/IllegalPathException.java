@@ -14,32 +14,16 @@
  * limitations under the License.
  *
  */
-package ua.mibal.cyryllicFileRenamer.model;
+
+package ua.mibal.cyrillicFileRenamer.model.exception;
 
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public enum OS {
+public class IllegalPathException extends Exception {
 
-    UNIX('/', System.getProperty("user.home") + "/path/to/catalog/"),
-
-    WINDOWS('\\', System.getProperty("user.home") + "\\path\\to\\catalog\\");
-
-    private final char border;
-    private final String examplePath;
-
-    OS(final char border, final String examplePath) {
-        this.border = border;
-        this.examplePath = examplePath;
-    }
-
-
-    public char getBorder() {
-        return border;
-    }
-
-    public String getExamplePath() {
-        return examplePath;
+    public IllegalPathException(final String message) {
+        super(message);
     }
 }

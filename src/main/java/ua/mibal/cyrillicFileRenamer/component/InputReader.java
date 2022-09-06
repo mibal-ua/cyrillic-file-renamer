@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package ua.mibal.cyryllicFileRenamer.component;
+package ua.mibal.cyrillicFileRenamer.component;
 
 /**
  * @author Michael Balakhon
