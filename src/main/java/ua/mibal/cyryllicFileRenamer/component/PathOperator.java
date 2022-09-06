@@ -17,8 +17,6 @@
 
 package ua.mibal.cyryllicFileRenamer.component;
 
-import ua.mibal.cyryllicFileRenamer.model.exception.IllegalPathException;
-
 import java.io.File;
 
 /**
@@ -26,7 +24,7 @@ import java.io.File;
  * @link http://t.me/mibal_ua
  */
 public class PathOperator {
-    public String testPath(final String userPath) throws IllegalPathException {
+    public String testPath(final String userPath) {
         if (userPath.length() != 0) {
             if (new File(userPath).exists()) {
                 return userPath;
@@ -44,6 +42,6 @@ public class PathOperator {
                 return userPathBuilder2.toString();
             }
         }
-        throw new IllegalPathException("Path '%s' is incorrect");
+        return null;
     }
 }
