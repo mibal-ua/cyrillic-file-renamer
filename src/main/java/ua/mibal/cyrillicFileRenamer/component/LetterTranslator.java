@@ -32,10 +32,13 @@ import static ua.mibal.cyrillicFileRenamer.model.Lang.UA;
  */
 public class LetterTranslator {
 
-    private Lang lang;
+    private final Lang lang;
 
-    public String translateName(final String oldName, final Lang lang) throws IllegalNameException {
+    public LetterTranslator(final Lang lang) {
         this.lang = lang;
+    }
+
+    public String translateName(final String oldName) throws IllegalNameException {
         String[] result = getSeparateExtensionAndName(oldName);
         String name = result[0];
         String extension = result[1];
