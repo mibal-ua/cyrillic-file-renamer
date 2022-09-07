@@ -34,7 +34,7 @@ public class LetterTranslator {
 
     private Lang lang;
 
-    public String translateName(String oldName, Lang lang) throws IllegalNameException {
+    public String translateName(final String oldName, final Lang lang) throws IllegalNameException {
         this.lang = lang;
         String[] result = getSeparateExtensionAndName(oldName);
         String name = result[0];
@@ -168,7 +168,7 @@ public class LetterTranslator {
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
-    private String convertFromUA(String ch) throws IllegalNameException {
+    private String convertFromUA(final String ch) throws IllegalNameException {
         String result = switch (ch.toUpperCase()) {
             case "Г" -> "H";
             case "Ґ" -> "G";
@@ -180,7 +180,7 @@ public class LetterTranslator {
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
-    private String convertUniversal(String ch) throws IllegalNameException {
+    private String convertUniversal(final String ch) throws IllegalNameException {
         String result = switch (ch.toUpperCase()) {
             case "А" -> "A";
             case "Б" -> "B";
@@ -216,7 +216,7 @@ public class LetterTranslator {
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
-    private String translateSpecialSymbols(String ch) throws IllegalNameException {
+    private String translateSpecialSymbols(final String ch) throws IllegalNameException {
         String result = switch (ch.toUpperCase()) {
             case "Е", "Є" -> "Ye";
             case "Ї" -> "Yi";
