@@ -21,7 +21,6 @@ import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.Lang;
-import ua.mibal.cyrillicFileRenamer.model.OS;
 import ua.mibal.cyrillicFileRenamer.model.exception.IllegalNameException;
 
 import java.io.File;
@@ -31,6 +30,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static java.lang.String.format;
+import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testPath;
 import static ua.mibal.cyrillicFileRenamer.model.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.Lang.UA;
 
@@ -42,7 +42,7 @@ public class Application {
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter();
 
-    private final LetterTranslator letterTranslator = new LetterTranslator();
+    private LetterTranslator letterTranslator;
 
     private static String pathToCatalog;
 
@@ -50,14 +50,12 @@ public class Application {
 
     public Application(final String[] args) {
         dataPrinter.printWelcomeMessage();
-        PathOperator pathOperator = new PathOperator();
         if (args.length != 0) {
             ArgumentParser parser = new ArgumentParser();
             parser.parse(args);
-            pathToCatalog = pathOperator.testPath(parser.getPath());
+            pathToCatalog = testPath(parser.getPath());
             lang = parser.getLang();
         }
-        OS os = OSDetector.detectOS();
         InputReader inputReader = new ConsoleInputReader();
         if (pathToCatalog == null) {
             dataPrinter.printInfoMessage("Enter path to catalog with files:");
@@ -66,7 +64,7 @@ public class Application {
                 dataPrinter.printInfoMessage("");
                 if (userPath.equalsIgnoreCase("/exit"))
                     dataPrinter.exit();
-                String normalUserPath = pathOperator.testPath(userPath);
+                String normalUserPath = testPath(userPath);
                 if (normalUserPath != null) {
                     pathToCatalog = normalUserPath;
                     break;
@@ -74,7 +72,7 @@ public class Application {
                     dataPrinter.printErrorMessage(format("Incorrect path '%s'", userPath));
                     dataPrinter.printInfoMessage(
                             "You must enter path like this: " +
-                            os.getExamplePath());
+                            OSDetector.detectOS().getExamplePath());
                 }
             }
         } else {
@@ -89,6 +87,7 @@ public class Application {
                     dataPrinter.exit();
                 } else if (userLang.equalsIgnoreCase(RU.name()) || userLang.equalsIgnoreCase(UA.name())) {
                     lang = Lang.valueOf(userLang.toUpperCase());
+                    letterTranslator = new LetterTranslator(lang);
                     break;
                 } else {
                     dataPrinter.printInfoMessage(format(
@@ -113,7 +112,7 @@ public class Application {
                 if (oldName.charAt(0) != '.') {
                     String newName;
                     try {
-                        newName = letterTranslator.translateName(oldName, lang);
+                        newName = letterTranslator.translateName(oldName);
                     } catch (IllegalNameException e) {
                         nonProcessedFiles.add(oldName);
                         reasonsOfNonProcessedFiles.add(e.getMessage());
