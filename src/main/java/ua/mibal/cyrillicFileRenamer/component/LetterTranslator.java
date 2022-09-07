@@ -66,7 +66,7 @@ public class LetterTranslator {
                         newLetter = Character.isUpperCase(letter.charAt(0)) ? "Y" : "y";
                     } else if (i != 0 && lang == UA && letter.equalsIgnoreCase("Г") &&
                                String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
-                        newLetter = Character.isUpperCase(letter.charAt(0)) ? "Zgh" : "zgh";
+                        newLetter = Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
                     } else {
                         newLetter = translatorForUsualCases.translate(letter);
                     }
@@ -237,7 +237,7 @@ public class LetterTranslator {
     }
 
     private boolean isGolosnyy(final char ch) {
-        char[] golosniChars = {'Е', 'Є', 'И', 'І', 'Ї', 'О', 'У', 'Ю', 'Я', 'Ы', 'Э'};
+        char[] golosniChars = {'А', 'Е', 'Є', 'И', 'І', 'Ї', 'О', 'У', 'Ю', 'Я', 'Ы', 'Э'};
         for (final char golosniyChar : golosniChars) {
             if (Character.toUpperCase(ch) == golosniyChar) {
                 return true;
