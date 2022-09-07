@@ -18,9 +18,8 @@ package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.model.Lang;
 
-import java.io.File;
-
 import static java.lang.String.format;
+import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testPath;
 import static ua.mibal.cyrillicFileRenamer.model.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.Lang.UA;
 
@@ -35,25 +34,18 @@ public class ArgumentParser {
     private Lang lang;
 
     public void parse(String[] args) {
-        // add more parameters in future
         for (final String arg : args) {
             if (arg.equalsIgnoreCase("this")) {
                 this.path = System.getProperty("user.dir");
             } else if (arg.equalsIgnoreCase(UA.name()) || arg.equalsIgnoreCase(RU.name())) {
                 lang = Lang.valueOf(arg.toUpperCase());
-            } else if (isThisAPath(arg)) {
-                this.path = arg;
             } else {
-                throw new IllegalArgumentException(format("Incorrect argument '%s'.", arg));
+                this.path = testPath(arg);
+                if (path == null) {
+                    throw new IllegalArgumentException(format("Incorrect argument '%s'.", arg));
+                }
             }
         }
-    }
-
-    private boolean isThisAPath(final String arg) {
-        if (!(arg.contains("\\") || arg.contains("/"))) {
-            return false;
-        }
-        return new File(arg).exists();
     }
 
     public String getPath() {
