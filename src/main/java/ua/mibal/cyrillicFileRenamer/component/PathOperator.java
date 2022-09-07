@@ -24,7 +24,10 @@ import java.io.File;
  * @link http://t.me/mibal_ua
  */
 public class PathOperator {
-    public String testPath(final String userPath) {
+    public static String testPath(final String userPath) {
+        if(userPath == null){
+            return null;
+        }
         if (userPath.length() != 0) {
             if (new File(userPath).exists()) {
                 return userPath;
