@@ -37,7 +37,7 @@ public class PathOperator {
 
             if (userPathBuilder1.charAt(0) != '/' && userPathBuilder1.charAt(0) != '\\') {
                 userPathBuilder1.insert(0, '/');
-                userPathBuilder1.insert(0, '\\');
+                userPathBuilder2.insert(0, '\\');
             }
             if (new File(userPathBuilder1.toString()).exists()) {
                 return userPathBuilder1.toString();
