@@ -58,7 +58,15 @@ public class ConsoleDataPrinter implements DataPrinter {
     }
 
     @Override
-    public void printNonProcessedFiles(final String[] nonProcessedFiles, final String[] reasonsOfNonProcessedFiles, File[] directoryFiles, final String[] ignoredFileNames) {
+    public void printNonProcessedFiles(final File[] directoryFiles,
+                                       final String[] ignoredFileNames,
+                                       final String[] notCyrillicSymbols,
+                                       final String[] fileAlreadyRenamed,
+                                       final String[] fileHaveHiddenName,
+                                       final String[] fileHaveAnotherLanguageName,
+                                       final String[] reasonsOfFileHaveAnotherLanguageName,
+                                       final String[] nonProcessedFiles,
+                                       final String[] reasonsOfNonProcessedFiles) {
         int countOfIgnoredFiles = 0;
         for (final File directoryFile : directoryFiles) {
             for (final String ignoredFileName : ignoredFileNames) {
@@ -67,18 +75,41 @@ public class ConsoleDataPrinter implements DataPrinter {
                 }
             }
         }
-        if (nonProcessedFiles.length == directoryFiles.length - countOfIgnoredFiles) {
-            printErrorMessage("\nAll files are not renamed by the next reasons:");
+        if ((notCyrillicSymbols.length +
+             fileAlreadyRenamed.length +
+             fileHaveHiddenName.length +
+             fileHaveAnotherLanguageName.length +
+             nonProcessedFiles.length) == (directoryFiles.length - countOfIgnoredFiles)) {
+            printErrorMessage("\n\033[1mAll files are not renamed by the next reasons:\u001B[0m");
         } else {
             printInfoMessage("\n\033[1mFiles renamed successfully.\u001B[0m");
         }
-        if (nonProcessedFiles.length != 0) {
-            String files = nonProcessedFiles.length == 1 ? "file" : "files";
-            printErrorMessage("The next " + nonProcessedFiles.length + " " + files + " have problems:");
-            for (int i = 0; i < reasonsOfNonProcessedFiles.length; i++) {
-                final String name = nonProcessedFiles[i];
-                final String reason = reasonsOfNonProcessedFiles[i];
-                printErrorMessage((i + 1) + ". " + name + ": " + reason + ";");
+        outListsWithProblems(notCyrillicSymbols, "don't have cyrillic symbols");
+        outListsWithProblems(fileAlreadyRenamed, "already renamed");
+        outListsWithProblems(fileHaveHiddenName, "have hidden name");
+        outListsWithProblems(fileHaveAnotherLanguageName,
+                reasonsOfFileHaveAnotherLanguageName, "have language problem");
+        outListsWithProblems(nonProcessedFiles,
+                reasonsOfNonProcessedFiles, "have other problem");
+    }
+
+    private void outListsWithProblems(final String[] list, final String[] reasonsList, final String message) {
+        if (list.length != 0) {
+            String files = list.length == 1 ? "file" : list.length + " files";
+            printErrorMessage("The next " + files + " " + message + ":");
+            for (int i = 0; i < list.length; i++) {
+                printErrorMessage((i + 1) + ". " + list[i] + ": " + reasonsList[i] + ";");
+            }
+            printErrorMessage("");
+        }
+    }
+
+    private void outListsWithProblems(final String[] list, final String message) {
+        if (list.length != 0) {
+            String files = list.length == 1 ? "file" : list.length + " files";
+            printErrorMessage("The next " + files + " " + message + ":");
+            for (int i = 0; i < list.length; i++) {
+                printErrorMessage((i + 1) + ". " + list[i] + ";");
             }
             printErrorMessage("");
         }
