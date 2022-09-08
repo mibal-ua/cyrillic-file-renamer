@@ -108,7 +108,7 @@ public class Application {
         DynaStringArray reasonsOfNonProcessedFiles = new DynaStringArray();
         for (final File file : directoryFiles) {
             String oldName = file.getName(); //this is name with extension
-            if (!oldName.equals(newDirectory.getName()) && !oldName.equals(".DS_Store")) {
+            if (!(isIgnoreFile(file) || oldName.equals(newDirectory.getName()))) {
                 if (oldName.charAt(0) != '.') {
                     String newName;
                     try {
@@ -137,5 +137,15 @@ public class Application {
         dataPrinter.printNonProcessedFiles(nonProcessedFiles.toArray(),
                 reasonsOfNonProcessedFiles.toArray(), directoryFiles);
         dataPrinter.exit();
+    }
+
+    private boolean isIgnoreFile(final File file) {
+        String name = file.getName();
+        return (name.contains("cyrillic-file-renamer-") ||
+                name.equalsIgnoreCase(".DS_Store") ||
+                name.equalsIgnoreCase("Thumbs.db") ||
+                name.equalsIgnoreCase("$RECYCLE.BIN") ||
+                name.equalsIgnoreCase("desktop.ini")||
+                name.equalsIgnoreCase(".localized"));
     }
 }
