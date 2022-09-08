@@ -19,6 +19,7 @@ package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.Lang;
+import ua.mibal.cyrillicFileRenamer.model.exception.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exception.IllegalNameException;
 
 import static java.lang.String.format;
@@ -38,7 +39,7 @@ public class LetterTranslator {
         this.lang = lang;
     }
 
-    public String translateName(final String oldName) throws IllegalNameException {
+    public String translateName(final String oldName) throws IllegalNameException, IllegalLanguageException {
         String[] result = getSeparateExtensionAndName(oldName);
         String name = result[0];
         String extension = result[1];
@@ -156,10 +157,10 @@ public class LetterTranslator {
     @FunctionalInterface
     private interface Lambda {
 
-        String translate(String ch) throws IllegalNameException;
+        String translate(String ch) throws IllegalNameException, IllegalLanguageException;
     }
 
-    private String convertFromRU(final String ch) throws IllegalNameException {
+    private String convertFromRU(final String ch) throws IllegalLanguageException {
         String result = switch (ch.toUpperCase()) {
             case "Г" -> "G";
             case "Э" -> "E";
@@ -171,7 +172,7 @@ public class LetterTranslator {
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
-    private String convertFromUA(final String ch) throws IllegalNameException {
+    private String convertFromUA(final String ch) throws IllegalLanguageException {
         String result = switch (ch.toUpperCase()) {
             case "Г" -> "H";
             case "Ґ" -> "G";
@@ -183,7 +184,7 @@ public class LetterTranslator {
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
-    private String convertUniversal(final String ch) throws IllegalNameException {
+    private String convertUniversal(final String ch) throws IllegalLanguageException {
         String result = switch (ch.toUpperCase()) {
             case "А" -> "A";
             case "Б" -> "B";
@@ -211,11 +212,8 @@ public class LetterTranslator {
             case "Ь", "'" -> "";
             case "Ю" -> "Iu";
             case "Я" -> "Ia";
-            default -> null;
+            default -> throw new IllegalLanguageException(format("Name has illegal symbol '%s' because language is %s", ch, lang.name()));
         };
-        if (result == null) {
-            throw new IllegalNameException(format("Name has illegal symbol '%s' because language is %s", ch, lang.name()));
-        }
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
