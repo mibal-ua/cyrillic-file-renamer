@@ -59,21 +59,22 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     @Override
     public void printNonProcessedFiles(final String[] nonProcessedFiles, final String[] reasonsOfNonProcessedFiles, File[] directoryFiles, final String[] ignoredFileNames) {
-        int count = 0;
+        int countOfIgnoredFiles = 0;
         for (final File directoryFile : directoryFiles) {
             for (final String ignoredFileName : ignoredFileNames) {
                 if (directoryFile.getName().equalsIgnoreCase(ignoredFileName)) {
-                    count++;
+                    countOfIgnoredFiles++;
                 }
             }
         }
-        if (nonProcessedFiles.length == directoryFiles.length - count) {
+        if (nonProcessedFiles.length == directoryFiles.length - countOfIgnoredFiles) {
             printErrorMessage("\nAll files are not renamed by the next reasons:");
         } else {
             printInfoMessage("\n\033[1mFiles renamed successfully.\u001B[0m");
         }
         if (nonProcessedFiles.length != 0) {
-            printErrorMessage("The next " + nonProcessedFiles.length + " files have problems:");
+            String files = nonProcessedFiles.length == 1 ? "file" : "files";
+            printErrorMessage("The next " + nonProcessedFiles.length + " " + files + " have problems:");
             for (int i = 0; i < reasonsOfNonProcessedFiles.length; i++) {
                 final String name = nonProcessedFiles[i];
                 final String reason = reasonsOfNonProcessedFiles[i];
