@@ -106,9 +106,12 @@ public class Application {
         newDirectory.mkdir();
         DynaStringArray nonProcessedFiles = new DynaStringArray();
         DynaStringArray reasonsOfNonProcessedFiles = new DynaStringArray();
+        String[] ignoredFileNames = {newDirectory.getName(), ".DS_Store",
+                "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", ".localized"
+        };
         for (final File file : directoryFiles) {
             String oldName = file.getName(); //this is name with extension
-            if (!(isIgnoreFile(file) || oldName.equals(newDirectory.getName()))) {
+            if (!isIgnoreFile(file, ignoredFileNames)) {
                 if (oldName.charAt(0) != '.') {
                     String newName;
                     try {
@@ -135,17 +138,17 @@ public class Application {
             }
         }
         dataPrinter.printNonProcessedFiles(nonProcessedFiles.toArray(),
-                reasonsOfNonProcessedFiles.toArray(), directoryFiles);
+                reasonsOfNonProcessedFiles.toArray(), directoryFiles, ignoredFileNames);
         dataPrinter.exit();
     }
 
-    private boolean isIgnoreFile(final File file) {
+    private boolean isIgnoreFile(final File file, final String[] ignoredFileNames) {
         String name = file.getName();
-        return (name.contains("cyrillic-file-renamer-") ||
-                name.equalsIgnoreCase(".DS_Store") ||
-                name.equalsIgnoreCase("Thumbs.db") ||
-                name.equalsIgnoreCase("$RECYCLE.BIN") ||
-                name.equalsIgnoreCase("desktop.ini")||
-                name.equalsIgnoreCase(".localized"));
+        for (final String ignoredFileName : ignoredFileNames) {
+            if (name.equalsIgnoreCase(ignoredFileName)) {
+                return true;
+            }
+        }
+        return name.contains("cyrillic-file-renamer-");
     }
 }
