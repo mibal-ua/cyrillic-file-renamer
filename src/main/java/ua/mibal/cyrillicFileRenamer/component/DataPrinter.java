@@ -30,7 +30,15 @@ public interface DataPrinter {
 
     void printWelcomeMessage();
 
-    void printNonProcessedFiles(String[] nonProcessedFiles, String[] reasonsOfNonProcessedFiles, File[] directoryFiles, final String[] ignoredFileNames);
+    void printNonProcessedFiles(final File[] directoryFiles,
+                                final String[] ignoredFileNames,
+                                final String[] notCyrillicSymbols,
+                                final String[] fileAlreadyRenamed,
+                                final String[] fileHaveHiddenName,
+                                final String[] fileHaveAnotherLanguageName,
+                                final String[] reasonsOfFileHaveAnotherLanguageName,
+                                final String[] nonProcessedFiles,
+                                final String[] reasonsOfNonProcessedFiles);
 
     void exit();
 }
