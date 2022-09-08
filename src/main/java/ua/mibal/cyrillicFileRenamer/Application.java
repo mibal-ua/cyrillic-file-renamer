@@ -21,6 +21,7 @@ import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.Lang;
+import ua.mibal.cyrillicFileRenamer.model.exception.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exception.IllegalNameException;
 
 import java.io.File;
@@ -106,6 +107,11 @@ public class Application {
         newDirectory.mkdir();
         DynaStringArray nonProcessedFiles = new DynaStringArray();
         DynaStringArray reasonsOfNonProcessedFiles = new DynaStringArray();
+        DynaStringArray notCyrillicSymbols = new DynaStringArray();
+        DynaStringArray fileAlreadyRenamed = new DynaStringArray();
+        DynaStringArray fileHaveHiddenName = new DynaStringArray();
+        DynaStringArray fileHaveAnotherLanguageName = new DynaStringArray();
+        DynaStringArray reasonsOfFileHaveAnotherLanguageName = new DynaStringArray();
         String[] ignoredFileNames = {newDirectory.getName(), ".DS_Store",
                 "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", ".localized"
         };
@@ -113,32 +119,39 @@ public class Application {
             String oldName = file.getName(); //this is name with extension
             if (!isIgnoreFile(file, ignoredFileNames)) {
                 if (oldName.charAt(0) != '.') {
-                    String newName;
+                    String newName = null;
                     try {
                         newName = letterTranslator.translateName(oldName);
                     } catch (IllegalNameException e) {
-                        nonProcessedFiles.add(oldName);
-                        reasonsOfNonProcessedFiles.add(e.getMessage());
+                        notCyrillicSymbols.add(oldName);
                         continue;
+                    } catch (IllegalLanguageException e) {
+                        fileHaveAnotherLanguageName.add(oldName);
+                        reasonsOfFileHaveAnotherLanguageName.add(e.getMessage());
                     }
                     try {
                         Files.copy(file.toPath(), Path.of((newDirectory.toPath() + "/" + newName)));
                     } catch (IOException e) {
-                        nonProcessedFiles.add(oldName);
                         if (e.getClass() == FileAlreadyExistsException.class) {
-                            reasonsOfNonProcessedFiles.add("File already renamed");
+                            fileAlreadyRenamed.add(oldName);
                         } else {
+                            nonProcessedFiles.add(oldName);
                             reasonsOfNonProcessedFiles.add(e.getClass().getSimpleName());
                         }
                     }
                 } else {
-                    nonProcessedFiles.add(oldName);
-                    reasonsOfNonProcessedFiles.add("File have hidden name");
+                    fileHaveHiddenName.add(oldName);
                 }
             }
         }
-        dataPrinter.printNonProcessedFiles(nonProcessedFiles.toArray(),
-                reasonsOfNonProcessedFiles.toArray(), directoryFiles, ignoredFileNames);
+        dataPrinter.printNonProcessedFiles(directoryFiles, ignoredFileNames,
+                notCyrillicSymbols.toArray(),
+                fileAlreadyRenamed.toArray(),
+                fileHaveHiddenName.toArray(),
+                fileHaveAnotherLanguageName.toArray(),
+                reasonsOfFileHaveAnotherLanguageName.toArray(),
+                nonProcessedFiles.toArray(),
+                reasonsOfNonProcessedFiles.toArray());
         dataPrinter.exit();
     }
 
