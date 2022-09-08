@@ -15,15 +15,15 @@
  *
  */
 
-package ua.mibal.cyrillicFileRenamer.model.exception;
+package ua.mibal.cyrillicFileRenamer.model.exceptions;
 
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public class IllegalLanguageException extends Exception {
+public class IllegalNameException extends Exception{
 
-    public IllegalLanguageException(final String message) {
+    public IllegalNameException(final String message) {
         super(message);
     }
 }

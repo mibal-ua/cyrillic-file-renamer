@@ -21,8 +21,8 @@ import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.Lang;
-import ua.mibal.cyrillicFileRenamer.model.exception.IllegalLanguageException;
-import ua.mibal.cyrillicFileRenamer.model.exception.IllegalNameException;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 
 import java.io.File;
 import java.io.IOException;
