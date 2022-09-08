@@ -42,7 +42,7 @@ public class Application {
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter();
 
-    private LetterTranslator letterTranslator;
+    private final LetterTranslator letterTranslator;
 
     private static String pathToCatalog;
 
@@ -87,7 +87,6 @@ public class Application {
                     dataPrinter.exit();
                 } else if (userLang.equalsIgnoreCase(RU.name()) || userLang.equalsIgnoreCase(UA.name())) {
                     lang = Lang.valueOf(userLang.toUpperCase());
-                    letterTranslator = new LetterTranslator(lang);
                     break;
                 } else {
                     dataPrinter.printInfoMessage(format(
@@ -98,6 +97,7 @@ public class Application {
         } else {
             dataPrinter.printInfoMessage("Language: " + lang.name());
         }
+        letterTranslator = new LetterTranslator(lang);
     }
 
     public void start() {
