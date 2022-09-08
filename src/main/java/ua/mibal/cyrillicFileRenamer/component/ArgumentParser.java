@@ -36,7 +36,7 @@ public class ArgumentParser {
     public void parse(String[] args) {
         for (final String arg : args) {
             if (arg.equalsIgnoreCase("this")) {
-                this.path = System.getProperty("user.dir");
+                this.path = PathOperator.getParentFolder(System.getProperty("user.dir"));
             } else if (arg.equalsIgnoreCase(UA.name()) || arg.equalsIgnoreCase(RU.name())) {
                 lang = Lang.valueOf(arg.toUpperCase());
             } else {
