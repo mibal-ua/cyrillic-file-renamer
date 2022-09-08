@@ -83,7 +83,7 @@ public class LetterTranslator {
             newName.append(word);
         }
         if (newName.toString().equals(name)) {
-            throw new IllegalNameException(format("File '%s' already renamed.", name));
+            throw new IllegalNameException("File don't have cyrillic symbols.");
         }
         return newName.append(extension).toString();
     }
