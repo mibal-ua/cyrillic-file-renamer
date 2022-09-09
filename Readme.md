@@ -11,16 +11,16 @@ mvn clean package
 ```
 
 - Use the following archives:
-    - `target/cyrillic-file-renamer-${project.version}-windows-with-jre.zip` for Windows
-    - `target/cyrillic-file-renamer-${project.version}-macos-with-jre.tar.gz` for MacOS
-    - `target/cyrillic-file-renamer-${project.version}-linux-with-jre.tar.gz` for Linux
+    - `target/cyrillic-file-renamer-${project.version}-windows.zip` for Windows
+    - `target/cyrillic-file-renamer-${project.version}-macos.tar.gz` for MacOS
+    - `target/cyrillic-file-renamer-${project.version}-linux.tar.gz` for Linux
 
 ## Run instructions
 
 - Unzip the Cyrillic file renamer distribution:
-    - Unzip `cyrillic-file-renamer-${project.version}-windows-with-jre.zip` for Windows;
-    - Unzip `cyrillic-file-renamer-${project.version}-macos-with-jre.tar.gz` for MacOS;
-    - Unzip `cyrillic-file-renamer-${project.version}-linux-with-jre.tar.gz` for Linux;
+    - Unzip `cyrillic-file-renamer-${project.version}-windows.zip` for Windows;
+    - Unzip `cyrillic-file-renamer-${project.version}-macos.tar.gz` for MacOS;
+    - Unzip `cyrillic-file-renamer-${project.version}-linux.tar.gz` for Linux;
 - Go to unzipped directory;
 - Run the app by double-click on the start script:
     - `start.cmd` for Windows;
