@@ -75,16 +75,19 @@ public class ConsoleDataPrinter implements DataPrinter {
                 }
             }
         }
-        if ((notCyrillicSymbols.length +
-             fileAlreadyRenamed.length +
-             fileHaveHiddenName.length +
-             fileHaveAnotherLanguageName.length +
-             nonProcessedFiles.length) == (directoryFiles.length - countOfIgnoredFiles)) {
+        int countOfAllFilesInDirectory = (directoryFiles.length - countOfIgnoredFiles);
+        int countOfExceptionNames = (notCyrillicSymbols.length +
+                                        fileAlreadyRenamed.length +
+                                        fileHaveHiddenName.length +
+                                        fileHaveAnotherLanguageName.length +
+                                        nonProcessedFiles.length);
+
+        if (countOfExceptionNames == countOfAllFilesInDirectory){
             printErrorMessage("\n\033[1mAll files are not renamed by the next reasons:\u001B[0m");
-        } else if ((directoryFiles.length - countOfIgnoredFiles) == 0){
+        } else if (countOfExceptionNames == 0) {
             printInfoMessage("\n\033[1mFiles renamed successfully.\u001B[0m");
         } else {
-            printInfoMessage("\n\033[1mFiles renamed\u001B[0m, but exists a problems");
+            printInfoMessage("\n\033[1mFiles renamed\u001B[0m, but exists a problems.");
         }
         outListsWithProblems(fileAlreadyRenamed, "already renamed");
         outListsWithProblems(fileHaveHiddenName, "have hidden name");
