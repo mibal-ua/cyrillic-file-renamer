@@ -81,12 +81,14 @@ public class ConsoleDataPrinter implements DataPrinter {
              fileHaveAnotherLanguageName.length +
              nonProcessedFiles.length) == (directoryFiles.length - countOfIgnoredFiles)) {
             printErrorMessage("\n\033[1mAll files are not renamed by the next reasons:\u001B[0m");
-        } else {
+        } else if ((directoryFiles.length - countOfIgnoredFiles) == 0){
             printInfoMessage("\n\033[1mFiles renamed successfully.\u001B[0m");
+        } else {
+            printInfoMessage("\n\033[1mFiles renamed\u001B[0m, but exists a problems");
         }
-        outListsWithProblems(notCyrillicSymbols, "don't have cyrillic symbols");
         outListsWithProblems(fileAlreadyRenamed, "already renamed");
         outListsWithProblems(fileHaveHiddenName, "have hidden name");
+        outListsWithProblems(notCyrillicSymbols, "don't have cyrillic symbols");
         outListsWithProblems(fileHaveAnotherLanguageName,
                 reasonsOfFileHaveAnotherLanguageName, "have language problem");
         outListsWithProblems(nonProcessedFiles,
