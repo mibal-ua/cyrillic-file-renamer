@@ -52,5 +52,12 @@
             <directory>.tmp/jre-windows</directory>
             <outputDirectory>jre</outputDirectory>
         </fileSet>
+        <fileSet>
+            <directory/>
+            <outputDirectory/>
+            <includes>
+                <include>Readme.txt</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>

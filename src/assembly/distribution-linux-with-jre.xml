@@ -66,5 +66,12 @@
                 <exclude>bin/keytool</exclude>
             </excludes>
         </fileSet>
+        <fileSet>
+            <directory/>
+            <outputDirectory/>
+            <includes>
+                <include>Readme.txt</include>
+            </includes>
+        </fileSet>
     </fileSets>
 </assembly>
