@@ -21,6 +21,7 @@ import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
+import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 
 import static java.lang.String.format;
 import static ua.mibal.cyrillicFileRenamer.model.Border.*;
@@ -35,8 +36,11 @@ public class LetterTranslator {
 
     private final Lang lang;
 
-    public LetterTranslator(final Lang lang) {
+    private final LetterStandard letterStandard;
+
+    public LetterTranslator(final Lang lang, final LetterStandard letterStandard) {
         this.lang = lang;
+        this.letterStandard = letterStandard;
     }
 
     public String translateName(final String oldName) throws IllegalNameException, IllegalLanguageException {
@@ -47,6 +51,11 @@ public class LetterTranslator {
         Lambda translatorForUsualCases = switch (lang) {
             case RU -> this::convertFromRU;
             case UA -> this::convertFromUA;
+        };
+        CheckLambda checker = switch (letterStandard) {
+            case OFFICIAL -> (word, index) -> false;
+            case EXTENDED -> (word, index) ->
+                    (isGolosnyy(word.charAt(index - 1)) || isZnakMyakshenniaOrElse(word.charAt(index - 1)));
         };
         DynaStringArray newNameArray = new DynaStringArray(words.length);
         for (final String word : words) {
@@ -60,7 +69,7 @@ public class LetterTranslator {
                     if (isSpecialLetter(letter)) {
                         if (i == 0) {
                             newLetter = translateSpecialSymbols(letter);
-                        } else if (isGolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1))) {
+                        } else if (checker.checkOut(word, i)) {
                             newLetter = translateSpecialSymbols(letter);
                         } else {
                             newLetter = translatorForUsualCases.translate(letter);
@@ -158,6 +167,11 @@ public class LetterTranslator {
     private interface Lambda {
 
         String translate(String ch) throws IllegalNameException, IllegalLanguageException;
+    }
+    @FunctionalInterface
+    private interface CheckLambda {
+
+        boolean checkOut(String word, int index);
     }
 
     private String convertFromRU(final String ch) throws IllegalLanguageException {
