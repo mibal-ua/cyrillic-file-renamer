@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package ua.mibal.cyrillicFileRenamer.model;
+package ua.mibal.cyrillicFileRenamer.model.programMode;
 
 /**
  * @author Michael Balakhon

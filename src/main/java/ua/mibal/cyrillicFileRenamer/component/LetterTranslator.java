@@ -18,14 +18,14 @@
 package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
-import ua.mibal.cyrillicFileRenamer.model.Lang;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
+import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 
 import static java.lang.String.format;
 import static ua.mibal.cyrillicFileRenamer.model.Border.*;
-import static ua.mibal.cyrillicFileRenamer.model.Lang.RU;
-import static ua.mibal.cyrillicFileRenamer.model.Lang.UA;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 
 /**
  * @author Michael Balakhon

@@ -17,10 +17,10 @@
 
 package ua.mibal.cyrillicFileRenamer.component;
 
-import ua.mibal.cyrillicFileRenamer.model.OS;
+import ua.mibal.cyrillicFileRenamer.model.programMode.OS;
 
-import static ua.mibal.cyrillicFileRenamer.model.OS.UNIX;
-import static ua.mibal.cyrillicFileRenamer.model.OS.WINDOWS;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.OS.UNIX;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.OS.WINDOWS;
 
 /**
  * @author Michael Balakhon
