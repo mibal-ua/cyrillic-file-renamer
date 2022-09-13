@@ -17,11 +17,14 @@
 package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
+import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 
 import static java.lang.String.format;
 import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testPath;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.OFFICIAL;
 
 /**
  * @author Michael Balakhon
@@ -33,19 +36,27 @@ public class ArgumentParser {
 
     private Lang lang;
 
+    private LetterStandard letterStandard;
+
     public void parse(String[] args) {
         for (final String arg : args) {
             if (arg.equalsIgnoreCase("this")) {
                 this.path = PathOperator.getParentFolder(System.getProperty("user.dir"));
             } else if (arg.equalsIgnoreCase(UA.name()) || arg.equalsIgnoreCase(RU.name())) {
                 lang = Lang.valueOf(arg.toUpperCase());
-            } else {
+            } else if (arg.equalsIgnoreCase(OFFICIAL.name()) || arg.equalsIgnoreCase(EXTENDED.name())) {
+                letterStandard = LetterStandard.valueOf(arg.toUpperCase());
+            }else {
                 this.path = testPath(arg);
                 if (path == null) {
                     throw new IllegalArgumentException(format("Incorrect argument '%s'.", arg));
                 }
             }
         }
+    }
+
+    public LetterStandard getLetterStandard() {
+        return letterStandard;
     }
 
     public String getPath() {
