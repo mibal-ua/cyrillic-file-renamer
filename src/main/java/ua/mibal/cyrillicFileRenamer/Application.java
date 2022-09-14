@@ -82,11 +82,12 @@ public class Application {
                             "Enter path like this: " +
                             OSDetector.detectOS().getExamplePath());
                 }
-            }
+            } dataPrinter.printInfoMessage("Path: " + pathToCatalog);
         } else {
             dataPrinter.printInfoMessage("Path: " + pathToCatalog);
         }
         if (lang == null) {
+            dataPrinter.printInfoMessage("");
             while (true) {
                 dataPrinter.printInfoMessage("Enter language of files: 'RU' or 'UA'");
                 String userLang = inputReader.read().trim();
@@ -102,12 +103,13 @@ public class Application {
                             "You enter unsupported language '%s'." + '\n', userLang
                     ));
                 }
-            }
+            } dataPrinter.printInfoMessage("Language: " + lang.name());
         } else {
             dataPrinter.printInfoMessage("Language: " + lang.name());
         }
         if (letterStandard == null) {
             boolean infoIsExists = false;
+            dataPrinter.printInfoMessage("");
             while (true) {
                 dataPrinter.printInfoMessage("Enter standard of transliteration: 'OFFICIAL' or 'EXTENDED'");
                 if (!infoIsExists)
@@ -118,8 +120,10 @@ public class Application {
                 if (userStandard.equalsIgnoreCase("/exit")) {
                     dataPrinter.exit();
                 } else if (userStandard.equalsIgnoreCase("/info")) {
-                    dataPrinter.printInfoMessage("The OFFICIAL transliteration mode is used to transliterate the names of people and places.\n" +
-                                                 "EXTENDED mode is best used for renaming files, as it uses all the word sounding rules for more accurate transliteration.");
+                    dataPrinter.printInfoMessage("""
+                            \033[1mOFFICIAL\u001B[0m transliteration mode is used to transliterate the names of people and places by goverment standards.
+                            \033[1mEXTENDED\u001B[0m mode uses all word sound rules for more accurate transliteration.
+                            """);
                     infoIsExists = true;
                 } else if (userStandard.equalsIgnoreCase(OFFICIAL.name()) ||
                            userStandard.equalsIgnoreCase(EXTENDED.name())) {
@@ -130,7 +134,7 @@ public class Application {
                             "You enter unsupported letter standard '%s'." + '\n', userStandard
                     ));
                 }
-            }
+            } dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
         } else {
             dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
         }
@@ -174,7 +178,7 @@ public class Application {
             String oldName = file.getName(); //this is name with extension
             if (!isIgnoreFile(file, ignoredFileNames)) {
                 if (oldName.charAt(0) != '.') {
-                    String newName = null;
+                    String newName;
                     try {
                         newName = letterTranslator.translateName(oldName);
                     } catch (IllegalNameException e) {
@@ -183,6 +187,7 @@ public class Application {
                     } catch (IllegalLanguageException e) {
                         fileHaveAnotherLanguageName.add(oldName);
                         reasonsOfFileHaveAnotherLanguageName.add(e.getMessage());
+                        continue;
                     }
                     try {
                         Files.copy(file.toPath(), Path.of((newDirectory.toPath() + "/" + newName)));
