@@ -31,7 +31,7 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public class LetterTranslator {
+public abstract class LetterTranslator {
 
     public String translateName(final String oldName) throws IllegalNameException, IllegalLanguageException {
         String[] result = getSeparateExtensionAndName(oldName);
