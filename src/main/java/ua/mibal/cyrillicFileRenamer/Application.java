@@ -19,10 +19,12 @@ package ua.mibal.cyrillicFileRenamer;
 import ua.mibal.cyrillicFileRenamer.component.*;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
+import ua.mibal.cyrillicFileRenamer.component.console.translators.*;
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
+import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +36,8 @@ import static java.lang.String.format;
 import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testPath;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.OFFICIAL;
 
 /**
  * @author Michael Balakhon
@@ -43,11 +47,13 @@ public class Application {
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter();
 
-    private final LetterTranslator letterTranslator;
+    private LetterTranslator letterTranslator;
 
     private static String pathToCatalog;
 
     private static Lang lang;
+
+    private static LetterStandard letterStandard;
 
     public Application(final String[] args) {
         dataPrinter.printWelcomeMessage();
@@ -56,6 +62,7 @@ public class Application {
             parser.parse(args);
             pathToCatalog = testPath(parser.getPath());
             lang = parser.getLang();
+            letterStandard = parser.getLetterStandard();
         }
         InputReader inputReader = new ConsoleInputReader();
         if (pathToCatalog == null) {
@@ -70,9 +77,9 @@ public class Application {
                     pathToCatalog = normalUserPath;
                     break;
                 } else {
-                    dataPrinter.printErrorMessage(format("Incorrect path '%s'", userPath));
+                    dataPrinter.printErrorMessage(format("You enter incorrect path '%s'.", userPath));
                     dataPrinter.printInfoMessage(
-                            "You must enter path like this: " +
+                            "Enter path like this: " +
                             OSDetector.detectOS().getExamplePath());
                 }
             }
@@ -86,7 +93,8 @@ public class Application {
                 dataPrinter.printInfoMessage("");
                 if (userLang.equalsIgnoreCase("/exit")) {
                     dataPrinter.exit();
-                } else if (userLang.equalsIgnoreCase(RU.name()) || userLang.equalsIgnoreCase(UA.name())) {
+                } else if (userLang.equalsIgnoreCase(RU.name()) ||
+                           userLang.equalsIgnoreCase(UA.name())) {
                     lang = Lang.valueOf(userLang.toUpperCase());
                     break;
                 } else {
@@ -98,7 +106,54 @@ public class Application {
         } else {
             dataPrinter.printInfoMessage("Language: " + lang.name());
         }
-        letterTranslator = new LetterTranslator(lang);
+        if (letterStandard == null) {
+            boolean infoIsExists = false;
+            while (true) {
+                dataPrinter.printInfoMessage("Enter standard of transliteration: 'OFFICIAL' or 'EXTENDED'");
+                if (!infoIsExists)
+                    dataPrinter.printInfoMessage("For more information enter '/info'");
+
+                String userStandard = inputReader.read().trim();
+                dataPrinter.printInfoMessage("");
+                if (userStandard.equalsIgnoreCase("/exit")) {
+                    dataPrinter.exit();
+                } else if (userStandard.equalsIgnoreCase("/info")) {
+                    dataPrinter.printInfoMessage("The OFFICIAL transliteration mode is used to transliterate the names of people and places.\n" +
+                                                 "EXTENDED mode is best used for renaming files, as it uses all the word sounding rules for more accurate transliteration.");
+                    infoIsExists = true;
+                } else if (userStandard.equalsIgnoreCase(OFFICIAL.name()) ||
+                           userStandard.equalsIgnoreCase(EXTENDED.name())) {
+                    letterStandard = LetterStandard.valueOf(userStandard.toUpperCase());
+                    break;
+                } else {
+                    dataPrinter.printInfoMessage(format(
+                            "You enter unsupported letter standard '%s'." + '\n', userStandard
+                    ));
+                }
+            }
+        } else {
+            dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
+        }
+        letterTranslator = null;
+        switch (lang){
+            case UA -> {
+                if (letterStandard == OFFICIAL) {
+                    letterTranslator = new UaOfficialLetterTranslator();
+                } else if (letterStandard == EXTENDED) {
+                    letterTranslator = new UaExtendedLetterTranslator();
+                }
+            }
+            case RU -> {
+                if (letterStandard == OFFICIAL) {
+                    letterTranslator = new ruOfficialLetterTranslator();
+                } else if (letterStandard == EXTENDED) {
+                    letterTranslator = new ruExtendedLetterTranslator();
+                }
+            }
+        }
+        if (letterTranslator == null) dataPrinter.printErrorMessage(format(
+                "Letter translator component is null because language is '%s' and letter standard is '%s'.",
+                lang.name(), letterStandard.name()));
     }
 
     public void start() {
