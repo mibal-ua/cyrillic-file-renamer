@@ -15,13 +15,12 @@
  *
  */
 
-package ua.mibal.cyrillicFileRenamer.component;
+package ua.mibal.cyrillicFileRenamer.component.console.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
-import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 
 import static java.lang.String.format;
 import static ua.mibal.cyrillicFileRenamer.model.Border.*;
@@ -34,55 +33,21 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
  */
 public class LetterTranslator {
 
-    private final Lang lang;
-
-    private final LetterStandard letterStandard;
-
-    public LetterTranslator(final Lang lang, final LetterStandard letterStandard) {
-        this.lang = lang;
-        this.letterStandard = letterStandard;
-    }
-
     public String translateName(final String oldName) throws IllegalNameException, IllegalLanguageException {
         String[] result = getSeparateExtensionAndName(oldName);
         String name = result[0];
         String extension = result[1];
         String[] words = getWordsFromName(name);
-        Lambda translatorForUsualCases = switch (lang) {
-            case RU -> this::convertFromRU;
-            case UA -> this::convertFromUA;
-        };
-        CheckLambda checker = switch (letterStandard) {
-            case OFFICIAL -> (word, index) -> false;
-            case EXTENDED -> (word, index) ->
-                    (isGolosnyy(word.charAt(index - 1)) || isZnakMyakshenniaOrElse(word.charAt(index - 1)));
-        };
         DynaStringArray newNameArray = new DynaStringArray(words.length);
         for (final String word : words) {
             StringBuilder newWord = new StringBuilder();
             String newLetter;
             for (int i = 0; i < word.length(); i++) {
                 String letter = String.valueOf(word.charAt(i));
-                if (!charIsCyrillic(letter)) { // checking if letter is latin
+                if (!charIsCyrillic(letter)) {
                     newLetter = letter;
                 } else {
-                    if (isSpecialLetter(letter)) {
-                        if (i == 0) {
-                            newLetter = translateSpecialSymbols(letter);
-                        } else if (checker.checkOut(word, i)) {
-                            newLetter = translateSpecialSymbols(letter);
-                        } else {
-                            newLetter = translatorForUsualCases.translate(letter);
-                        }
-                    } else if (i != 0 && lang == RU && letter.equalsIgnoreCase("И") &&
-                               isShyplyachyy(word.charAt(i - 1))) {
-                        newLetter = Character.isUpperCase(letter.charAt(0)) ? "Y" : "y";
-                    } else if (i != 0 && lang == UA && letter.equalsIgnoreCase("Г") &&
-                               String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
-                        newLetter = Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
-                    } else {
-                        newLetter = translatorForUsualCases.translate(letter);
-                    }
+                    newLetter = translate(word, i, letter);
                 }
                 newWord.append(newLetter);
             }
@@ -98,7 +63,11 @@ public class LetterTranslator {
         return newName.append(extension).toString();
     }
 
-    private boolean isSpecialLetter(final String letter) {
+    protected String translate(final String word, final int i, final String letter) throws IllegalNameException, IllegalLanguageException {
+        return null;
+    }
+
+    protected boolean isSpecialLetter(final String letter) {
         return (letter.equalsIgnoreCase("Є") ||
                 letter.equalsIgnoreCase("Ї") ||
                 letter.equalsIgnoreCase("Е") ||
@@ -163,42 +132,33 @@ public class LetterTranslator {
         return dynaResult.toArray();
     }
 
-    @FunctionalInterface
-    private interface Lambda {
-
-        String translate(String ch) throws IllegalNameException, IllegalLanguageException;
-    }
-    @FunctionalInterface
-    private interface CheckLambda {
-
-        boolean checkOut(String word, int index);
-    }
-
-    private String convertFromRU(final String ch) throws IllegalLanguageException {
+    protected String convertFromru(final String ch) throws IllegalLanguageException {
         String result = switch (ch.toUpperCase()) {
             case "Г" -> "G";
             case "Э" -> "E";
             case "Ё" -> "Yo";
             case "И" -> "I";
             case "Й" -> "Y";
-            default -> convertUniversal(ch);
+            case "Ы" -> "Y";
+
+            default -> convertUniversal(ch, RU);
         };
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
-    private String convertFromUA(final String ch) throws IllegalLanguageException {
+    protected String convertFromUA(final String ch) throws IllegalLanguageException {
         String result = switch (ch.toUpperCase()) {
             case "Г" -> "H";
             case "Ґ" -> "G";
             case "Є" -> "Ie";
             case "И" -> "Y";
             case "І", "Ї", "Й" -> "I";
-            default -> convertUniversal(ch);
+            default -> convertUniversal(ch, UA);
         };
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
-    private String convertUniversal(final String ch) throws IllegalLanguageException {
+    protected String convertUniversal(final String ch, final Lang lang) throws IllegalLanguageException {
         String result = switch (ch.toUpperCase()) {
             case "А" -> "A";
             case "Б" -> "B";
@@ -231,18 +191,15 @@ public class LetterTranslator {
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
-    private String translateSpecialSymbols(final String ch) throws IllegalNameException {
+    protected String translateSpecialSymbols(final String ch, final Lang lang) throws IllegalNameException {
         String result = switch (ch.toUpperCase()) {
             case "Е", "Є" -> "Ye";
             case "Ї" -> "Yi";
             case "Й" -> "Y";
             case "Ю" -> "Yu";
             case "Я" -> "Ya";
-            default -> null;
+            default -> throw new IllegalNameException(format("Name has illegal symbol '%s' because language is %s", ch, lang.name()));
         };
-        if (result == null) {
-            throw new IllegalNameException(format("Name has illegal symbol '%s' because language is %s", ch, lang.name()));
-        }
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
@@ -251,7 +208,7 @@ public class LetterTranslator {
                ch.equals("'") || ch.equals("’");
     }
 
-    private boolean isGolosnyy(final char ch) {
+    protected boolean isGolosnyy(final char ch) {
         char[] golosniChars = {'А', 'Е', 'Є', 'И', 'І', 'Ї', 'О', 'У', 'Ю', 'Я', 'Ы', 'Э'};
         for (final char golosniyChar : golosniChars) {
             if (Character.toUpperCase(ch) == golosniyChar) {
@@ -261,11 +218,11 @@ public class LetterTranslator {
         return false;
     }
 
-    private boolean isZnakMyakshenniaOrElse(final char ch) {
+    protected boolean isZnakMyakshenniaOrElse(final char ch) {
         return (ch == '\'' || ch == '’' || Character.toUpperCase(ch) == 'Ь' || Character.toUpperCase(ch) == 'Ъ');
     }
 
-    private boolean isShyplyachyy(final char charAt) {
+    protected boolean isShyplyachyy(final char charAt) {
         char ch = Character.toUpperCase(charAt);
         return (ch == 'Ж' || ch == 'Ш' || ch == 'Щ');
     }
