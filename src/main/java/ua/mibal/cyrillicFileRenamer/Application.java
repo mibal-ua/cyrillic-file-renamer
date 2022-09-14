@@ -19,7 +19,7 @@ package ua.mibal.cyrillicFileRenamer;
 import ua.mibal.cyrillicFileRenamer.component.*;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
-import ua.mibal.cyrillicFileRenamer.component.console.translators.*;
+import ua.mibal.cyrillicFileRenamer.component.translators.*;
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;

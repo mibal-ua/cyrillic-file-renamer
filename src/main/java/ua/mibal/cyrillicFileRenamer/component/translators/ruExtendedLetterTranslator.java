@@ -15,32 +15,38 @@
  *
  */
 
-package ua.mibal.cyrillicFileRenamer.component.console.translators;
+package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public class UaOfficialLetterTranslator extends LetterTranslator {
+public class ruExtendedLetterTranslator extends LetterTranslator {
 
-    public UaOfficialLetterTranslator() {
+    public ruExtendedLetterTranslator() {
         super();
     }
 
     @Override
     protected String translate(final String word, final int i, final String letter) throws IllegalNameException, IllegalLanguageException {
-        if (i == 0 && isSpecialLetter(letter)) {
-            return translateSpecialSymbols(letter, UA);
-        } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
-                   String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
-            return Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
+        if (isSpecialLetter(letter)) { // if lang ru and official - return false
+            if (i == 0) {
+                return translateSpecialSymbols(letter, RU);
+            } else if (isGolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1))) {
+                return translateSpecialSymbols(letter, RU);
+            } else {
+                return convertFromru(letter);
+            }
+        } else if (i != 0 && letter.equalsIgnoreCase("И") &&
+                   isShyplyachyy(word.charAt(i - 1))) {
+            return Character.isUpperCase(letter.charAt(0)) ? "Y" : "y";
         } else {
-            return convertFromUA(letter);
+            return convertFromru(letter);
         }
     }
 }

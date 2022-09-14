@@ -15,7 +15,7 @@
  *
  */
 
-package ua.mibal.cyrillicFileRenamer.component.console.translators;
+package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
@@ -26,18 +26,16 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public class UaExtendedLetterTranslator extends LetterTranslator {
+public class UaOfficialLetterTranslator extends LetterTranslator {
+
+    public UaOfficialLetterTranslator() {
+        super();
+    }
 
     @Override
     protected String translate(final String word, final int i, final String letter) throws IllegalNameException, IllegalLanguageException {
-        if (isSpecialLetter(letter)) {
-            if (i == 0) {
-                return translateSpecialSymbols(letter, UA);
-            } else if ((isGolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1)))) {
-                return translateSpecialSymbols(letter, UA);
-            } else {
-                return convertFromUA(letter);
-            }
+        if (i == 0 && isSpecialLetter(letter)) {
+            return translateSpecialSymbols(letter, UA);
         } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
                    String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
             return Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";

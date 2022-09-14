@@ -15,7 +15,7 @@
  *
  */
 
-package ua.mibal.cyrillicFileRenamer.component.console.translators;
+package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
