@@ -17,11 +17,13 @@
 
 package ua.mibal.cyrillicFileRenamer.component;
 
+import java.io.File;
+
 /**
  * @author Mykhailo Balakhon
  * @link t.me/mibal_ua
  */
 public interface FileManager {
 
-    void getFilesFromDirectory(String pathToCatalog);
+    File[] getFilesFromDirectory(String pathToCatalog);
 }
