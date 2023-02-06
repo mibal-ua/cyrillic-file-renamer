@@ -17,43 +17,11 @@
 
 package ua.mibal.cyrillicFileRenamer.component;
 
-import java.io.File;
-
-import static java.lang.String.format;
-
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link t.me/mibal_ua
  */
-public class FileManager {
-    public static File[] getFilesFromDirectory(final String pathToCatalog, final DataPrinter dataPrinter) {
-        File directory = new File(pathToCatalog);
-        File[] directoryFiles = null;
-        try {
-            directoryFiles = directory.listFiles();
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        }
-        if(directoryFiles == null){
-            extracted(pathToCatalog, dataPrinter, "no access");
-        }
-        if (directoryFiles.length == 0) {
-            extracted(pathToCatalog, dataPrinter);
-        } else if (directoryFiles.length == 1 && (directoryFiles[0].getName().equals(".DS_Store") || directoryFiles[0].getName().equals(".DS_Store"))) {
-            extracted(pathToCatalog, dataPrinter);
-        } else if (directoryFiles.length == 2 && (directoryFiles[0].getName().equals(".DS_Store") || directoryFiles[1].getName().equals(".DS_Store")) &&
-                   (directoryFiles[0].getName().equals("renamedToLatin") || directoryFiles[1].getName().equals("renamedToLatin"))) {
-            extracted(pathToCatalog, dataPrinter);
-        }
-        return directoryFiles;
-    }
+public interface FileManager {
 
-    private static void extracted(final String pathToCatalog, final DataPrinter dataPrinter, final String message ){
-        dataPrinter.printErrorMessage(format(
-                "\nThere is %s in directory: '%s'.\n",message, pathToCatalog));
-        dataPrinter.exit();
-    }
-    private static void extracted(final String pathToCatalog, final DataPrinter dataPrinter){
-        extracted(pathToCatalog, dataPrinter, "no files");
-    }
+    void getFilesFromDirectory(String pathToCatalog, DataPrinter dataPrinter);
 }
