@@ -19,8 +19,8 @@ package ua.mibal.cyrillicFileRenamer;
 import ua.mibal.cyrillicFileRenamer.component.Application;
 import ua.mibal.cyrillicFileRenamer.component.ArgumentParser;
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
-import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
+import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
 import ua.mibal.cyrillicFileRenamer.component.OSDetector;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
@@ -46,7 +46,7 @@ public class ApplicationBuilder {
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter();
 
-    private final FileManager fileManager = new FileManager();
+    private final LocalFileManager localFileManager = new LocalFileManager();
 
     private InputReader inputReader = new ConsoleInputReader();
 
@@ -79,7 +79,7 @@ public class ApplicationBuilder {
             dataPrinter.printInfoMessage("Language: " + lang.name());
         }
         if (letterStandard == null) {
-            configureLetterStandart(inputReader);
+            configureLetterStandard(inputReader);
         } else {
             dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
         }
@@ -89,7 +89,7 @@ public class ApplicationBuilder {
     public Application build() {
         return new Application(
             dataPrinter,
-            fileManager,
+            localFileManager,
             inputReader,
             pathToCatalog,
             letterTranslator
@@ -119,7 +119,7 @@ public class ApplicationBuilder {
     }
 
 
-    private void configureLetterStandart(final InputReader inputReader) {
+    private void configureLetterStandard(final InputReader inputReader) {
         boolean infoIsExists = false;
         dataPrinter.printInfoMessage("");
         while (true) {

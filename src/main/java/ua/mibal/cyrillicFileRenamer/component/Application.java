@@ -35,7 +35,7 @@ public class Application {
 
     private final DataPrinter dataPrinter;
 
-    private final FileManager fileManager;
+    private final LocalFileManager localFileManager;
 
     private final InputReader inputReader;
 
@@ -43,18 +43,18 @@ public class Application {
 
     private final LetterTranslator letterTranslator;
 
-    public Application(final DataPrinter dataPrinter, final FileManager fileManager, final InputReader inputReader,
+    public Application(final DataPrinter dataPrinter, final LocalFileManager localFileManager, final InputReader inputReader,
                        final String pathToCatalog, final LetterTranslator letterTranslator) {
 
         this.dataPrinter = dataPrinter;
-        this.fileManager = fileManager;
+        this.localFileManager = localFileManager;
         this.inputReader = inputReader;
         this.pathToCatalog = pathToCatalog;
         this.letterTranslator = letterTranslator;
     }
 
     public void start() {
-        File[] directoryFiles = FileManager.getFilesFromDirectory(pathToCatalog, dataPrinter);
+        File[] directoryFiles = LocalFileManager.getFilesFromDirectory(pathToCatalog, dataPrinter);
         File newDirectory = new File(pathToCatalog + "/renamedToLatin");
         newDirectory.mkdir();
         DynaStringArray nonProcessedFiles = new DynaStringArray();
