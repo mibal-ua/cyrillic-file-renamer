@@ -37,18 +37,15 @@ public class Application {
 
     private final LocalFileManager localFileManager;
 
-    private final InputReader inputReader;
-
     private final String pathToCatalog;
 
     private final LetterTranslator letterTranslator;
 
-    public Application(final DataPrinter dataPrinter, final LocalFileManager localFileManager, final InputReader inputReader,
+    public Application(final DataPrinter dataPrinter, final LocalFileManager localFileManager,
                        final String pathToCatalog, final LetterTranslator letterTranslator) {
 
         this.dataPrinter = dataPrinter;
         this.localFileManager = localFileManager;
-        this.inputReader = inputReader;
         this.pathToCatalog = pathToCatalog;
         this.letterTranslator = letterTranslator;
     }

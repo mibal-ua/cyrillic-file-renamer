@@ -90,7 +90,6 @@ public class ApplicationBuilder {
         return new Application(
             dataPrinter,
             localFileManager,
-            inputReader,
             pathToCatalog,
             letterTranslator
         );
