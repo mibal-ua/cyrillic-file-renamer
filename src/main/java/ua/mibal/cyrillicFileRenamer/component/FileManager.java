@@ -23,5 +23,5 @@ package ua.mibal.cyrillicFileRenamer.component;
  */
 public interface FileManager {
 
-    void getFilesFromDirectory(String pathToCatalog, DataPrinter dataPrinter);
+    void getFilesFromDirectory(String pathToCatalog);
 }
