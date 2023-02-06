@@ -46,7 +46,7 @@ public class ApplicationBuilder {
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter();
 
-    private final LocalFileManager localFileManager = new LocalFileManager();
+    private final LocalFileManager localFileManager = new LocalFileManager(dataPrinter);
 
     private InputReader inputReader = new ConsoleInputReader();
 

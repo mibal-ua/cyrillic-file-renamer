@@ -26,7 +26,13 @@ import java.io.File;
  */
 public class LocalFileManager {
 
-    public static File[] getFilesFromDirectory(final String pathToCatalog, final DataPrinter dataPrinter) {
+    final DataPrinter dataPrinter;
+
+    public LocalFileManager(final DataPrinter dataPrinter) {
+        this.dataPrinter = dataPrinter;
+    }
+
+    public File[] getFilesFromDirectory(final String pathToCatalog) {
         File directory = new File(pathToCatalog);
         File[] directoryFiles = null;
         try {
@@ -35,29 +41,29 @@ public class LocalFileManager {
             e.printStackTrace();
         }
         if (directoryFiles == null) {
-            extracted(pathToCatalog, dataPrinter, "no access");
+            printError(pathToCatalog, "no access");
         }
         if (directoryFiles.length == 0) {
-            extracted(pathToCatalog, dataPrinter);
+            printError(pathToCatalog);
         } else if (directoryFiles.length == 1 && (directoryFiles[0].getName().equals(".DS_Store") ||
                                                   directoryFiles[0].getName().equals(".DS_Store"))) {
-            extracted(pathToCatalog, dataPrinter);
+            printError(pathToCatalog);
         } else if (directoryFiles.length == 2 && (directoryFiles[0].getName().equals(".DS_Store") ||
                                                   directoryFiles[1].getName().equals(".DS_Store")) &&
                    (directoryFiles[0].getName().equals("renamedToLatin") ||
                     directoryFiles[1].getName().equals("renamedToLatin"))) {
-            extracted(pathToCatalog, dataPrinter);
+            printError(pathToCatalog);
         }
         return directoryFiles;
     }
 
-    private static void extracted(final String pathToCatalog, final DataPrinter dataPrinter, final String message) {
+    private void printError(final String pathToCatalog,  final String message) {
         dataPrinter.printErrorMessage(format(
             "\nThere is %s in directory: '%s'.\n", message, pathToCatalog));
         dataPrinter.exit();
     }
 
-    private static void extracted(final String pathToCatalog, final DataPrinter dataPrinter) {
-        extracted(pathToCatalog, dataPrinter, "no files");
+    private void printError(final String pathToCatalog) {
+        printError(pathToCatalog, "no files");
     }
 }

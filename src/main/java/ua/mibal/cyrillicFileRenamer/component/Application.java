@@ -51,7 +51,7 @@ public class Application {
     }
 
     public void start() {
-        File[] directoryFiles = LocalFileManager.getFilesFromDirectory(pathToCatalog, dataPrinter);
+        File[] directoryFiles = localFileManager.getFilesFromDirectory(pathToCatalog);
         File newDirectory = new File(pathToCatalog + "/renamedToLatin");
         newDirectory.mkdir();
         DynaStringArray nonProcessedFiles = new DynaStringArray();
