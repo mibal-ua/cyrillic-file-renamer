@@ -17,6 +17,8 @@
 
 package ua.mibal.cyrillicFileRenamer;
 
+import ua.mibal.cyrillicFileRenamer.component.Application;
+
 /**
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
@@ -24,7 +26,7 @@ package ua.mibal.cyrillicFileRenamer;
 public class Launcher {
 
     public static void main(String[] args) {
-        Application application = new Application(args);
+        Application application = new ApplicationBuilder(args).build();
         application.start();
     }
 }
