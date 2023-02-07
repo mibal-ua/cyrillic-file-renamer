@@ -18,6 +18,7 @@
 package ua.mibal.cyrillicFileRenamer.component;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -32,18 +33,18 @@ public interface DataPrinter {
     void printWelcomeMessage();
 
     void printNonProcessedFiles(final File[] directoryFiles,
-                                final String[] notCyrillicSymbols,
-                                final String[] fileAlreadyRenamed,
-                                final String[] fileHaveHiddenName,
-                                final String[] fileHaveAnotherLanguageName,
-                                final String[] reasonsOfFileHaveAnotherLanguageName,
-                                final String[] nonProcessedFiles,
-                                final String[] reasonsOfNonProcessedFiles);
+                                final List<String> notCyrillicSymbols,
+                                final List<String> fileAlreadyRenamed,
+                                final List<String> fileHaveHiddenName,
+                                final List<String> fileHaveAnotherLanguageName,
+                                final List<String> reasonsOfFileHaveAnotherLanguageName,
+                                final List<String> nonProcessedFiles,
+                                final List<String> reasonsOfNonProcessedFiles);
 
     void exit();
 
     @FunctionalInterface
-    public interface ExitHandler {
+    interface ExitHandler {
 
         void exit();
     }

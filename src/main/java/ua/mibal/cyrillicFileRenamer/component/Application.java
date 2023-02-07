@@ -18,13 +18,14 @@
 package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
-import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 import static java.util.Objects.requireNonNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Mykhailo Balakhon
@@ -40,8 +41,6 @@ public class Application {
 
     private final LetterTranslator letterTranslator;
 
-    private File resultingDirectory;
-
     public Application(final DataPrinter dataPrinter,
                        final FileManager fileManager,
                        final String pathToCatalog,
@@ -54,18 +53,18 @@ public class Application {
 
     public void start() {
         final File[] directoryFiles = fileManager.getFilesFromDirectory(pathToCatalog);
-        resultingDirectory = fileManager.createResultingDirectory(pathToCatalog);
+        final File resultingDirectory = fileManager.createResultingDirectory(pathToCatalog);
 
-        DynaStringArray nonProcessedFiles = new DynaStringArray();
-        DynaStringArray reasonsOfNonProcessedFiles = new DynaStringArray();
-        DynaStringArray notCyrillicSymbols = new DynaStringArray();
-        DynaStringArray fileAlreadyRenamed = new DynaStringArray();
-        DynaStringArray fileHaveHiddenName = new DynaStringArray();
-        DynaStringArray fileHaveAnotherLanguageName = new DynaStringArray();
-        DynaStringArray reasonsOfFileHaveAnotherLanguageName = new DynaStringArray();
+        List<String> nonProcessedFiles = new ArrayList<>();
+        List<String> reasonsOfNonProcessedFiles = new ArrayList<>();
+        List<String> notCyrillicSymbols = new ArrayList<>();
+        List<String> fileAlreadyRenamed = new ArrayList<>();
+        List<String> fileHaveHiddenName = new ArrayList<>();
+        List<String> fileHaveAnotherLanguageName = new ArrayList<>();
+        List<String> reasonsOfFileHaveAnotherLanguageName = new ArrayList<>();
 
         for (final File sourceFile : directoryFiles) {
-            String oldName = sourceFile.getName(); //this is name with extension
+            final String oldName = sourceFile.getName(); //this is name with extension
             if (oldName.equals(resultingDirectory.getName())) {
                 continue;
             }
@@ -96,13 +95,13 @@ public class Application {
 
         dataPrinter.printNonProcessedFiles(
             directoryFiles,
-            notCyrillicSymbols.toArray(),
-            fileAlreadyRenamed.toArray(),
-            fileHaveHiddenName.toArray(),
-            fileHaveAnotherLanguageName.toArray(),
-            reasonsOfFileHaveAnotherLanguageName.toArray(),
-            nonProcessedFiles.toArray(),
-            reasonsOfNonProcessedFiles.toArray());
+            notCyrillicSymbols,
+            fileAlreadyRenamed,
+            fileHaveHiddenName,
+            fileHaveAnotherLanguageName,
+            reasonsOfFileHaveAnotherLanguageName,
+            nonProcessedFiles,
+            reasonsOfNonProcessedFiles);
 
         dataPrinter.exit();
     }

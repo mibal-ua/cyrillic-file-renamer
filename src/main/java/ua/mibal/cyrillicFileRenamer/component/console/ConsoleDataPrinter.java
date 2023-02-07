@@ -22,6 +22,7 @@ import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
 import static java.util.Objects.requireNonNull;
 import java.io.File;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -67,13 +68,13 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     @Override
     public void printNonProcessedFiles(final File[] directoryFiles,
-                                       final String[] notCyrillicSymbols,
-                                       final String[] fileAlreadyRenamed,
-                                       final String[] fileHaveHiddenName,
-                                       final String[] fileHaveAnotherLanguageName,
-                                       final String[] reasonsOfFileHaveAnotherLanguageName,
-                                       final String[] nonProcessedFiles,
-                                       final String[] reasonsOfNonProcessedFiles) {
+                                       final List<String> notCyrillicSymbols,
+                                       final List<String> fileAlreadyRenamed,
+                                       final List<String> fileHaveHiddenName,
+                                       final List<String> fileHaveAnotherLanguageName,
+                                       final List<String> reasonsOfFileHaveAnotherLanguageName,
+                                       final List<String> nonProcessedFiles,
+                                       final List<String> reasonsOfNonProcessedFiles) {
         FileManager fileManager = new LocalFileManager(this); //TODO call fileManager in another way
         int countOfIgnoredFiles = 0;
         for (final File directoryFile : directoryFiles) {
@@ -82,11 +83,11 @@ public class ConsoleDataPrinter implements DataPrinter {
             }
         }
         int countOfAllFilesInDirectory = (directoryFiles.length - countOfIgnoredFiles);
-        int countOfExceptionNames = (notCyrillicSymbols.length +
-                                     fileAlreadyRenamed.length +
-                                     fileHaveHiddenName.length +
-                                     fileHaveAnotherLanguageName.length +
-                                     nonProcessedFiles.length);
+        int countOfExceptionNames = (notCyrillicSymbols.size() +
+                                     fileAlreadyRenamed.size() +
+                                     fileHaveHiddenName.size() +
+                                     fileHaveAnotherLanguageName.size() +
+                                     nonProcessedFiles.size());
 
         if (countOfExceptionNames == countOfAllFilesInDirectory) {
             printErrorMessage("\n\033[1mAll files are not renamed by the next reasons:\u001B[0m");
@@ -104,23 +105,23 @@ public class ConsoleDataPrinter implements DataPrinter {
             reasonsOfNonProcessedFiles, "have other problem");
     }
 
-    private void outListsWithProblems(final String[] list, final String[] reasonsList, final String message) {
-        if (list.length != 0) {
-            String files = list.length == 1 ? "file" : list.length + " files";
+    private void outListsWithProblems(final List<String> list, final List<String> reasonsList, final String message) {
+        if (list.size() != 0) {
+            String files = list.size() == 1 ? "file" : list.size() + " files";
             printErrorMessage("The next " + files + " " + message + ":");
-            for (int i = 0; i < list.length; i++) {
-                printErrorMessage((i + 1) + ". " + list[i] + ": " + reasonsList[i] + ";");
+            for (int i = 0; i < list.size(); i++) {
+                printErrorMessage((i + 1) + ". " + list.get(i) + ": " + reasonsList.get(i) + ";");
             }
             printErrorMessage("");
         }
     }
 
-    private void outListsWithProblems(final String[] list, final String message) {
-        if (list.length != 0) {
-            String files = list.length == 1 ? "file" : list.length + " files";
+    private void outListsWithProblems(final List<String> list, final String message) {
+        if (list.size() != 0) {
+            String files = list.size() == 1 ? "file" : list.size() + " files";
             printErrorMessage("The next " + files + " " + message + ":");
-            for (int i = 0; i < list.length; i++) {
-                printErrorMessage((i + 1) + ". " + list[i] + ";");
+            for (int i = 0; i < list.size(); i++) {
+                printErrorMessage((i + 1) + ". " + list.get(i) + ";");
             }
             printErrorMessage("");
         }
