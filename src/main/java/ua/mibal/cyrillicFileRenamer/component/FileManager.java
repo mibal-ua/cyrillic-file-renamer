@@ -28,4 +28,6 @@ public interface FileManager {
     File[] getFilesFromDirectory(String pathToCatalog);
 
     boolean isIgnoredFile(String fileName);
+
+    File createResultingDirectory(String pathToCatalog);
 }

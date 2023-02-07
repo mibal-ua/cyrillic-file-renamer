@@ -27,11 +27,11 @@ import java.io.File;
  */
 public class LocalFileManager implements FileManager {
 
-    private final DataPrinter dataPrinter;
-
     private final static String[] IGNORED_FILE_NAMES = {
         "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", "cyrillic-file-renamer-"
     };
+
+    private final DataPrinter dataPrinter;
 
     public LocalFileManager(final DataPrinter dataPrinter) {
         this.dataPrinter = requireNonNull(dataPrinter);
@@ -71,6 +71,15 @@ public class LocalFileManager implements FileManager {
             }
         }
         return false;
+    }
+
+    @Override
+    public File createResultingDirectory(final String pathToCatalog) {
+        final File file = new File(pathToCatalog + "/renamedToLatin");
+        if (file.mkdir()) {
+            return file;
+        }
+        return null;
     }
 
     private void printErrorAndExit(final String pathToCatalog, final String message) {
