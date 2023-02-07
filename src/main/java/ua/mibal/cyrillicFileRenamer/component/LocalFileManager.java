@@ -25,9 +25,9 @@ import java.io.File;
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public class LocalFileManager implements FileManager{
+public class LocalFileManager implements FileManager {
 
-    final DataPrinter dataPrinter;
+    private final DataPrinter dataPrinter;
 
     public final static String[] IGNORED_FILE_NAMES = {
         ".DS_Store", "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", ".localized"
@@ -38,37 +38,41 @@ public class LocalFileManager implements FileManager{
     }
 
     public File[] getFilesFromDirectory(final String pathToCatalog) {
-        File directory = new File(pathToCatalog);
+        final File directory = new File(pathToCatalog);
         File[] directoryFiles = null;
         try {
             directoryFiles = directory.listFiles();
         } catch (SecurityException e) {
-            e.printStackTrace();
+            printErrorAndExit(pathToCatalog, "no access");
         }
-        if (directoryFiles == null) {
-            printError(pathToCatalog, "no access");
-        }
+
         if (directoryFiles.length == 0) {
-            printError(pathToCatalog);
-        } else if (directoryFiles.length == 1 && (directoryFiles[0].getName().equals(".DS_Store") ||
-                                                  directoryFiles[0].getName().equals(".DS_Store"))) {
-            printError(pathToCatalog);
-        } else if (directoryFiles.length == 2 && (directoryFiles[0].getName().equals(".DS_Store") ||
-                                                  directoryFiles[1].getName().equals(".DS_Store")) &&
-                   (directoryFiles[0].getName().equals("renamedToLatin") ||
-                    directoryFiles[1].getName().equals("renamedToLatin"))) {
-            printError(pathToCatalog);
+            printErrorAndExit(pathToCatalog, "no files");
+        }
+        if (directoryFiles.length == 1 && isIgnoredFile(directoryFiles[0].getName())) {
+            printErrorAndExit(pathToCatalog, "no files");
+        }
+        if (directoryFiles.length == 2 && (directoryFiles[0].getName().equals(".DS_Store") ||
+                                           directoryFiles[1].getName().equals(".DS_Store")) &&
+            (directoryFiles[0].getName().equals("renamedToLatin") ||
+             directoryFiles[1].getName().equals("renamedToLatin"))) {
+            printErrorAndExit(pathToCatalog, "no files");
         }
         return directoryFiles;
     }
 
-    private void printError(final String pathToCatalog,  final String message) {
+    private boolean isIgnoredFile(final String fileName) {
+        for (final String ignoredFileName : IGNORED_FILE_NAMES) {
+            if (fileName.contains(ignoredFileName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void printErrorAndExit(final String pathToCatalog, final String message) {
         dataPrinter.printErrorMessage(format(
             "\nThere is %s in directory: '%s'.\n", message, pathToCatalog));
         dataPrinter.exit();
-    }
-
-    private void printError(final String pathToCatalog) {
-        printError(pathToCatalog, "no files");
     }
 }
