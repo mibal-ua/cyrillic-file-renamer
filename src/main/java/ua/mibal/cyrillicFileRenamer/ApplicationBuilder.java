@@ -19,6 +19,7 @@ package ua.mibal.cyrillicFileRenamer;
 import ua.mibal.cyrillicFileRenamer.component.Application;
 import ua.mibal.cyrillicFileRenamer.component.ArgumentParser;
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
+import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
 import ua.mibal.cyrillicFileRenamer.component.OSDetector;
@@ -46,7 +47,7 @@ public class ApplicationBuilder {
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter();
 
-    private final LocalFileManager localFileManager = new LocalFileManager(dataPrinter);
+    private final FileManager fileManager = new LocalFileManager(dataPrinter);
 
     private InputReader inputReader = new ConsoleInputReader();
 
@@ -89,7 +90,7 @@ public class ApplicationBuilder {
     public Application build() {
         return new Application(
             dataPrinter,
-            localFileManager,
+            fileManager,
             pathToCatalog,
             letterTranslator
         );

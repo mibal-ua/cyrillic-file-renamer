@@ -35,23 +35,23 @@ public class Application {
 
     private final DataPrinter dataPrinter;
 
-    private final LocalFileManager localFileManager;
+    private final FileManager fileManager;
 
     private final String pathToCatalog;
 
     private final LetterTranslator letterTranslator;
 
-    public Application(final DataPrinter dataPrinter, final LocalFileManager localFileManager,
+    public Application(final DataPrinter dataPrinter, final FileManager fileManager,
                        final String pathToCatalog, final LetterTranslator letterTranslator) {
 
         this.dataPrinter = dataPrinter;
-        this.localFileManager = localFileManager;
+        this.fileManager = fileManager;
         this.pathToCatalog = pathToCatalog;
         this.letterTranslator = letterTranslator;
     }
 
     public void start() {
-        File[] directoryFiles = localFileManager.getFilesFromDirectory(pathToCatalog);
+        File[] directoryFiles = fileManager.getFilesFromDirectory(pathToCatalog);
         File newDirectory = new File(pathToCatalog + "/renamedToLatin");
         newDirectory.mkdir();
         DynaStringArray nonProcessedFiles = new DynaStringArray();

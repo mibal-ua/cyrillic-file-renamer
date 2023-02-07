@@ -24,7 +24,7 @@ import java.io.File;
  * @author Michael Balakhon
  * @link http://t.me/mibal_ua
  */
-public class LocalFileManager {
+public class LocalFileManager implements FileManager{
 
     final DataPrinter dataPrinter;
 
