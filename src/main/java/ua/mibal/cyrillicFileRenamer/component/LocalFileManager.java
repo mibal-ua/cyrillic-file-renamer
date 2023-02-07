@@ -79,10 +79,8 @@ public class LocalFileManager implements FileManager {
     @Override
     public File createResultingDirectory(final String pathToCatalog) {
         final File file = new File(pathToCatalog + "/renamedToLatin");
-        if (file.mkdir()) {
-            return file;
-        }
-        return null;
+        file.mkdir();
+        return file;
     }
 
     @Override
