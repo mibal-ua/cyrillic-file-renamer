@@ -45,8 +45,8 @@ public class ArgumentParser {
                 lang = Lang.valueOf(arg.toUpperCase());
             } else if (arg.equalsIgnoreCase(OFFICIAL.name()) || arg.equalsIgnoreCase(EXTENDED.name())) {
                 letterStandard = LetterStandard.valueOf(arg.toUpperCase());
-            }else {
-                this.path = testPath(arg);
+            } else {
+                this.path = testAndGetCorrectPath(arg);
                 if (path == null) {
                     throw new IllegalArgumentException(format("Incorrect argument '%s'.", arg));
                 }

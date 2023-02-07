@@ -34,7 +34,7 @@ import ua.mibal.cyrillicFileRenamer.component.translators.ruOfficialLetterTransl
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 import static java.lang.String.format;
-import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testPath;
+import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testAndGetCorrectPath;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
@@ -67,7 +67,7 @@ public class ApplicationBuilder {
         if (args.length != 0) {
             ArgumentParser parser = new ArgumentParser();
             parser.parse(args);
-            pathToCatalog = testPath(parser.getPath());
+            pathToCatalog = testAndGetCorrectPath(parser.getPath());
             lang = parser.getLang();
             letterStandard = parser.getLetterStandard();
         }
@@ -180,7 +180,7 @@ public class ApplicationBuilder {
             dataPrinter.printInfoMessage("");
             if (userPath.equalsIgnoreCase("/exit"))
                 dataPrinter.exit();
-            String normalUserPath = testPath(userPath);
+            String normalUserPath = testAndGetCorrectPath(userPath);
             if (normalUserPath != null) {
                 pathToCatalog = normalUserPath;
                 break;

@@ -25,7 +25,7 @@ import java.io.File;
  */
 public class PathOperator {
 
-    public static String testPath(String userPath) {
+    public static String testAndGetCorrectPath(String userPath) {
         if (new File(userPath).exists()) {
             return userPath;
         }
@@ -42,7 +42,7 @@ public class PathOperator {
     }
 
     public static String getParentFolder(final String path) {
-        String newPath = testPath(path);
+        final String newPath = testAndGetCorrectPath(path);
         if (newPath != null) {
             File file = new File(newPath);
             if (file.exists()) {
