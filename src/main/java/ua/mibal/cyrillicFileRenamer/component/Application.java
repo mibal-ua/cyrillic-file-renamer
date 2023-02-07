@@ -21,6 +21,8 @@ import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
+import static java.util.Objects.requireNonNull;
+import static ua.mibal.cyrillicFileRenamer.component.LocalFileManager.IGNORED_FILE_NAMES;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -41,6 +43,8 @@ public class Application {
 
     private final LetterTranslator letterTranslator;
 
+    private File renamedToLatinDirectory;
+
     public Application(final DataPrinter dataPrinter, final FileManager fileManager,
                        final String pathToCatalog, final LetterTranslator letterTranslator) {
 
@@ -51,9 +55,11 @@ public class Application {
     }
 
     public void start() {
-        File[] directoryFiles = fileManager.getFilesFromDirectory(pathToCatalog);
-        File newDirectory = new File(pathToCatalog + "/renamedToLatin");
-        newDirectory.mkdir();
+        final File[] directoryFiles = fileManager.getFilesFromDirectory(pathToCatalog);
+        renamedToLatinDirectory = new File(pathToCatalog + "/renamedToLatin");
+        renamedToLatinDirectory.mkdir();
+
+
         DynaStringArray nonProcessedFiles = new DynaStringArray();
         DynaStringArray reasonsOfNonProcessedFiles = new DynaStringArray();
         DynaStringArray notCyrillicSymbols = new DynaStringArray();
@@ -78,7 +84,7 @@ public class Application {
                         continue;
                     }
                     try {
-                        Files.copy(file.toPath(), Path.of((newDirectory.toPath() + "/" + newName)));
+                        Files.copy(file.toPath(), Path.of((renamedToLatinDirectory.toPath() + "/" + newName)));
                     } catch (IOException e) {
                         if (e.getClass() == FileAlreadyExistsException.class) {
                             fileAlreadyRenamed.add(oldName);
