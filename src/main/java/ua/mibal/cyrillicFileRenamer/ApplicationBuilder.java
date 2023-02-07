@@ -17,7 +17,7 @@
 package ua.mibal.cyrillicFileRenamer;
 
 import ua.mibal.cyrillicFileRenamer.component.Application;
-import ua.mibal.cyrillicFileRenamer.component.ArgumentParser;
+import ua.mibal.cyrillicFileRenamer.component.ConsoleArgumentParser;
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter.ExitHandler;
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
@@ -65,7 +65,7 @@ public class ApplicationBuilder {
     public ApplicationBuilder(final String[] args) {
         dataPrinter.printWelcomeMessage();
         if (args.length != 0) {
-            ArgumentParser parser = new ArgumentParser();
+            ConsoleArgumentParser parser = new ConsoleArgumentParser();
             parser.parse(args);
             pathToCatalog = testAndGetCorrectPath(parser.getPath());
             lang = parser.getLang();

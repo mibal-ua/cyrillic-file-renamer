@@ -14,12 +14,13 @@
  * limitations under the License.
  *
  */
+
 package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 import static java.lang.String.format;
-import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testPath;
+import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testAndGetCorrectPath;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
@@ -29,7 +30,7 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.OFFI
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public class ArgumentParser {
+public class ConsoleArgumentParser {
 
     private String path;
 
