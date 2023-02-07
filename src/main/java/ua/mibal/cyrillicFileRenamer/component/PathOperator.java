@@ -24,28 +24,21 @@ import java.io.File;
  * @link https://t.me/mibal_ua
  */
 public class PathOperator {
-    public static String testPath(final String userPath) {
-        if (userPath == null) {
-            return null;
-        }
-        if (userPath.length() != 0) {
-            if (new File(userPath).exists()) {
-                return userPath;
-            }
-            StringBuilder userPathBuilder1 = new StringBuilder(userPath);
-            StringBuilder userPathBuilder2 = new StringBuilder(userPath);
 
-            if (userPathBuilder1.charAt(0) != '/' && userPathBuilder1.charAt(0) != '\\') {
-                userPathBuilder1.insert(0, '/');
-                userPathBuilder2.insert(0, '\\');
-            }
-            if (new File(userPathBuilder1.toString()).exists()) {
-                return userPathBuilder1.toString();
-            } else if (new File(userPathBuilder2.toString()).exists()) {
-                return userPathBuilder2.toString();
-            }
+    public static String testPath(String userPath) {
+        if (new File(userPath).exists()) {
+            return userPath;
         }
-        return null;
+        if (userPath.length() == 0) {
+            return null; //TODO throw exception
+        }
+        if (userPath.charAt(0) != '/') {
+            userPath = "/" + userPath;
+        }
+        if (new File(userPath).exists()) {
+            return userPath;
+        }
+        return null; //TODO throw exception
     }
 
     public static String getParentFolder(final String path) {
