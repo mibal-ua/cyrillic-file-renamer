@@ -29,8 +29,8 @@ public class LocalFileManager implements FileManager {
 
     private final DataPrinter dataPrinter;
 
-    public final static String[] IGNORED_FILE_NAMES = {
-        ".DS_Store", "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", ".localized"
+    private final static String[] IGNORED_FILE_NAMES = {
+        "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", "cyrillic-file-renamer-"
     };
 
     public LocalFileManager(final DataPrinter dataPrinter) {
@@ -61,7 +61,10 @@ public class LocalFileManager implements FileManager {
         return directoryFiles;
     }
 
-    private boolean isIgnoredFile(final String fileName) {
+    public boolean isIgnoredFile(final String fileName) {
+        if (fileName.charAt(0) == '.') {
+            return true;
+        }
         for (final String ignoredFileName : IGNORED_FILE_NAMES) {
             if (fileName.contains(ignoredFileName)) {
                 return true;

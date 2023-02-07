@@ -18,6 +18,8 @@
 package ua.mibal.cyrillicFileRenamer.component.console;
 
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
+import ua.mibal.cyrillicFileRenamer.component.FileManager;
+import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
 import static java.util.Objects.requireNonNull;
 import java.io.File;
 import java.util.Scanner;
@@ -47,13 +49,13 @@ public class ConsoleDataPrinter implements DataPrinter {
     @Override
     public void printWelcomeMessage() {
         System.out.println("""
-                                
-                -------------||\033[1m The Cyrillic file renamer application \u001B[0m||-------------
-                -                         made with love ❤                          -
-                -                                                                   -
-                - #StandWithUkraine                                                 -
-                - author: @mibal_ua                                                 -
-                ---------------------------------------------------------------------""");
+                            
+            -------------||\033[1m The Cyrillic file renamer application \u001B[0m||-------------
+            -                         made with love ❤                          -
+            -                                                                   -
+            - #StandWithUkraine                                                 -
+            - author: @mibal_ua                                                 -
+            ---------------------------------------------------------------------""");
     }
 
     @Override
@@ -65,7 +67,6 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     @Override
     public void printNonProcessedFiles(final File[] directoryFiles,
-                                       final String[] ignoredFileNames,
                                        final String[] notCyrillicSymbols,
                                        final String[] fileAlreadyRenamed,
                                        final String[] fileHaveHiddenName,
@@ -73,22 +74,21 @@ public class ConsoleDataPrinter implements DataPrinter {
                                        final String[] reasonsOfFileHaveAnotherLanguageName,
                                        final String[] nonProcessedFiles,
                                        final String[] reasonsOfNonProcessedFiles) {
+        FileManager fileManager = new LocalFileManager(this); //TODO call fileManager in another way
         int countOfIgnoredFiles = 0;
         for (final File directoryFile : directoryFiles) {
-            for (final String ignoredFileName : ignoredFileNames) {
-                if (directoryFile.getName().equalsIgnoreCase(ignoredFileName)) {
-                    countOfIgnoredFiles++;
-                }
+            if (fileManager.isIgnoredFile(directoryFile.getName())) {
+                countOfIgnoredFiles++;
             }
         }
         int countOfAllFilesInDirectory = (directoryFiles.length - countOfIgnoredFiles);
         int countOfExceptionNames = (notCyrillicSymbols.length +
-                                        fileAlreadyRenamed.length +
-                                        fileHaveHiddenName.length +
-                                        fileHaveAnotherLanguageName.length +
-                                        nonProcessedFiles.length);
+                                     fileAlreadyRenamed.length +
+                                     fileHaveHiddenName.length +
+                                     fileHaveAnotherLanguageName.length +
+                                     nonProcessedFiles.length);
 
-        if (countOfExceptionNames == countOfAllFilesInDirectory){
+        if (countOfExceptionNames == countOfAllFilesInDirectory) {
             printErrorMessage("\n\033[1mAll files are not renamed by the next reasons:\u001B[0m");
         } else if (countOfExceptionNames == 0) {
             printInfoMessage("\n\033[1mFiles renamed successfully.\u001B[0m");
@@ -99,9 +99,9 @@ public class ConsoleDataPrinter implements DataPrinter {
         outListsWithProblems(fileHaveHiddenName, "have hidden name");
         outListsWithProblems(notCyrillicSymbols, "don't have cyrillic symbols");
         outListsWithProblems(fileHaveAnotherLanguageName,
-                reasonsOfFileHaveAnotherLanguageName, "have language problem");
+            reasonsOfFileHaveAnotherLanguageName, "have language problem");
         outListsWithProblems(nonProcessedFiles,
-                reasonsOfNonProcessedFiles, "have other problem");
+            reasonsOfNonProcessedFiles, "have other problem");
     }
 
     private void outListsWithProblems(final String[] list, final String[] reasonsList, final String message) {

@@ -32,7 +32,6 @@ public interface DataPrinter {
     void printWelcomeMessage();
 
     void printNonProcessedFiles(final File[] directoryFiles,
-                                final String[] ignoredFileNames,
                                 final String[] notCyrillicSymbols,
                                 final String[] fileAlreadyRenamed,
                                 final String[] fileHaveHiddenName,

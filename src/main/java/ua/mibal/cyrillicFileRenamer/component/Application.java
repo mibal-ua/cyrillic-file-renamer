@@ -22,7 +22,6 @@ import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 import static java.util.Objects.requireNonNull;
-import static ua.mibal.cyrillicFileRenamer.component.LocalFileManager.IGNORED_FILE_NAMES;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
@@ -71,39 +70,36 @@ public class Application {
 
         for (final File file : directoryFiles) {
             String oldName = file.getName(); //this is name with extension
-            if (!isIgnoreFile(file)) {
-                if (oldName.charAt(0) != '.') {
-                    String newName;
-                    try {
-                        newName = letterTranslator.translateName(oldName);
-                    } catch (IllegalNameException e) {
-                        notCyrillicSymbols.add(oldName);
-                        continue;
-                    } catch (IllegalLanguageException e) {
-                        fileHaveAnotherLanguageName.add(oldName);
-                        reasonsOfFileHaveAnotherLanguageName.add(e.getMessage());
-                        continue;
-                    }
-                    try {
-                        Files.copy(file.toPath(), Path.of((renamedToLatinDirectory.toPath() + "/" + newName)));
-                    } catch (IOException e) {
-                        if (e.getClass() == FileAlreadyExistsException.class) {
-                            fileAlreadyRenamed.add(oldName);
-                        } else {
-                            nonProcessedFiles.add(oldName);
-                            reasonsOfNonProcessedFiles.add(e.getClass().getSimpleName());
-                        }
-                    }
-                } else {
-                    fileHaveHiddenName.add(oldName);
+            if (oldName.equals(renamedToLatinDirectory.getName())) {
+                continue;
+            }
+            if (!fileManager.isIgnoredFile(oldName)) {
+                String newName;
+                try {
+                    newName = letterTranslator.translateName(oldName);
+                } catch (IllegalNameException e) {
+                    notCyrillicSymbols.add(oldName);
+                    continue;
+                } catch (IllegalLanguageException e) {
+                    fileHaveAnotherLanguageName.add(oldName);
+                    reasonsOfFileHaveAnotherLanguageName.add(e.getMessage());
+                    continue;
                 }
+                try {
+                    Files.copy(file.toPath(), Path.of((renamedToLatinDirectory.toPath() + "/" + newName)));
+                } catch (FileAlreadyExistsException e) {
+                    fileAlreadyRenamed.add(oldName);
+                } catch (IOException e) {
+                    nonProcessedFiles.add(oldName);
+                    reasonsOfNonProcessedFiles.add(e.getClass().getSimpleName());
+                }
+            } else {
+                fileHaveHiddenName.add(oldName);
             }
         }
 
-
         dataPrinter.printNonProcessedFiles(
             directoryFiles,
-            IGNORED_FILE_NAMES,
             notCyrillicSymbols.toArray(),
             fileAlreadyRenamed.toArray(),
             fileHaveHiddenName.toArray(),
@@ -113,16 +109,5 @@ public class Application {
             reasonsOfNonProcessedFiles.toArray());
 
         dataPrinter.exit();
-    }
-
-    private boolean isIgnoreFile(final File file) {
-        String name = file.getName();
-        for (final String ignoredFileName : IGNORED_FILE_NAMES) {
-            if (name.equalsIgnoreCase(ignoredFileName)) {
-                return true;
-            }
-        }
-        return name.contains("cyrillic-file-renamer-") ||
-               name.contains(renamedToLatinDirectory.getName());
     }
 }
