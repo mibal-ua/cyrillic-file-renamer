@@ -28,6 +28,10 @@ public class LocalFileManager implements FileManager{
 
     final DataPrinter dataPrinter;
 
+    public final static String[] IGNORED_FILE_NAMES = {
+        ".DS_Store", "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", ".localized"
+    };
+
     public LocalFileManager(final DataPrinter dataPrinter) {
         this.dataPrinter = dataPrinter;
     }

@@ -61,12 +61,10 @@ public class Application {
         DynaStringArray fileHaveHiddenName = new DynaStringArray();
         DynaStringArray fileHaveAnotherLanguageName = new DynaStringArray();
         DynaStringArray reasonsOfFileHaveAnotherLanguageName = new DynaStringArray();
-        String[] ignoredFileNames = {newDirectory.getName(), ".DS_Store",
-            "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", ".localized"
-        };
+
         for (final File file : directoryFiles) {
             String oldName = file.getName(); //this is name with extension
-            if (!isIgnoreFile(file, ignoredFileNames)) {
+            if (!isIgnoreFile(file)) {
                 if (oldName.charAt(0) != '.') {
                     String newName;
                     try {
@@ -94,7 +92,11 @@ public class Application {
                 }
             }
         }
-        dataPrinter.printNonProcessedFiles(directoryFiles, ignoredFileNames,
+
+
+        dataPrinter.printNonProcessedFiles(
+            directoryFiles,
+            IGNORED_FILE_NAMES,
             notCyrillicSymbols.toArray(),
             fileAlreadyRenamed.toArray(),
             fileHaveHiddenName.toArray(),
@@ -102,17 +104,18 @@ public class Application {
             reasonsOfFileHaveAnotherLanguageName.toArray(),
             nonProcessedFiles.toArray(),
             reasonsOfNonProcessedFiles.toArray());
+
         dataPrinter.exit();
     }
 
-    private boolean isIgnoreFile(final File file, final String[] ignoredFileNames) {
+    private boolean isIgnoreFile(final File file) {
         String name = file.getName();
-        for (final String ignoredFileName : ignoredFileNames) {
+        for (final String ignoredFileName : IGNORED_FILE_NAMES) {
             if (name.equalsIgnoreCase(ignoredFileName)) {
                 return true;
             }
         }
-        return name.contains("cyrillic-file-renamer-");
+        return name.contains("cyrillic-file-renamer-") ||
+               name.contains(renamedToLatinDirectory.getName());
     }
-
 }
