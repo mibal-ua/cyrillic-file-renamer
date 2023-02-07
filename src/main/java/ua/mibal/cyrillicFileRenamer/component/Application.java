@@ -47,11 +47,10 @@ public class Application {
 
     public Application(final DataPrinter dataPrinter, final FileManager fileManager,
                        final String pathToCatalog, final LetterTranslator letterTranslator) {
-
-        this.dataPrinter = dataPrinter;
-        this.fileManager = fileManager;
-        this.pathToCatalog = pathToCatalog;
-        this.letterTranslator = letterTranslator;
+        this.dataPrinter = requireNonNull(dataPrinter);
+        this.fileManager = requireNonNull(fileManager);
+        this.pathToCatalog = requireNonNull(pathToCatalog);
+        this.letterTranslator = requireNonNull(letterTranslator);
     }
 
     public void start() {

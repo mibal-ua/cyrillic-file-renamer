@@ -18,6 +18,7 @@
 package ua.mibal.cyrillicFileRenamer.component;
 
 import static java.lang.String.format;
+import static java.util.Objects.requireNonNull;
 import java.io.File;
 
 /**
@@ -33,7 +34,7 @@ public class LocalFileManager implements FileManager{
     };
 
     public LocalFileManager(final DataPrinter dataPrinter) {
-        this.dataPrinter = dataPrinter;
+        this.dataPrinter = requireNonNull(dataPrinter);
     }
 
     public File[] getFilesFromDirectory(final String pathToCatalog) {
