@@ -19,7 +19,6 @@ package ua.mibal.cyrillicFileRenamer;
 import ua.mibal.cyrillicFileRenamer.component.Application;
 import ua.mibal.cyrillicFileRenamer.component.ArgumentParser;
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
-import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
 import ua.mibal.cyrillicFileRenamer.component.OSDetector;
@@ -47,9 +46,7 @@ public class ApplicationBuilder {
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter();
 
-    private final FileManager fileManager = new LocalFileManager(dataPrinter);
-
-    private InputReader inputReader = new ConsoleInputReader();
+    private final InputReader inputReader = new ConsoleInputReader();
 
     private LetterTranslator letterTranslator;
 
@@ -68,19 +65,18 @@ public class ApplicationBuilder {
             lang = parser.getLang();
             letterStandard = parser.getLetterStandard();
         }
-        InputReader inputReader = new ConsoleInputReader();
         if (pathToCatalog == null) {
-            configurePath(inputReader);
+            configurePath();
         } else {
             dataPrinter.printInfoMessage("Path: " + pathToCatalog);
         }
         if (lang == null) {
-            configureLang(inputReader);
+            configureLang();
         } else {
             dataPrinter.printInfoMessage("Language: " + lang.name());
         }
         if (letterStandard == null) {
-            configureLetterStandard(inputReader);
+            configureLetterStandard();
         } else {
             dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
         }
@@ -90,7 +86,7 @@ public class ApplicationBuilder {
     public Application build() {
         return new Application(
             dataPrinter,
-            fileManager,
+            new LocalFileManager(dataPrinter),
             pathToCatalog,
             letterTranslator
         );
@@ -119,7 +115,7 @@ public class ApplicationBuilder {
     }
 
 
-    private void configureLetterStandard(final InputReader inputReader) {
+    private void configureLetterStandard() {
         boolean infoIsExists = false;
         dataPrinter.printInfoMessage("");
         while (true) {
@@ -150,7 +146,7 @@ public class ApplicationBuilder {
         dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
     }
 
-    private void configureLang(final InputReader inputReader) {
+    private void configureLang() {
         dataPrinter.printInfoMessage("");
         while (true) {
             dataPrinter.printInfoMessage("Enter language of files: 'RU' or 'UA'");
@@ -171,7 +167,7 @@ public class ApplicationBuilder {
         dataPrinter.printInfoMessage("Language: " + lang.name());
     }
 
-    private void configurePath(final InputReader inputReader) {
+    private void configurePath() {
         dataPrinter.printInfoMessage("Enter path to catalog with files:");
         while (true) {
             String userPath = inputReader.read().trim();
