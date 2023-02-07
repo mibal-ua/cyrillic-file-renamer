@@ -58,4 +58,8 @@ public class PathOperator {
         }
         return null;
     }
+
+    public static String getExamplePath() {
+        return "/Users/home/path/to/catalog/";
+    }
 }

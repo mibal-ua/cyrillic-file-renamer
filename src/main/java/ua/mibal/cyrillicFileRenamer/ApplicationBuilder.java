@@ -23,7 +23,7 @@ import ua.mibal.cyrillicFileRenamer.component.DataPrinter.ExitHandler;
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
-import ua.mibal.cyrillicFileRenamer.component.OSDetector;
+import ua.mibal.cyrillicFileRenamer.component.PathOperator;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
@@ -188,7 +188,7 @@ public class ApplicationBuilder {
                 dataPrinter.printErrorMessage(format("You enter incorrect path '%s'.", userPath));
                 dataPrinter.printInfoMessage(
                     "Enter path like this: " +
-                    OSDetector.detectOS().getExamplePath());
+                    PathOperator.getExamplePath());
             }
         }
         dataPrinter.printInfoMessage("Path: " + pathToCatalog);
