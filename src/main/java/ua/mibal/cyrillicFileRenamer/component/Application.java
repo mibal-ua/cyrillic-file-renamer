@@ -57,9 +57,11 @@ public class Application {
 
         List<String> nonProcessedFiles = new ArrayList<>();
         List<String> reasonsOfNonProcessedFiles = new ArrayList<>();
+
         List<String> notCyrillicSymbols = new ArrayList<>();
         List<String> fileAlreadyRenamed = new ArrayList<>();
         List<String> fileHaveHiddenName = new ArrayList<>();
+
         List<String> fileHaveAnotherLanguageName = new ArrayList<>();
         List<String> reasonsOfFileHaveAnotherLanguageName = new ArrayList<>();
 
@@ -68,28 +70,28 @@ public class Application {
             if (oldName.equals(resultingDirectory.getName())) {
                 continue;
             }
-            if (!fileManager.isIgnoredFile(oldName)) {
-                String newName;
-                try {
-                    newName = letterTranslator.translateName(oldName);
-                } catch (IllegalNameException e) {
-                    notCyrillicSymbols.add(oldName);
-                    continue;
-                } catch (IllegalLanguageException e) {
-                    fileHaveAnotherLanguageName.add(oldName);
-                    reasonsOfFileHaveAnotherLanguageName.add(e.getMessage());
-                    continue;
-                }
-                try {
-                    fileManager.createRenamedFile(sourceFile, newName, resultingDirectory);
-                } catch (FileAlreadyExistsException e) {
-                    fileAlreadyRenamed.add(oldName);
-                } catch (IOException e) {
-                    nonProcessedFiles.add(oldName);
-                    reasonsOfNonProcessedFiles.add(e.getClass().getSimpleName());
-                }
-            } else {
+            if (fileManager.isIgnoredFile(oldName)) {
                 fileHaveHiddenName.add(oldName);
+                continue;
+            }
+            String newName;
+            try {
+                newName = letterTranslator.translateName(oldName);
+            } catch (IllegalNameException e) {
+                notCyrillicSymbols.add(oldName);
+                continue;
+            } catch (IllegalLanguageException e) {
+                fileHaveAnotherLanguageName.add(oldName);
+                reasonsOfFileHaveAnotherLanguageName.add(e.getMessage());
+                continue;
+            }
+            try {
+                fileManager.createRenamedFile(sourceFile, newName, resultingDirectory);
+            } catch (FileAlreadyExistsException e) {
+                fileAlreadyRenamed.add(oldName);
+            } catch (IOException e) {
+                nonProcessedFiles.add(oldName);
+                reasonsOfNonProcessedFiles.add(e.getClass().getSimpleName());
             }
         }
 
