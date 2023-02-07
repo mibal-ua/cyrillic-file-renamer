@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package ua.mibal.cyrillicFileRenamer.component;
 
 import java.io.File;
@@ -41,4 +42,10 @@ public interface DataPrinter {
                                 final String[] reasonsOfNonProcessedFiles);
 
     void exit();
+
+    @FunctionalInterface
+    public interface ExitHandler {
+
+        void exit();
+    }
 }

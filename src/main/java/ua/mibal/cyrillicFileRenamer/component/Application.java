@@ -45,8 +45,10 @@ public class Application {
 
     private File renamedToLatinDirectory;
 
-    public Application(final DataPrinter dataPrinter, final FileManager fileManager,
-                       final String pathToCatalog, final LetterTranslator letterTranslator) {
+    public Application(final DataPrinter dataPrinter,
+                       final FileManager fileManager,
+                       final String pathToCatalog,
+                       final LetterTranslator letterTranslator) {
         this.dataPrinter = requireNonNull(dataPrinter);
         this.fileManager = requireNonNull(fileManager);
         this.pathToCatalog = requireNonNull(pathToCatalog);

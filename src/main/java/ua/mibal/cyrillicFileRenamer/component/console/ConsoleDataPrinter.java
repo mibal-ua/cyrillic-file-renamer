@@ -18,7 +18,7 @@
 package ua.mibal.cyrillicFileRenamer.component.console;
 
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
-
+import static java.util.Objects.requireNonNull;
 import java.io.File;
 import java.util.Scanner;
 
@@ -27,6 +27,12 @@ import java.util.Scanner;
  * @link http://t.me/mibal_ua
  */
 public class ConsoleDataPrinter implements DataPrinter {
+
+    private final ExitHandler exitHandler;
+
+    public ConsoleDataPrinter(final ExitHandler exitHandler) {
+        this.exitHandler = requireNonNull(exitHandler);
+    }
 
     @Override
     public void printInfoMessage(final String message) {
@@ -54,7 +60,7 @@ public class ConsoleDataPrinter implements DataPrinter {
     public void exit() {
         System.out.println("Press any key to exit...");
         new Scanner(System.in).nextLine();
-        System.exit(0);
+        exitHandler.exit();
     }
 
     @Override
