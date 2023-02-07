@@ -41,8 +41,8 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTE
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.OFFICIAL;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public class ApplicationBuilder {
 

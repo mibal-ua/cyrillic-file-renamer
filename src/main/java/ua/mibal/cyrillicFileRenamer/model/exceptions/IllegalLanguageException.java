@@ -18,8 +18,8 @@
 package ua.mibal.cyrillicFileRenamer.model.exceptions;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public class IllegalLanguageException extends Exception {
 

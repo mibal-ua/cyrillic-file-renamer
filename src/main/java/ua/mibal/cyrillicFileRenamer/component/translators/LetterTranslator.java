@@ -21,15 +21,20 @@ import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
-
 import static java.lang.String.format;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.*;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.DOT;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.EMDASH;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.ENDASH;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.HYPHENMINUS;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.MINUS;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.SPACE;
+import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.UNDERSCORE;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public abstract class LetterTranslator {
 

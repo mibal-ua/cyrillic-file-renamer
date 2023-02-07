@@ -18,12 +18,11 @@
 package ua.mibal.cyrillicFileRenamer.component.console;
 
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
-
 import java.util.Scanner;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public class ConsoleInputReader implements InputReader {
 

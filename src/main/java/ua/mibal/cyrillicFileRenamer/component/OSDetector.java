@@ -18,13 +18,12 @@
 package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.model.programMode.OS;
-
 import static ua.mibal.cyrillicFileRenamer.model.programMode.OS.UNIX;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.OS.WINDOWS;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public class OSDetector {
     public static OS detectOS() {

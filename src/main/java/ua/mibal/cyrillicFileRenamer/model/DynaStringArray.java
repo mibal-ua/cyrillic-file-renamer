@@ -20,8 +20,8 @@ package ua.mibal.cyrillicFileRenamer.model;
 import java.util.Arrays;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public class DynaStringArray {
 

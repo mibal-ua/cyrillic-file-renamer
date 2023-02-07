@@ -20,8 +20,8 @@ package ua.mibal.cyrillicFileRenamer.component;
 import java.io.File;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public interface DataPrinter {
 

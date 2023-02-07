@@ -19,12 +19,11 @@ package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
-
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public class ruExtendedLetterTranslator extends LetterTranslator {
 

@@ -25,8 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public class LocalFileManager implements FileManager {
 

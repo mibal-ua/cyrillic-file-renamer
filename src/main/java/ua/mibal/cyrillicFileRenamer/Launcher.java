@@ -20,8 +20,8 @@ package ua.mibal.cyrillicFileRenamer;
 import ua.mibal.cyrillicFileRenamer.component.Application;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public class Launcher {
 

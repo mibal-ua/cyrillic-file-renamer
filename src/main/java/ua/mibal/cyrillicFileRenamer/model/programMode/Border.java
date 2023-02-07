@@ -18,8 +18,8 @@
 package ua.mibal.cyrillicFileRenamer.model.programMode;
 
 /**
- * @author Michael Balakhon
- * @link http://t.me/mibal_ua
+ * @author Mykhailo Balakhon
+ * @link https://t.me/mibal_ua
  */
 public enum Border {
 
