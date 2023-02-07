@@ -25,8 +25,6 @@ import static java.util.Objects.requireNonNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 
 /**
  * @author Mykhailo Balakhon
@@ -66,8 +64,8 @@ public class Application {
         DynaStringArray fileHaveAnotherLanguageName = new DynaStringArray();
         DynaStringArray reasonsOfFileHaveAnotherLanguageName = new DynaStringArray();
 
-        for (final File file : directoryFiles) {
-            String oldName = file.getName(); //this is name with extension
+        for (final File sourceFile : directoryFiles) {
+            String oldName = sourceFile.getName(); //this is name with extension
             if (oldName.equals(resultingDirectory.getName())) {
                 continue;
             }
@@ -84,7 +82,7 @@ public class Application {
                     continue;
                 }
                 try {
-                    Files.copy(file.toPath(), Path.of((resultingDirectory.toPath() + "/" + newName)));
+                    fileManager.createRenamedFile(sourceFile, newName, resultingDirectory);
                 } catch (FileAlreadyExistsException e) {
                     fileAlreadyRenamed.add(oldName);
                 } catch (IOException e) {

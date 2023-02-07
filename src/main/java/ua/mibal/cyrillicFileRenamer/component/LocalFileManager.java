@@ -20,6 +20,9 @@ package ua.mibal.cyrillicFileRenamer.component;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 /**
  * @author Michael Balakhon
@@ -80,6 +83,12 @@ public class LocalFileManager implements FileManager {
             return file;
         }
         return null;
+    }
+
+    @Override
+    public void createRenamedFile(final File sourceFile, final String newName, final File resultingDirectory)
+        throws IOException {
+        Files.copy(sourceFile.toPath(), Path.of((resultingDirectory.toPath() + "/" + newName)));
     }
 
     private void printErrorAndExit(final String pathToCatalog, final String message) {

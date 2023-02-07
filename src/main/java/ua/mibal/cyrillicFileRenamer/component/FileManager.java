@@ -18,6 +18,7 @@
 package ua.mibal.cyrillicFileRenamer.component;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  * @author Mykhailo Balakhon
@@ -30,4 +31,6 @@ public interface FileManager {
     boolean isIgnoredFile(String fileName);
 
     File createResultingDirectory(String pathToCatalog);
+
+    void createRenamedFile(File sourceFile, String newName, File resultingDirectory) throws IOException;
 }
