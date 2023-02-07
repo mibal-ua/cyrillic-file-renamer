@@ -42,7 +42,7 @@ public class Application {
 
     private final LetterTranslator letterTranslator;
 
-    private File renamedToLatinDirectory;
+    private File resultingDirectory;
 
     public Application(final DataPrinter dataPrinter,
                        final FileManager fileManager,
@@ -56,9 +56,7 @@ public class Application {
 
     public void start() {
         final File[] directoryFiles = fileManager.getFilesFromDirectory(pathToCatalog);
-        renamedToLatinDirectory = new File(pathToCatalog + "/renamedToLatin");
-        renamedToLatinDirectory.mkdir();
-
+        resultingDirectory = fileManager.createResultingDirectory(pathToCatalog);
 
         DynaStringArray nonProcessedFiles = new DynaStringArray();
         DynaStringArray reasonsOfNonProcessedFiles = new DynaStringArray();
@@ -70,7 +68,7 @@ public class Application {
 
         for (final File file : directoryFiles) {
             String oldName = file.getName(); //this is name with extension
-            if (oldName.equals(renamedToLatinDirectory.getName())) {
+            if (oldName.equals(resultingDirectory.getName())) {
                 continue;
             }
             if (!fileManager.isIgnoredFile(oldName)) {
@@ -86,7 +84,7 @@ public class Application {
                     continue;
                 }
                 try {
-                    Files.copy(file.toPath(), Path.of((renamedToLatinDirectory.toPath() + "/" + newName)));
+                    Files.copy(file.toPath(), Path.of((resultingDirectory.toPath() + "/" + newName)));
                 } catch (FileAlreadyExistsException e) {
                     fileAlreadyRenamed.add(oldName);
                 } catch (IOException e) {
