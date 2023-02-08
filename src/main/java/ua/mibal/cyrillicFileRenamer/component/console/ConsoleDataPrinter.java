@@ -18,10 +18,15 @@
 package ua.mibal.cyrillicFileRenamer.component.console;
 
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
-import ua.mibal.cyrillicFileRenamer.component.FileManager;
-import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.HiddenFileException;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
+import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
-import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
@@ -33,6 +38,10 @@ import java.util.Scanner;
 public class ConsoleDataPrinter implements DataPrinter {
 
     private final ExitHandler exitHandler;
+
+    private final static String BOLD = "\u001B[1m";
+
+    private final static String RESET = "\u001B[0m";
 
     public ConsoleDataPrinter(final ExitHandler exitHandler) {
         this.exitHandler = requireNonNull(exitHandler);
@@ -50,14 +59,16 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     @Override
     public void printWelcomeMessage() {
-        System.out.println("""
+        final String message = format("""
                             
-            -------------||\033[1m The Cyrillic file renamer application \u001B[0m||-------------
+            -------------||%s The Cyrillic file renamer application %s||-------------
             -                         made with love ❤                          -
             -                                                                   -
             - #StandWithUkraine                                                 -
             - author: @mibal_ua                                                 -
-            ---------------------------------------------------------------------""");
+            ---------------------------------------------------------------------""",
+            BOLD, RESET);
+        printInfoMessage(message);
     }
 
     @Override
@@ -68,57 +79,52 @@ public class ConsoleDataPrinter implements DataPrinter {
     }
 
     @Override
-    public void printNonProcessedFiles(final File[] directoryFiles,
-                                       final Map<String, List<String>> list) {
-        FileManager fileManager = new LocalFileManager(this); //TODO call fileManager in another way
-        int countOfIgnoredFiles = 0;
-        for (final File directoryFile : directoryFiles) {
-            if (fileManager.isIgnoredFile(directoryFile.getName())) {
-                countOfIgnoredFiles++;
-            }
-        }
-        int countOfAllFilesInDirectory = (directoryFiles.length - countOfIgnoredFiles);
-        int countOfExceptionNames = (list.get("notCyrillicSymbols").size() +
-                                     list.get("fileAlreadyRenamed").size() +
-                                     list.get("fileHaveHiddenName").size() +
-                                     list.get("fileHaveAnotherLanguageName").size() +
-                                     list.get("nonProcessedFiles").size());
-
-        if (countOfExceptionNames == countOfAllFilesInDirectory) {
-            printErrorMessage("\n\033[1mAll files are not renamed by the next reasons:\u001B[0m");
-        } else if (countOfExceptionNames == 0) {
-            printInfoMessage("\n\033[1mFiles renamed successfully.\u001B[0m");
+    public void printNonProcessedFiles(final int directoryFilesLength,
+                                       final Map<String, Exception> logList) {
+        final Map<Class<? extends Exception>, List<String>> sortedLogList = sortLogs(logList);
+        final int countOfExceptions = logList.size();
+        String mainHeaderMessage = "\n" + BOLD;
+        if (directoryFilesLength == 0) {
+            mainHeaderMessage += "Directory is empty";
+        } else if (directoryFilesLength == countOfExceptions) {
+            mainHeaderMessage += "All files are not renamed by the next reasons:";
+        } else if (countOfExceptions == 0) {
+            mainHeaderMessage += "Files renamed successfully.";
         } else {
-            printInfoMessage("\n\033[1mFiles renamed\u001B[0m, but exists a problems.");
+            mainHeaderMessage += "Files renamed" + RESET + ", but exists a problems.";
         }
-        outListsWithProblems(list.get("fileAlreadyRenamed"), "already renamed");
-        outListsWithProblems(list.get("fileHaveHiddenName"), "have hidden name");
-        outListsWithProblems(list.get("notCyrillicSymbols"), "don't have cyrillic symbols");
-        outListsWithProblems(list.get("fileHaveAnotherLanguageName"),
-            list.get("reasonsOfFileHaveAnotherLanguageName"), "have language problem");
-        outListsWithProblems(list.get("nonProcessedFiles"),
-            list.get("reasonsOfNonProcessedFiles"), "have other problem");
-    }
+        printInfoMessage(mainHeaderMessage + RESET);
+        printInfoMessage("");
 
-    private void outListsWithProblems(final List<String> list, final List<String> reasonsList, final String message) {
-        if (list.size() == 0) {
-            return;
-        }
-        printErrorMessage("The next " + (list.size() == 1 ? "file" : list.size() + " files") + " " + message + ":");
-        for (int i = 0; i < list.size(); i++) {
-            printErrorMessage((i + 1) + ". " + list.get(i) + ": " + reasonsList.get(i) + ";");
-        }
-        printErrorMessage("");
-    }
-
-    private void outListsWithProblems(final List<String> list, final String message) {
-        if (list.size() != 0) {
-            String files = list.size() == 1 ? "file" : list.size() + " files";
-            printErrorMessage("The next " + files + " " + message + ":");
-            for (int i = 0; i < list.size(); i++) {
-                printErrorMessage((i + 1) + ". " + list.get(i) + ";");
+        sortedLogList.forEach((e, list) -> {
+            if (list.size() == 0) {
+                return;
             }
-            printErrorMessage("");
-        }
+            printInfoMessage(e.getSimpleName() + ":");
+            for (int i = 0; i < list.size(); i++) {
+                final String message = list.get(i);
+                printInfoMessage(format("%s. %s", i + 1, message));
+            }
+            printInfoMessage("");
+        });
+    }
+
+    private Map<Class<? extends Exception>, List<String>> sortLogs(final Map<String, Exception> logList) {
+        final Map<Class<? extends Exception>, List<String>> map = new HashMap<>();
+
+        map.put(HiddenFileException.class, new ArrayList<>());
+        map.put(IllegalNameException.class, new ArrayList<>());
+        map.put(IllegalLanguageException.class, new ArrayList<>());
+        map.put(IOException.class, new ArrayList<>());
+
+        logList.forEach((name, e) -> {
+            final Class<? extends Exception> clazz = e.getClass();
+            if (clazz == IllegalLanguageException.class) {
+                map.get(clazz).add(name + ": " + e.getMessage());
+            } else {
+                map.get(clazz).add(name);
+            }
+        });
+        return Collections.unmodifiableMap(map);
     }
 }

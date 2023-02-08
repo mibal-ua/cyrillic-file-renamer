@@ -17,8 +17,6 @@
 
 package ua.mibal.cyrillicFileRenamer.component;
 
-import java.io.File;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +31,7 @@ public interface DataPrinter {
 
     void printWelcomeMessage();
 
-    void printNonProcessedFiles(File[] directoryFiles, Map<String, List<String>> logList);
+    void printNonProcessedFiles(int directoryFilesLength, Map<String, Exception> logList);
 
     void exit();
 
