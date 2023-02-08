@@ -46,20 +46,9 @@ public class LocalFileManager implements FileManager {
         try {
             directoryFiles = directory.listFiles();
         } catch (SecurityException e) {
-            printErrorAndExit(pathToCatalog, "no access");
-        }
-
-        if (directoryFiles.length == 0) {
-            printErrorAndExit(pathToCatalog, "no files");
-        }
-        if (directoryFiles.length == 1 && isIgnoredFile(directoryFiles[0].getName())) {
-            printErrorAndExit(pathToCatalog, "no files");
-        }
-        if (directoryFiles.length == 2 && (directoryFiles[0].getName().equals(".DS_Store") ||
-                                           directoryFiles[1].getName().equals(".DS_Store")) &&
-            (directoryFiles[0].getName().equals("renamedToLatin") ||
-             directoryFiles[1].getName().equals("renamedToLatin"))) {
-            printErrorAndExit(pathToCatalog, "no files");
+            dataPrinter.printErrorMessage(format(
+                "\nThere is no access to directory '%s'.\n", pathToCatalog));
+            dataPrinter.exit();
         }
         return directoryFiles;
     }
@@ -84,14 +73,9 @@ public class LocalFileManager implements FileManager {
     }
 
     @Override
-    public void createRenamedFile(final File sourceFile, final String newName, final File resultingDirectory)
-        throws IOException {
+    public void createRenamedFile(final File sourceFile,
+                                  final String newName,
+                                  final File resultingDirectory) throws IOException {
         Files.copy(sourceFile.toPath(), Path.of((resultingDirectory.toPath() + "/" + newName)));
-    }
-
-    private void printErrorAndExit(final String pathToCatalog, final String message) {
-        dataPrinter.printErrorMessage(format(
-            "\nThere is %s in directory: '%s'.\n", message, pathToCatalog));
-        dataPrinter.exit();
     }
 }
