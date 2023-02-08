@@ -31,7 +31,7 @@ import java.util.Map;
 
 /**
  * @author Mykhailo Balakhon
- * @link t.me/mibal_ua
+ * @link https://t.me/mibal_ua
  */
 public class Application {
 

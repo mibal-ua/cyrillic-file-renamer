@@ -22,7 +22,7 @@ import java.io.IOException;
 
 /**
  * @author Mykhailo Balakhon
- * @link t.me/mibal_ua
+ * @link https://t.me/mibal_ua
  */
 public interface FileManager {
 
