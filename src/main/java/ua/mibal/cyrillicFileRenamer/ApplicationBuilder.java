@@ -92,14 +92,16 @@ public class ApplicationBuilder {
         if (lang == UA) {
             if (letterStandard == OFFICIAL) {
                 letterTranslator = new UaOfficialLetterTranslator();
-            } else if (letterStandard == EXTENDED) {
+            }
+            if (letterStandard == EXTENDED) {
                 letterTranslator = new UaExtendedLetterTranslator();
             }
         }
         if (lang == RU) {
             if (letterStandard == OFFICIAL) {
                 letterTranslator = new RuOfficialLetterTranslator();
-            } else if (letterStandard == EXTENDED) {
+            }
+            if (letterStandard == EXTENDED) {
                 letterTranslator = new RuExtendedLetterTranslator();
             }
         }
