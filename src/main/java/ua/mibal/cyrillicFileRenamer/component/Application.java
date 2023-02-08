@@ -57,7 +57,7 @@ public class Application {
         final Map<String, Exception> logList = new HashMap<>();
 
         for (final File sourceFile : directoryFiles) {
-            final String oldName = sourceFile.getName(); //this is name with extension
+            final String oldName = sourceFile.getName(); // with extension
             if (oldName.equals(resultingDirectory.getName())) {
                 continue;
             }

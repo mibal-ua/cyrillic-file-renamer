@@ -14,6 +14,7 @@
  * limitations under the License.
  *
  */
+
 package ua.mibal.cyrillicFileRenamer;
 
 import ua.mibal.cyrillicFileRenamer.component.Application;
@@ -27,10 +28,10 @@ import ua.mibal.cyrillicFileRenamer.component.PathOperator;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
+import ua.mibal.cyrillicFileRenamer.component.translators.RuExtendedLetterTranslator;
+import ua.mibal.cyrillicFileRenamer.component.translators.RuOfficialLetterTranslator;
 import ua.mibal.cyrillicFileRenamer.component.translators.UaExtendedLetterTranslator;
 import ua.mibal.cyrillicFileRenamer.component.translators.UaOfficialLetterTranslator;
-import ua.mibal.cyrillicFileRenamer.component.translators.ruExtendedLetterTranslator;
-import ua.mibal.cyrillicFileRenamer.component.translators.ruOfficialLetterTranslator;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 import static java.lang.String.format;
@@ -46,6 +47,12 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.OFFI
  */
 public class ApplicationBuilder {
 
+    private static String pathToCatalog;
+
+    private static Lang lang;
+
+    private static LetterStandard letterStandard;
+
     private final ExitHandler exitHandler = () -> System.exit(0);
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter(exitHandler);
@@ -53,14 +60,6 @@ public class ApplicationBuilder {
     private final InputReader inputReader = new ConsoleInputReader();
 
     private final FileManager fileManager = new LocalFileManager();
-
-    private LetterTranslator letterTranslator;
-
-    private static String pathToCatalog;
-
-    private static Lang lang;
-
-    private static LetterStandard letterStandard;
 
     public ApplicationBuilder(final String[] args) {
         dataPrinter.printWelcomeMessage();
@@ -126,18 +125,18 @@ public class ApplicationBuilder {
         dataPrinter.printInfoMessage("");
         while (true) {
             dataPrinter.printInfoMessage("Enter standard of transliteration: 'OFFICIAL' or 'EXTENDED'");
-            if (!infoIsExists)
+            if (!infoIsExists) {
                 dataPrinter.printInfoMessage("For more information enter '/info'");
-
+            }
             String userStandard = inputReader.read().trim();
             dataPrinter.printInfoMessage("");
             if (userStandard.equalsIgnoreCase("/exit")) {
                 dataPrinter.exit();
             } else if (userStandard.equalsIgnoreCase("/info")) {
                 dataPrinter.printInfoMessage("""
-                        \033[1mOFFICIAL\u001B[0m transliteration mode is used to transliterate the names of people and places by goverment standards.
-                        \033[1mEXTENDED\u001B[0m mode uses all word sound rules for more accurate transliteration.
-                        """);
+                    \033[1mOFFICIAL\u001B[0m transliteration mode is used to transliterate the names of people and places by goverment standards.
+                    \033[1mEXTENDED\u001B[0m mode uses all word sound rules for more accurate transliteration.
+                    """);
                 infoIsExists = true;
             } else if (userStandard.equalsIgnoreCase(OFFICIAL.name()) ||
                        userStandard.equalsIgnoreCase(EXTENDED.name())) {
@@ -178,8 +177,9 @@ public class ApplicationBuilder {
         while (true) {
             String userPath = inputReader.read().trim();
             dataPrinter.printInfoMessage("");
-            if (userPath.equalsIgnoreCase("/exit"))
+            if (userPath.equalsIgnoreCase("/exit")) {
                 dataPrinter.exit();
+            }
             String normalUserPath = testAndGetCorrectPath(userPath);
             if (normalUserPath != null) {
                 pathToCatalog = normalUserPath;
