@@ -17,8 +17,6 @@
 
 package ua.mibal.cyrillicFileRenamer.component;
 
-import static java.lang.String.format;
-import static java.util.Objects.requireNonNull;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -34,23 +32,9 @@ public class LocalFileManager implements FileManager {
         "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", "cyrillic-file-renamer-"
     };
 
-    private final DataPrinter dataPrinter;
-
-    public LocalFileManager(final DataPrinter dataPrinter) {
-        this.dataPrinter = requireNonNull(dataPrinter);
-    }
-
     public File[] getFilesFromDirectory(final String pathToCatalog) {
         final File directory = new File(pathToCatalog);
-        File[] directoryFiles = null;
-        try {
-            directoryFiles = directory.listFiles();
-        } catch (SecurityException e) {
-            dataPrinter.printErrorMessage(format(
-                "\nThere is no access to directory '%s'.\n", pathToCatalog));
-            dataPrinter.exit();
-        }
-        return directoryFiles;
+        return directory.listFiles();
     }
 
     public boolean isIgnoredFile(final String fileName) {

@@ -52,7 +52,7 @@ public class ApplicationBuilder {
 
     private final InputReader inputReader = new ConsoleInputReader();
 
-    private final FileManager fileManager = new LocalFileManager(dataPrinter);
+    private final FileManager fileManager = new LocalFileManager();
 
     private LetterTranslator letterTranslator;
 
