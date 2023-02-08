@@ -61,34 +61,49 @@ public class ApplicationBuilder {
 
     private final FileManager fileManager = new LocalFileManager();
 
+    private LetterTranslator letterTranslator;
+
     public ApplicationBuilder(final String[] args) {
         dataPrinter.printWelcomeMessage();
-        if (args.length != 0) {
-            ConsoleArgumentParser parser = new ConsoleArgumentParser();
-            parser.parse(args);
-            pathToCatalog = testAndGetCorrectPath(parser.getPath());
-            lang = parser.getLang();
-            letterStandard = parser.getLetterStandard();
+        if (args.length == 0) {
+            return;
         }
-        if (pathToCatalog == null) {
-            configurePath();
-        } else {
-            dataPrinter.printInfoMessage("Path: " + pathToCatalog);
-        }
-        if (lang == null) {
-            configureLang();
-        } else {
-            dataPrinter.printInfoMessage("Language: " + lang.name());
-        }
-        if (letterStandard == null) {
-            configureLetterStandard();
-        } else {
-            dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
-        }
-        configureLetterTranslator();
+        final ConsoleArgumentParser parser = new ConsoleArgumentParser();
+        parser.parse(args);
+        pathToCatalog = testAndGetCorrectPath(parser.getPath());
+        lang = parser.getLang();
+        letterStandard = parser.getLetterStandard();
     }
 
     public Application build() {
+        if (pathToCatalog == null) {
+            configurePathToCatalog();
+        }
+        dataPrinter.printInfoMessage("Path: " + pathToCatalog);
+        if (lang == null) {
+            configureLang();
+        }
+        dataPrinter.printInfoMessage("Language: " + lang.name());
+        if (letterStandard == null) {
+            configureLetterStandard();
+        }
+        dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
+
+        if (lang == UA) {
+            if (letterStandard == OFFICIAL) {
+                letterTranslator = new UaOfficialLetterTranslator();
+            } else if (letterStandard == EXTENDED) {
+                letterTranslator = new UaExtendedLetterTranslator();
+            }
+        }
+        if (lang == RU) {
+            if (letterStandard == OFFICIAL) {
+                letterTranslator = new RuOfficialLetterTranslator();
+            } else if (letterStandard == EXTENDED) {
+                letterTranslator = new RuExtendedLetterTranslator();
+            }
+        }
+
         return new Application(
             dataPrinter,
             fileManager,
@@ -96,29 +111,6 @@ public class ApplicationBuilder {
             letterTranslator
         );
     }
-
-    private void configureLetterTranslator() {
-        switch (lang){
-            case UA -> {
-                if (letterStandard == OFFICIAL) {
-                    letterTranslator = new UaOfficialLetterTranslator();
-                } else if (letterStandard == EXTENDED) {
-                    letterTranslator = new UaExtendedLetterTranslator();
-                }
-            }
-            case RU -> {
-                if (letterStandard == OFFICIAL) {
-                    letterTranslator = new ruOfficialLetterTranslator();
-                } else if (letterStandard == EXTENDED) {
-                    letterTranslator = new ruExtendedLetterTranslator();
-                }
-            }
-        }
-        if (letterTranslator == null) dataPrinter.printErrorMessage(format(
-            "Letter translator component is null because language is '%s' and letter standard is '%s'.",
-            lang.name(), letterStandard.name()));
-    }
-
 
     private void configureLetterStandard() {
         boolean infoIsExists = false;
@@ -148,7 +140,6 @@ public class ApplicationBuilder {
                 ));
             }
         }
-        dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
     }
 
     private void configureLang() {
@@ -169,10 +160,9 @@ public class ApplicationBuilder {
                 ));
             }
         }
-        dataPrinter.printInfoMessage("Language: " + lang.name());
     }
 
-    private void configurePath() {
+    private void configurePathToCatalog() {
         dataPrinter.printInfoMessage("Enter path to catalog with files:");
         while (true) {
             String userPath = inputReader.read().trim();
@@ -191,6 +181,5 @@ public class ApplicationBuilder {
                     PathOperator.getExamplePath());
             }
         }
-        dataPrinter.printInfoMessage("Path: " + pathToCatalog);
     }
 }
