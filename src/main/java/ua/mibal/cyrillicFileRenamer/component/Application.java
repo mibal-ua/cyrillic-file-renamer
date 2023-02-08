@@ -25,7 +25,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Mykhailo Balakhon
@@ -54,16 +56,7 @@ public class Application {
     public void start() {
         final File[] directoryFiles = fileManager.getFilesFromDirectory(pathToCatalog);
         final File resultingDirectory = fileManager.createResultingDirectory(pathToCatalog);
-
-        List<String> nonProcessedFiles = new ArrayList<>();
-        List<String> reasonsOfNonProcessedFiles = new ArrayList<>();
-
-        List<String> notCyrillicSymbols = new ArrayList<>();
-        List<String> fileAlreadyRenamed = new ArrayList<>();
-        List<String> fileHaveHiddenName = new ArrayList<>();
-
-        List<String> fileHaveAnotherLanguageName = new ArrayList<>();
-        List<String> reasonsOfFileHaveAnotherLanguageName = new ArrayList<>();
+        final Map<String, List<String>> logList = initLogList();
 
         for (final File sourceFile : directoryFiles) {
             final String oldName = sourceFile.getName(); //this is name with extension
@@ -71,40 +64,42 @@ public class Application {
                 continue;
             }
             if (fileManager.isIgnoredFile(oldName)) {
-                fileHaveHiddenName.add(oldName);
+                logList.get("fileHaveHiddenName").add(oldName);
                 continue;
             }
             String newName;
             try {
                 newName = letterTranslator.translateName(oldName);
             } catch (IllegalNameException e) {
-                notCyrillicSymbols.add(oldName);
+                logList.get("notCyrillicSymbols").add(oldName);
                 continue;
             } catch (IllegalLanguageException e) {
-                fileHaveAnotherLanguageName.add(oldName);
-                reasonsOfFileHaveAnotherLanguageName.add(e.getMessage());
+                logList.get("fileHaveAnotherLanguageName").add(oldName);
+                logList.get("reasonsOfFileHaveAnotherLanguageName").add(e.getMessage());
                 continue;
             }
             try {
                 fileManager.createRenamedFile(sourceFile, newName, resultingDirectory);
             } catch (FileAlreadyExistsException e) {
-                fileAlreadyRenamed.add(oldName);
+                logList.get("fileAlreadyRenamed").add(oldName);
             } catch (IOException e) {
-                nonProcessedFiles.add(oldName);
-                reasonsOfNonProcessedFiles.add(e.getClass().getSimpleName());
+                logList.get("nonProcessedFiles").add(oldName);
+                logList.get("reasonsOfNonProcessedFiles").add(e.getClass().getSimpleName());
             }
         }
-
-        dataPrinter.printNonProcessedFiles(
-            directoryFiles,
-            notCyrillicSymbols,
-            fileAlreadyRenamed,
-            fileHaveHiddenName,
-            fileHaveAnotherLanguageName,
-            reasonsOfFileHaveAnotherLanguageName,
-            nonProcessedFiles,
-            reasonsOfNonProcessedFiles);
-
+        dataPrinter.printNonProcessedFiles(directoryFiles, logList);
         dataPrinter.exit();
+    }
+
+    private static Map<String, List<String>> initLogList() {
+        final Map<String, List<String>> map = new HashMap<>();
+        map.put("nonProcessedFiles", new ArrayList<>());
+        map.put("reasonsOfNonProcessedFiles", new ArrayList<>());
+        map.put("notCyrillicSymbols", new ArrayList<>());
+        map.put("fileAlreadyRenamed", new ArrayList<>());
+        map.put("fileHaveHiddenName", new ArrayList<>());
+        map.put("fileHaveAnotherLanguageName", new ArrayList<>());
+        map.put("reasonsOfFileHaveAnotherLanguageName", new ArrayList<>());
+        return map;
     }
 }
