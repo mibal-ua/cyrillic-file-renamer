@@ -191,7 +191,7 @@ public abstract class LetterTranslator {
             case "Ь", "'" -> "";
             case "Ю" -> "Iu";
             case "Я" -> "Ia";
-            default -> throw new IllegalLanguageException(format("Name has illegal symbol '%s' because language is %s", ch, lang.name()));
+            default -> throw new IllegalLanguageException(ch, lang);
         };
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
