@@ -25,14 +25,5 @@ public enum LetterStandard {
 
     OFFICIAL,
 
-    EXTENDED;
-
-    @Override
-    public String toString() {
-        String name = this.name();
-        final StringBuilder sb = new StringBuilder(name.toLowerCase());
-        sb.deleteCharAt(0);
-        sb.insert(0, name.charAt(0));
-        return sb.toString();
-    }
+    EXTENDED
 }
