@@ -83,11 +83,11 @@ public class ApplicationBuilder {
         if (lang == null) {
             configureLang();
         }
-        dataPrinter.printInfoMessage("Language: " + lang.name());
+        dataPrinter.printInfoMessage("Language: " + lang);
         if (letterStandard == null) {
             configureLetterStandard();
         }
-        dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard.name());
+        dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard);
 
         if (lang == UA) {
             if (letterStandard == OFFICIAL) {

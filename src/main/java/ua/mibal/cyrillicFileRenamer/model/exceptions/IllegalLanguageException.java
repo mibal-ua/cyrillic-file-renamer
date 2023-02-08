@@ -27,6 +27,6 @@ import static java.lang.String.format;
 public final class IllegalLanguageException extends Exception {
 
     public IllegalLanguageException(final String symbol, final Lang lang) {
-        super(format("Name has illegal symbol '%s' but language is %s", symbol, lang.name()));
+        super(format("Name has illegal symbol '%s' but language is %s", symbol, lang));
     }
 }
