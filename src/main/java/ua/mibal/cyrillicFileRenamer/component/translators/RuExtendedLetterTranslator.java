@@ -25,9 +25,9 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public class ruExtendedLetterTranslator extends LetterTranslator {
+public class RuExtendedLetterTranslator extends LetterTranslator {
 
-    public ruExtendedLetterTranslator() {
+    public RuExtendedLetterTranslator() {
         super();
     }
 

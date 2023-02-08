@@ -25,7 +25,7 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public class ruOfficialLetterTranslator extends LetterTranslator {
+public class RuOfficialLetterTranslator extends LetterTranslator {
 
     @Override
     protected String translate(final String word, final int i, final String letter) throws IllegalLanguageException, IllegalNameException {
