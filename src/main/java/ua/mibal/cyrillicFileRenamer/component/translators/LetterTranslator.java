@@ -21,7 +21,6 @@ import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
-import static java.lang.String.format;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.DOT;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.EMDASH;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.ENDASH;
@@ -63,12 +62,13 @@ public abstract class LetterTranslator {
             newName.append(word);
         }
         if (newName.toString().equals(name)) {
-            throw new IllegalNameException("File don't have cyrillic symbols");
+            throw new IllegalNameException("File don't contain cyrillic symbols");
         }
         return newName.append(extension).toString();
     }
 
-    protected String translate(final String word, final int i, final String letter) throws IllegalNameException, IllegalLanguageException {
+    protected String translate(final String word, final int i, final String letter)
+        throws IllegalNameException, IllegalLanguageException {
         return null;
     }
 
@@ -97,18 +97,18 @@ public abstract class LetterTranslator {
             name = oldName.substring(0, index);
             extension = oldName.substring(index);
         }
-        return new String[]{name, extension};
+        return new String[] {name, extension};
     }
 
     private String[] getWordsFromName(final String oldName) {
         if (oldName.length() <= 1) {
             return oldName.length() == 1 ?
-                    new String[]{String.valueOf(oldName.charAt(0))} :
-                    new String[]{""};
+                new String[] {String.valueOf(oldName.charAt(0))} :
+                new String[] {""};
         }
 
         String[] borders = {HYPHENMINUS.getBorder(), ENDASH.getBorder(), EMDASH.getBorder(),
-                MINUS.getBorder(), SPACE.getBorder(), UNDERSCORE.getBorder(), DOT.getBorder()};
+            MINUS.getBorder(), SPACE.getBorder(), UNDERSCORE.getBorder(), DOT.getBorder()};
 
         DynaStringArray dynaResult = new DynaStringArray();
         StringBuilder stringBuilder = new StringBuilder();
@@ -196,14 +196,14 @@ public abstract class LetterTranslator {
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
 
-    protected String translateSpecialSymbols(final String ch, final Lang lang) throws IllegalNameException {
+    protected String translateSpecialSymbols(final String ch, final Lang lang) throws IllegalLanguageException {
         String result = switch (ch.toUpperCase()) {
             case "Е", "Є" -> "Ye";
             case "Ї" -> "Yi";
             case "Й" -> "Y";
             case "Ю" -> "Yu";
             case "Я" -> "Ya";
-            default -> throw new IllegalNameException(format("Name has illegal symbol '%s' because language is %s", ch, lang.name()));
+            default -> throw new IllegalLanguageException(ch, lang);
         };
         return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
     }
