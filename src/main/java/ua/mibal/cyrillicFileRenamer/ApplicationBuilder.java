@@ -115,41 +115,49 @@ public class ApplicationBuilder {
     }
 
     private void configureLetterStandard() {
-        boolean infoIsExists = false;
         dataPrinter.printInfoMessage("");
+        boolean infoIsExists = false;
+        int count = 1;
         while (true) {
             dataPrinter.printInfoMessage("Enter standard of transliteration: 'OFFICIAL' or 'EXTENDED'");
             if (!infoIsExists) {
                 dataPrinter.printInfoMessage("For more information enter '/info'");
+                count++;
             }
             String userStandard = inputReader.read().trim();
-            dataPrinter.printInfoMessage("");
+            count += 2;
             if (userStandard.equalsIgnoreCase("/exit")) {
                 dataPrinter.exit();
             } else if (userStandard.equalsIgnoreCase("/info")) {
+                dataPrinter.printInfoMessage("");
                 dataPrinter.printInfoMessage("""
                     \033[1mOFFICIAL\u001B[0m transliteration mode is used to transliterate the names of people and places by goverment standards.
                     \033[1mEXTENDED\u001B[0m mode uses all word sound rules for more accurate transliteration.
                     """);
+                count += 5;
                 infoIsExists = true;
             } else if (userStandard.equalsIgnoreCase(OFFICIAL.name()) ||
                        userStandard.equalsIgnoreCase(EXTENDED.name())) {
                 letterStandard = LetterStandard.valueOf(userStandard.toUpperCase());
                 break;
             } else {
+                dataPrinter.printInfoMessage("");
                 dataPrinter.printInfoMessage(format(
                     "You enter unsupported letter standard '%s'." + '\n', userStandard
                 ));
+                count += 2;
             }
         }
+        clearLines(count);
     }
 
     private void configureLang() {
         dataPrinter.printInfoMessage("");
+        int count = 1;
         while (true) {
             dataPrinter.printInfoMessage("Enter language of files: 'RU' or 'UA'");
             String userLang = inputReader.read().trim();
-            dataPrinter.printInfoMessage("");
+            count += 2;
             if (userLang.equalsIgnoreCase("/exit")) {
                 dataPrinter.exit();
             } else if (userLang.equalsIgnoreCase(RU.name()) ||
@@ -157,18 +165,23 @@ public class ApplicationBuilder {
                 lang = Lang.valueOf(userLang.toUpperCase());
                 break;
             } else {
+                dataPrinter.printInfoMessage("");
                 dataPrinter.printInfoMessage(format(
                     "You enter unsupported language '%s'." + '\n', userLang
                 ));
+                count += 2;
             }
         }
+        clearLines(count);
     }
 
     private void configurePathToCatalog() {
+        dataPrinter.printInfoMessage("");
         dataPrinter.printInfoMessage("Enter path to catalog with files:");
+        int count = 2;
         while (true) {
             String userPath = inputReader.read().trim();
-            dataPrinter.printInfoMessage("");
+            count += 1;
             if (userPath.equalsIgnoreCase("/exit")) {
                 dataPrinter.exit();
             }
@@ -177,11 +190,20 @@ public class ApplicationBuilder {
                 pathToCatalog = normalUserPath;
                 break;
             } else {
+                dataPrinter.printInfoMessage("");
                 dataPrinter.printErrorMessage(format("You enter incorrect path '%s'.", userPath));
-                dataPrinter.printInfoMessage(
-                    "Enter path like this: " +
-                    PathOperator.getExamplePath());
+                dataPrinter.printInfoMessage("Enter path like this: " +
+                                             PathOperator.getExamplePath());
+                count += 3;
             }
+        }
+        clearLines(count);
+    }
+
+    public static void clearLines(final int count) {
+        for (int i = 0; i < count; i++) {
+            System.out.print("\033[F");
+            System.out.print("\033[2K");
         }
     }
 }
