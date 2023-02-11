@@ -19,8 +19,6 @@ package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
-import static java.lang.String.format;
-import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testAndGetCorrectPath;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
@@ -47,10 +45,7 @@ public class ConsoleArgumentParser {
             } else if (arg.equalsIgnoreCase(OFFICIAL.name()) || arg.equalsIgnoreCase(EXTENDED.name())) {
                 letterStandard = LetterStandard.valueOf(arg.toUpperCase());
             } else {
-                this.path = testAndGetCorrectPath(arg);
-                if (path == null) {
-                    throw new IllegalArgumentException(format("Incorrect argument '%s'.", arg));
-                }
+                this.path = arg;
             }
         }
     }
