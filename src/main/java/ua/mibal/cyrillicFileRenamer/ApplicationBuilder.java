@@ -56,9 +56,9 @@ public class ApplicationBuilder {
 
     private final ExitHandler exitHandler = () -> System.exit(0);
 
-    private final DataPrinter dataPrinter = new ConsoleDataPrinter(exitHandler);
-
     private final InputReader inputReader = new ConsoleInputReader();
+
+    private final DataPrinter dataPrinter = new ConsoleDataPrinter(inputReader, exitHandler);
 
     private final FileManager fileManager = new LocalFileManager();
 

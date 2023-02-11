@@ -18,6 +18,7 @@
 package ua.mibal.cyrillicFileRenamer.component.console;
 
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
+import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.FIleNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.HiddenFileNameException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
@@ -43,7 +44,10 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     private final ExitHandler exitHandler;
 
-    public ConsoleDataPrinter(final ExitHandler exitHandler) {
+    private final InputReader inputReader;
+
+    public ConsoleDataPrinter(final InputReader inputReader, final ExitHandler exitHandler) {
+        this.inputReader = requireNonNull(inputReader);
         this.exitHandler = requireNonNull(exitHandler);
     }
 
@@ -81,22 +85,26 @@ public class ConsoleDataPrinter implements DataPrinter {
     @Override
     public void printNonProcessedFiles(final int directoryFilesLength,
                                        final Map<String, Exception> logList) {
-        final Map<Class<? extends Exception>, List<String>> sortedLogList = sortLogs(logList);
         final int countOfExceptions = logList.size();
         String mainHeaderMessage = BOLD;
         if (directoryFilesLength == 0) {
             mainHeaderMessage += "Directory is empty";
         } else if (directoryFilesLength == countOfExceptions) {
-            mainHeaderMessage += "All files are not renamed by the next reasons:";
+            mainHeaderMessage += "All files are not renamed.";
         } else if (countOfExceptions == 0) {
             mainHeaderMessage += "Files renamed successfully.";
         } else {
             mainHeaderMessage += "Files renamed" + RESET + ", but exists a problems.";
         }
-        printErrorMessage("");
-        printErrorMessage(mainHeaderMessage + RESET);
-        printErrorMessage("");
+        printInfoMessage("");
+        printInfoMessage(mainHeaderMessage + RESET);
 
+        printInfoMessage("To see log, enter '/log'");
+        if (inputReader.read().equals("")) {
+            return;
+        }
+        printErrorMessage("");
+        final Map<Class<? extends Exception>, List<String>> sortedLogList = sortLogs(logList);
         sortedLogList.forEach((e, list) -> {
             if (list.size() == 0) {
                 return;
