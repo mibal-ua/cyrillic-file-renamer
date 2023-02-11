@@ -26,6 +26,9 @@ import java.io.File;
 public class PathOperator {
 
     public static String testAndGetCorrectPath(String userPath) {
+        if (userPath == null) {
+            return null;
+        }
         if (new File(userPath).exists()) {
             return userPath;
         }
