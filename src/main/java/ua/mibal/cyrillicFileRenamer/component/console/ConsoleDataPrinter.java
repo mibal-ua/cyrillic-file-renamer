@@ -83,7 +83,7 @@ public class ConsoleDataPrinter implements DataPrinter {
                                        final Map<String, Exception> logList) {
         final Map<Class<? extends Exception>, List<String>> sortedLogList = sortLogs(logList);
         final int countOfExceptions = logList.size();
-        String mainHeaderMessage = "\n" + BOLD;
+        String mainHeaderMessage = BOLD;
         if (directoryFilesLength == 0) {
             mainHeaderMessage += "Directory is empty";
         } else if (directoryFilesLength == countOfExceptions) {
@@ -93,6 +93,7 @@ public class ConsoleDataPrinter implements DataPrinter {
         } else {
             mainHeaderMessage += "Files renamed" + RESET + ", but exists a problems.";
         }
+        printInfoMessage("");
         printInfoMessage(mainHeaderMessage + RESET);
         printInfoMessage("");
 
