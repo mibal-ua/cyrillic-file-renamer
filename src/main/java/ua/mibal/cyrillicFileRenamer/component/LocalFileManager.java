@@ -32,11 +32,13 @@ public class LocalFileManager implements FileManager {
         "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", "cyrillic-file-renamer-"
     };
 
+    @Override
     public File[] getFilesFromDirectory(final String pathToCatalog) {
         final File directory = new File(pathToCatalog);
         return directory.listFiles();
     }
 
+    @Override
     public boolean isIgnoredFile(final String fileName) {
         if (fileName.charAt(0) == '.') {
             return true;
@@ -60,6 +62,7 @@ public class LocalFileManager implements FileManager {
     public void createRenamedFile(final File sourceFile,
                                   final String newName,
                                   final File resultingDirectory) throws IOException {
-        Files.copy(sourceFile.toPath(), Path.of((resultingDirectory.toPath() + "/" + newName)));
+        Files.copy(sourceFile.toPath(),
+            Path.of((resultingDirectory.toPath() + "/" + newName)));
     }
 }
