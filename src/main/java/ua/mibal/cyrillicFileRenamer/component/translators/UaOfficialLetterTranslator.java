@@ -17,8 +17,8 @@
 
 package ua.mibal.cyrillicFileRenamer.component.translators;
 
+import ua.mibal.cyrillicFileRenamer.model.exceptions.FIleNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
-import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 
 /**
@@ -32,7 +32,8 @@ public class UaOfficialLetterTranslator extends LetterTranslator {
     }
 
     @Override
-    protected String translate(final String word, final int i, final String letter) throws IllegalNameException, IllegalLanguageException {
+    protected String translate(final String word, final int i, final String letter) throws
+        FIleNameDontContainCyrillicSymbolsException, IllegalLanguageException {
         if (i == 0 && isSpecialLetter(letter)) {
             return translateSpecialSymbols(letter, UA);
         } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
