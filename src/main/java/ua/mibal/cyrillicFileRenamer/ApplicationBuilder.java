@@ -76,7 +76,7 @@ public class ApplicationBuilder {
         letterStandard = parser.getLetterStandard();
     }
 
-    private static void clearLines(final int count) {
+    private void clearLines(final int count) {
         for (int i = 0; i < count; i++) {
             System.out.print("\033[F"); // go to previous line
             System.out.print("\033[2K"); // clear current line
