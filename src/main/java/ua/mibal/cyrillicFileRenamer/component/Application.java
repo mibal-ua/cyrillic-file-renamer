@@ -78,7 +78,7 @@ public class Application {
                 logList.put(oldName, e);
             }
         }
-        dataPrinter.printNonProcessedFiles(directoryFiles.length, logList);
+        dataPrinter.printNonProcessedFiles(directoryFiles.length - 1, logList); // minus resultingDirectory
         dataPrinter.exit();
     }
 }
