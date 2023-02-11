@@ -61,12 +61,12 @@ public class ConsoleDataPrinter implements DataPrinter {
     public void printWelcomeMessage() {
         final String message = format("""
                             
-            -------------||%s The Cyrillic file renamer application %s||-------------
-            -                         made with love ❤                          -
-            -                                                                   -
-            - #StandWithUkraine                                                 -
-            - author: @mibal_ua                                                 -
-            ---------------------------------------------------------------------""",
+            ----------------------||%s The Cyrillic file renamer v2.0 %s||----------------------
+            -                               made with love ❤                               -
+            - #StandWithUkraine                                                            -
+            - version: 2.0                                                                 -
+            - author: @mibal_ua                                                            -
+            --------------------------------------------------------------------------------""",
             BOLD, RESET);
         printInfoMessage(message);
     }
