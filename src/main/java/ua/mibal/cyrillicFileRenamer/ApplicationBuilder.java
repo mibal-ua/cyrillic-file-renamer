@@ -24,7 +24,6 @@ import ua.mibal.cyrillicFileRenamer.component.DataPrinter.ExitHandler;
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
-import ua.mibal.cyrillicFileRenamer.component.PathOperator;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
@@ -35,7 +34,10 @@ import ua.mibal.cyrillicFileRenamer.component.translators.UaOfficialLetterTransl
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 import static java.lang.String.format;
+import static ua.mibal.cyrillicFileRenamer.component.PathOperator.getExamplePath;
 import static ua.mibal.cyrillicFileRenamer.component.PathOperator.testAndGetCorrectPath;
+import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.BOLD;
+import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.RESET;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
@@ -73,6 +75,13 @@ public class ApplicationBuilder {
         pathToCatalog = testAndGetCorrectPath(parser.getPath());
         lang = parser.getLang();
         letterStandard = parser.getLetterStandard();
+    }
+
+    private static void clearLines(final int count) {
+        for (int i = 0; i < count; i++) {
+            System.out.print("\033[F"); // go to previous line
+            System.out.print("\033[2K"); // clear current line
+        }
     }
 
     public Application build() {
@@ -116,61 +125,79 @@ public class ApplicationBuilder {
 
     private void configureLetterStandard() {
         dataPrinter.printInfoMessage("");
+        dataPrinter.printInfoMessage("Select standard of transliteration:");
         boolean infoIsExists = false;
-        int count = 1;
+        int count = 2;
         while (true) {
-            dataPrinter.printInfoMessage("Enter standard of transliteration: 'OFFICIAL' or 'EXTENDED'");
+            dataPrinter.printInfoMessage("""
+                1 - EXTENDED
+                2 - OFFICIAL""");
+            count += 2;
             if (!infoIsExists) {
-                dataPrinter.printInfoMessage("For more information enter '/info'");
+                dataPrinter.printInfoMessage("Questions? Enter '/info'");
                 count++;
             }
-            String userStandard = inputReader.read().trim();
+            dataPrinter.printInfoMessage("");
+            final String userStandard = inputReader.read().trim();
             count += 2;
-            if (userStandard.equalsIgnoreCase("/exit")) {
-                dataPrinter.exit();
-            } else if (userStandard.equalsIgnoreCase("/info")) {
-                dataPrinter.printInfoMessage("");
-                dataPrinter.printInfoMessage("""
-                    \033[1mOFFICIAL\u001B[0m transliteration mode is used to transliterate the names of people and places by goverment standards.
-                    \033[1mEXTENDED\u001B[0m mode uses all word sound rules for more accurate transliteration.
-                    """);
-                count += 5;
-                infoIsExists = true;
-            } else if (userStandard.equalsIgnoreCase(OFFICIAL.name()) ||
-                       userStandard.equalsIgnoreCase(EXTENDED.name())) {
-                letterStandard = LetterStandard.valueOf(userStandard.toUpperCase());
+            if (userStandard.equals("1")) {
+                letterStandard = EXTENDED;
                 break;
-            } else {
-                dataPrinter.printInfoMessage("");
-                dataPrinter.printInfoMessage(format(
-                    "You enter unsupported letter standard '%s'." + '\n', userStandard
-                ));
-                count += 2;
             }
+            if (userStandard.equals("2")) {
+                letterStandard = EXTENDED;
+                break;
+            }
+            if (userStandard.equalsIgnoreCase("/info")) {
+                clearLines(count - 1);
+                count = 1;
+                dataPrinter.printInfoMessage(format("""
+                        %sEXTENDED%s transliteration mode uses all word
+                                 sound rules for more accurate
+                                 transliteration.
+                        %sOFFICIAL%s mode is used to
+                                 transliterate the names of people
+                                 and places by government standards.""",
+                    BOLD, RESET, BOLD, RESET));
+                infoIsExists = true;
+                count += 6;
+                continue;
+            }
+            clearLines(count - 1);
+            count = 1;
+            dataPrinter.printInfoMessage(format(
+                "You enter unsupported letter standard '%s'.", userStandard
+            ));
+            count += 1;
         }
         clearLines(count);
     }
 
     private void configureLang() {
         dataPrinter.printInfoMessage("");
-        int count = 1;
+        dataPrinter.printInfoMessage("Select language:");
+        int count = 2;
         while (true) {
-            dataPrinter.printInfoMessage("Enter language of files: 'RU' or 'UA'");
-            String userLang = inputReader.read().trim();
-            count += 2;
-            if (userLang.equalsIgnoreCase("/exit")) {
-                dataPrinter.exit();
-            } else if (userLang.equalsIgnoreCase(RU.name()) ||
-                       userLang.equalsIgnoreCase(UA.name())) {
-                lang = Lang.valueOf(userLang.toUpperCase());
+            dataPrinter.printInfoMessage("""
+                1 - UA
+                2 - RU
+                """);
+            final String userLang = inputReader.read().trim();
+            count += 4;
+            if (userLang.equals("1")) {
+                lang = UA;
                 break;
-            } else {
-                dataPrinter.printInfoMessage("");
-                dataPrinter.printInfoMessage(format(
-                    "You enter unsupported language '%s'." + '\n', userLang
-                ));
-                count += 2;
             }
+            if (userLang.equals("2")) {
+                lang = RU;
+                break;
+            }
+            clearLines(count - 1);
+            count = 1;
+            dataPrinter.printInfoMessage(format(
+                "You enter unsupported language '%s'.", userLang
+            ));
+            count += 1;
         }
         clearLines(count);
     }
@@ -180,30 +207,20 @@ public class ApplicationBuilder {
         dataPrinter.printInfoMessage("Enter path to catalog with files:");
         int count = 2;
         while (true) {
-            String userPath = inputReader.read().trim();
+            final String userPath = inputReader.read().trim();
             count += 1;
-            if (userPath.equalsIgnoreCase("/exit")) {
-                dataPrinter.exit();
-            }
-            String normalUserPath = testAndGetCorrectPath(userPath);
+            final String normalUserPath = testAndGetCorrectPath(userPath);
             if (normalUserPath != null) {
                 pathToCatalog = normalUserPath;
                 break;
-            } else {
-                dataPrinter.printInfoMessage("");
-                dataPrinter.printErrorMessage(format("You enter incorrect path '%s'.", userPath));
-                dataPrinter.printInfoMessage("Enter path like this: " +
-                                             PathOperator.getExamplePath());
-                count += 3;
             }
+            clearLines(count - 1);
+            count = 1;
+            dataPrinter.printErrorMessage(format("You enter incorrect path '%s'.", userPath));
+            dataPrinter.printInfoMessage("Enter path like this: " + getExamplePath());
+            dataPrinter.printInfoMessage("");
+            count += 3;
         }
         clearLines(count);
-    }
-
-    public static void clearLines(final int count) {
-        for (int i = 0; i < count; i++) {
-            System.out.print("\033[F");
-            System.out.print("\033[2K");
-        }
     }
 }
