@@ -37,7 +37,8 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
  */
 public abstract class LetterTranslator {
 
-    public String translateName(final String oldName) throws FIleNameDontContainCyrillicSymbolsException, IllegalLanguageException {
+    public String translateName(final String oldName)
+        throws FIleNameDontContainCyrillicSymbolsException, IllegalLanguageException {
         String[] result = getSeparateExtensionAndName(oldName);
         String name = result[0];
         String extension = result[1];

@@ -21,7 +21,7 @@ package ua.mibal.cyrillicFileRenamer.model.exceptions;
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public final class FIleNameDontContainCyrillicSymbolsException extends Exception{
+public final class FIleNameDontContainCyrillicSymbolsException extends Exception {
 
     public FIleNameDontContainCyrillicSymbolsException(final String message) {
         super(message);
