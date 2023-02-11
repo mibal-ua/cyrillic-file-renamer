@@ -21,9 +21,9 @@ package ua.mibal.cyrillicFileRenamer.model.exceptions;
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public final class IllegalNameException extends Exception{
+public final class FIleNameDontContainCyrillicSymbolsException extends Exception{
 
-    public IllegalNameException(final String message) {
+    public FIleNameDontContainCyrillicSymbolsException(final String message) {
         super(message);
     }
 }

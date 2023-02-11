@@ -18,8 +18,8 @@
 package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.FIleNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
-import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalNameException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.DOT;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Border.EMDASH;
@@ -37,7 +37,7 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
  */
 public abstract class LetterTranslator {
 
-    public String translateName(final String oldName) throws IllegalNameException, IllegalLanguageException {
+    public String translateName(final String oldName) throws FIleNameDontContainCyrillicSymbolsException, IllegalLanguageException {
         String[] result = getSeparateExtensionAndName(oldName);
         String name = result[0];
         String extension = result[1];
@@ -62,13 +62,13 @@ public abstract class LetterTranslator {
             newName.append(word);
         }
         if (newName.toString().equals(name)) {
-            throw new IllegalNameException("File don't contain cyrillic symbols");
+            throw new FIleNameDontContainCyrillicSymbolsException("File don't contain cyrillic symbols");
         }
         return newName.append(extension).toString();
     }
 
     protected String translate(final String word, final int i, final String letter)
-        throws IllegalNameException, IllegalLanguageException {
+        throws FIleNameDontContainCyrillicSymbolsException, IllegalLanguageException {
         return null;
     }
 

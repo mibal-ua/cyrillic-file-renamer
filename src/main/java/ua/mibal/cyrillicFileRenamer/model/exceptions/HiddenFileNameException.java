@@ -21,9 +21,9 @@ package ua.mibal.cyrillicFileRenamer.model.exceptions;
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public final class HiddenFileException extends Exception {
+public final class HiddenFileNameException extends Exception {
 
-    public HiddenFileException() {
+    public HiddenFileNameException() {
         super("File have hidden name.");
     }
 }
