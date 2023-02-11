@@ -39,9 +39,9 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     private final ExitHandler exitHandler;
 
-    private final static String BOLD = "\u001B[1m";
+    public final static String BOLD = "\u001B[1m";
 
-    private final static String RESET = "\u001B[0m";
+    public final static String RESET = "\u001B[0m";
 
     public ConsoleDataPrinter(final ExitHandler exitHandler) {
         this.exitHandler = requireNonNull(exitHandler);
