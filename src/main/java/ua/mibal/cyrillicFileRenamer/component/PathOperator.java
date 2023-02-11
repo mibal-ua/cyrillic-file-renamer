@@ -46,13 +46,10 @@ public class PathOperator {
 
     public static String getParentFolder(final String path) {
         final String newPath = testAndGetCorrectPath(path);
-        if (newPath != null) {
-            File file = new File(newPath);
-            if (file.exists()) {
-                return file.getAbsoluteFile().getParent();
-            }
+        if (newPath == null) {
+            return null;
         }
-        return null;
+        return new File(newPath).getAbsoluteFile().getParent();
     }
 
     public static String getExamplePath() {
