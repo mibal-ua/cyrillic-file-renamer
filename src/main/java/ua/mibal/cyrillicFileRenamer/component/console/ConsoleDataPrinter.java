@@ -93,20 +93,20 @@ public class ConsoleDataPrinter implements DataPrinter {
         } else {
             mainHeaderMessage += "Files renamed" + RESET + ", but exists a problems.";
         }
-        printInfoMessage("");
-        printInfoMessage(mainHeaderMessage + RESET);
-        printInfoMessage("");
+        printErrorMessage("");
+        printErrorMessage(mainHeaderMessage + RESET);
+        printErrorMessage("");
 
         sortedLogList.forEach((e, list) -> {
             if (list.size() == 0) {
                 return;
             }
-            printInfoMessage(e.getSimpleName() + ":");
+            printErrorMessage(e.getSimpleName() + ":");
             for (int i = 0; i < list.size(); i++) {
                 final String message = list.get(i);
-                printInfoMessage(format("%s. %s", i + 1, message));
+                printErrorMessage(format("%s. %s", i + 1, message));
             }
-            printInfoMessage("");
+            printErrorMessage("");
         });
     }
 

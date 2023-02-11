@@ -215,7 +215,7 @@ public class ApplicationBuilder {
             }
             clearLines(count - 1);
             count = 1;
-            dataPrinter.printErrorMessage(format("You enter incorrect path '%s'.", userPath));
+            dataPrinter.printInfoMessage(format("You enter incorrect path '%s'.", userPath));
             dataPrinter.printInfoMessage("Enter path like this: " + PathOperator.getExamplePath());
             dataPrinter.printInfoMessage("");
             count += 3;
