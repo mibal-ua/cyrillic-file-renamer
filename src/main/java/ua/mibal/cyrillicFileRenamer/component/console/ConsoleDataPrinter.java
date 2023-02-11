@@ -117,12 +117,12 @@ public class ConsoleDataPrinter implements DataPrinter {
         map.put(HiddenFileNameException.class, new ArrayList<>());
         map.put(FIleNameDontContainCyrillicSymbolsException.class, new ArrayList<>());
 
-        logList.forEach((name, e) -> {
+        logList.forEach((fileName, e) -> {
             final Class<? extends Exception> clazz = e.getClass();
             if (clazz == IllegalLanguageException.class) {
-                map.get(clazz).add(name + ": " + e.getMessage());
+                map.get(clazz).add(fileName + ": " + e.getMessage());
             } else {
-                map.get(clazz).add(name);
+                map.get(clazz).add(fileName);
             }
         });
         return Collections.unmodifiableMap(map);
