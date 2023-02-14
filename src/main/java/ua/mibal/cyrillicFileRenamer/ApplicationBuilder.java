@@ -18,12 +18,14 @@
 package ua.mibal.cyrillicFileRenamer;
 
 import ua.mibal.cyrillicFileRenamer.component.Application;
-import ua.mibal.cyrillicFileRenamer.component.ConsoleArgumentParser;
+import ua.mibal.cyrillicFileRenamer.component.ApplicationConfigurator;
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter.ExitHandler;
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
+import ua.mibal.cyrillicFileRenamer.component.config.ConsoleApplicationConfigurator;
+import ua.mibal.cyrillicFileRenamer.component.config.ConsoleArgumentParser;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
@@ -34,9 +36,6 @@ import ua.mibal.cyrillicFileRenamer.component.translators.UaOfficialLetterTransl
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 import ua.mibal.cyrillicFileRenamer.model.programMode.OS;
-import static java.lang.String.format;
-import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.BOLD;
-import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.RESET;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
@@ -48,19 +47,22 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.OFFI
  */
 public class ApplicationBuilder {
 
-    private static String pathToCatalog;
+    private static String currentPath;
 
     private static Lang lang;
 
     private static LetterStandard letterStandard;
 
-    private final ExitHandler exitHandler = () -> System.exit(0);
-
     private final InputReader inputReader = new ConsoleInputReader();
+
+    private final ExitHandler exitHandler = () -> System.exit(0);
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter(inputReader, exitHandler);
 
     private final FileManager fileManager = new LocalFileManager(OS.UNIX);
+
+    private final ApplicationConfigurator configurator =
+        new ConsoleApplicationConfigurator(dataPrinter, inputReader, fileManager);
 
     private LetterTranslator letterTranslator;
 
@@ -71,29 +73,22 @@ public class ApplicationBuilder {
         }
         final ConsoleArgumentParser parser = new ConsoleArgumentParser(fileManager);
         parser.parse(args);
-        pathToCatalog = fileManager.testAndGetCorrectPath(parser.getPath());
+        currentPath = fileManager.testAndGetCorrectPath(parser.getPath());
         lang = parser.getLang();
         letterStandard = parser.getLetterStandard();
     }
 
-    private void clearLines(final int count) {
-        for (int i = 0; i < count; i++) {
-            System.out.print("\033[F"); // go to previous line
-            System.out.print("\033[2K"); // clear current line
-        }
-    }
-
     public Application build() {
-        if (pathToCatalog == null) {
-            configurePathToCatalog();
+        if (currentPath == null) {
+            currentPath = configurator.configureCurrentPath();
         }
-        dataPrinter.printInfoMessage("Path: " + pathToCatalog);
+        dataPrinter.printInfoMessage("Path: " + currentPath);
         if (lang == null) {
-            configureLang();
+            lang = configurator.configureLang();
         }
         dataPrinter.printInfoMessage("Language: " + lang);
         if (letterStandard == null) {
-            configureLetterStandard();
+            letterStandard = configurator.configureLetterStandard();
         }
         dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard);
 
@@ -117,109 +112,8 @@ public class ApplicationBuilder {
         return new Application(
             dataPrinter,
             fileManager,
-            pathToCatalog,
+            currentPath,
             letterTranslator
         );
-    }
-
-    private void configureLetterStandard() {
-        dataPrinter.printInfoMessage("");
-        dataPrinter.printInfoMessage("Select standard of transliteration:");
-        boolean infoIsExists = false;
-        int count = 2;
-        while (true) {
-            dataPrinter.printInfoMessage("""
-                1 - EXTENDED
-                2 - OFFICIAL""");
-            count += 2;
-            if (!infoIsExists) {
-                dataPrinter.printInfoMessage("Questions? Enter '/info'");
-                count++;
-            }
-            dataPrinter.printInfoMessage("");
-            final String userStandard = inputReader.read().trim();
-            count += 2;
-            if (userStandard.equals("1")) {
-                letterStandard = EXTENDED;
-                break;
-            }
-            if (userStandard.equals("2")) {
-                letterStandard = EXTENDED;
-                break;
-            }
-            if (userStandard.equalsIgnoreCase("/info")) {
-                clearLines(count - 1);
-                count = 1;
-                dataPrinter.printInfoMessage(format("""
-                        %sEXTENDED%s transliteration mode uses all word
-                                 sound rules for more accurate
-                                 transliteration.
-                        %sOFFICIAL%s mode is used to
-                                 transliterate the names of people
-                                 and places by government standards.""",
-                    BOLD, RESET, BOLD, RESET));
-                infoIsExists = true;
-                count += 6;
-                continue;
-            }
-            clearLines(count - 1);
-            count = 1;
-            dataPrinter.printInfoMessage(format(
-                "You enter unsupported letter standard '%s'.", userStandard
-            ));
-            count += 1;
-        }
-        clearLines(count);
-    }
-
-    private void configureLang() {
-        dataPrinter.printInfoMessage("");
-        dataPrinter.printInfoMessage("Select language:");
-        int count = 2;
-        while (true) {
-            dataPrinter.printInfoMessage("""
-                1 - UA
-                2 - RU
-                """);
-            final String userLang = inputReader.read().trim();
-            count += 4;
-            if (userLang.equals("1")) {
-                lang = UA;
-                break;
-            }
-            if (userLang.equals("2")) {
-                lang = RU;
-                break;
-            }
-            clearLines(count - 1);
-            count = 1;
-            dataPrinter.printInfoMessage(format(
-                "You enter unsupported language '%s'.", userLang
-            ));
-            count += 1;
-        }
-        clearLines(count);
-    }
-
-    private void configurePathToCatalog() {
-        dataPrinter.printInfoMessage("");
-        dataPrinter.printInfoMessage("Enter path to catalog with files:");
-        int count = 2;
-        while (true) {
-            final String userPath = inputReader.read().trim();
-            count += 1;
-            final String normalUserPath = fileManager.testAndGetCorrectPath(userPath);
-            if (normalUserPath != null) {
-                pathToCatalog = normalUserPath;
-                break;
-            }
-            clearLines(count - 1);
-            count = 1;
-            dataPrinter.printInfoMessage(format("You enter incorrect path '%s'.", userPath));
-            dataPrinter.printInfoMessage("Enter path like this: " + fileManager.getPathExample());
-            dataPrinter.printInfoMessage("");
-            count += 3;
-        }
-        clearLines(count);
     }
 }
