@@ -38,5 +38,5 @@ public interface FileManager {
 
     String getParentFolder(String path);
 
-    String getExamplePath();
+    String getPathExample();
 }

@@ -17,6 +17,7 @@
 
 package ua.mibal.cyrillicFileRenamer.component;
 
+import ua.mibal.cyrillicFileRenamer.model.programMode.OS;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,6 +28,12 @@ import java.nio.file.Path;
  * @link https://t.me/mibal_ua
  */
 public class LocalFileManager implements FileManager {
+
+    private final String pathExample;
+
+    public LocalFileManager(final OS os) {
+        this.pathExample = os.getPathExample();
+    }
 
     private final static String[] IGNORED_FILE_NAMES = {
         "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", "cyrillic-file-renamer-"
@@ -95,9 +102,8 @@ public class LocalFileManager implements FileManager {
         return new File(newPath).getAbsoluteFile().getParent();
     }
 
-    //TODO make variations with UNIX and WINDOWS examples depends on OS
     @Override
-    public String getExamplePath() {
-        return "/Users/home/path/to/catalog/";
+    public String getPathExample() {
+        return pathExample;
     }
 }

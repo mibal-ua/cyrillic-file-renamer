@@ -33,6 +33,7 @@ import ua.mibal.cyrillicFileRenamer.component.translators.UaExtendedLetterTransl
 import ua.mibal.cyrillicFileRenamer.component.translators.UaOfficialLetterTranslator;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
+import ua.mibal.cyrillicFileRenamer.model.programMode.OS;
 import static java.lang.String.format;
 import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.BOLD;
 import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.RESET;
@@ -59,7 +60,7 @@ public class ApplicationBuilder {
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter(inputReader, exitHandler);
 
-    private final FileManager fileManager = new LocalFileManager();
+    private final FileManager fileManager = new LocalFileManager(OS.UNIX);
 
     private LetterTranslator letterTranslator;
 
@@ -215,7 +216,7 @@ public class ApplicationBuilder {
             clearLines(count - 1);
             count = 1;
             dataPrinter.printInfoMessage(format("You enter incorrect path '%s'.", userPath));
-            dataPrinter.printInfoMessage("Enter path like this: " + fileManager.getExamplePath());
+            dataPrinter.printInfoMessage("Enter path like this: " + fileManager.getPathExample());
             dataPrinter.printInfoMessage("");
             count += 3;
         }
