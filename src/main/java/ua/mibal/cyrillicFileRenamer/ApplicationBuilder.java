@@ -24,6 +24,7 @@ import ua.mibal.cyrillicFileRenamer.component.DataPrinter.ExitHandler;
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
+import ua.mibal.cyrillicFileRenamer.component.OSDetector;
 import ua.mibal.cyrillicFileRenamer.component.config.ConsoleApplicationConfigurator;
 import ua.mibal.cyrillicFileRenamer.component.config.ConsoleArgumentParser;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
@@ -35,7 +36,6 @@ import ua.mibal.cyrillicFileRenamer.component.translators.UaExtendedLetterTransl
 import ua.mibal.cyrillicFileRenamer.component.translators.UaOfficialLetterTranslator;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
-import ua.mibal.cyrillicFileRenamer.model.programMode.OS;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
@@ -59,7 +59,7 @@ public class ApplicationBuilder {
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter(inputReader, exitHandler);
 
-    private final FileManager fileManager = new LocalFileManager(OS.UNIX);
+    private final FileManager fileManager = new LocalFileManager(OSDetector.detectOS());
 
     private final ApplicationConfigurator configurator =
         new ConsoleApplicationConfigurator(dataPrinter, inputReader, fileManager);
