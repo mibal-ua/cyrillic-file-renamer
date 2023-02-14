@@ -50,6 +50,13 @@ public class ConsoleDataPrinter implements DataPrinter {
         this.exitHandler = requireNonNull(exitHandler);
     }
 
+    public static void clearLines(final int count) {
+        for (int i = 0; i < count; i++) {
+            System.out.print("\033[F"); // go to previous line
+            System.out.print("\033[2K"); // clear current line
+        }
+    }
+
     @Override
     public void printInfoMessage(final String message) {
         System.out.println(message);

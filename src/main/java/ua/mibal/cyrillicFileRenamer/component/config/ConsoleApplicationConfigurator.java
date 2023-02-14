@@ -26,6 +26,7 @@ import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 import static java.lang.String.format;
 import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.BOLD;
 import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.RESET;
+import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.clearLines;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
@@ -159,13 +160,5 @@ public class ConsoleApplicationConfigurator implements ApplicationConfigurator {
         }
         clearLines(count);
         return resultPath;
-    }
-
-
-    private void clearLines(final int count) {
-        for (int i = 0; i < count; i++) {
-            System.out.print("\033[F"); // go to previous line
-            System.out.print("\033[2K"); // clear current line
-        }
     }
 }
