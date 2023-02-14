@@ -43,7 +43,8 @@ public class ConsoleApplicationConfigurator implements ApplicationConfigurator {
 
     private final FileManager fileManager;
 
-    public ConsoleApplicationConfigurator(final DataPrinter dataPrinter, final InputReader inputReader,
+    public ConsoleApplicationConfigurator(final DataPrinter dataPrinter,
+                                          final InputReader inputReader,
                                           final FileManager fileManager) {
         this.dataPrinter = dataPrinter;
         this.inputReader = inputReader;
