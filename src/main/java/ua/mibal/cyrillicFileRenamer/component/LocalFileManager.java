@@ -49,8 +49,7 @@ public class LocalFileManager implements FileManager {
         return directory.listFiles((dir, file) -> !isIgnoredFile(file));
     }
 
-    @Override
-    public boolean isIgnoredFile(final String fileName) {
+    private boolean isIgnoredFile(final String fileName) {
         if (fileName.charAt(0) == '.') {
             return true;
         }

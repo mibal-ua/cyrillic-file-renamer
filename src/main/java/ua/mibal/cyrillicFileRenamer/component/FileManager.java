@@ -28,8 +28,6 @@ public interface FileManager {
 
     File[] getFilesFromDirectory(String pathToCatalog);
 
-    boolean isIgnoredFile(String fileName);
-
     void createResultingDirectory(String pathToCatalog);
 
     void createRenamedFile(File sourceFile, String newName) throws IOException;
