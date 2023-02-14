@@ -70,7 +70,7 @@ public class Application {
                 logList.put(oldName, e);
             }
         }
-        dataPrinter.printNonProcessedFiles(directoryFiles.length - 2, logList);
+        dataPrinter.printNonProcessedFiles(directoryFiles.length, logList);
         dataPrinter.exit();
     }
 }
