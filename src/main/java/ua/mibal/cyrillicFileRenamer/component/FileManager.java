@@ -33,4 +33,10 @@ public interface FileManager {
     File createResultingDirectory(String pathToCatalog);
 
     void createRenamedFile(File sourceFile, String newName, File resultingDirectory) throws IOException;
+
+    String testAndGetCorrectPath(String path);
+
+    String getParentFolder(String path);
+
+    String getExamplePath();
 }

@@ -24,7 +24,6 @@ import ua.mibal.cyrillicFileRenamer.component.DataPrinter.ExitHandler;
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
-import ua.mibal.cyrillicFileRenamer.component.PathOperator;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
@@ -69,9 +68,9 @@ public class ApplicationBuilder {
         if (args.length == 0) {
             return;
         }
-        final ConsoleArgumentParser parser = new ConsoleArgumentParser();
+        final ConsoleArgumentParser parser = new ConsoleArgumentParser(fileManager);
         parser.parse(args);
-        pathToCatalog = PathOperator.testAndGetCorrectPath(parser.getPath());
+        pathToCatalog = fileManager.testAndGetCorrectPath(parser.getPath());
         lang = parser.getLang();
         letterStandard = parser.getLetterStandard();
     }
@@ -208,7 +207,7 @@ public class ApplicationBuilder {
         while (true) {
             final String userPath = inputReader.read().trim();
             count += 1;
-            final String normalUserPath = PathOperator.testAndGetCorrectPath(userPath);
+            final String normalUserPath = fileManager.testAndGetCorrectPath(userPath);
             if (normalUserPath != null) {
                 pathToCatalog = normalUserPath;
                 break;
@@ -216,7 +215,7 @@ public class ApplicationBuilder {
             clearLines(count - 1);
             count = 1;
             dataPrinter.printInfoMessage(format("You enter incorrect path '%s'.", userPath));
-            dataPrinter.printInfoMessage("Enter path like this: " + PathOperator.getExamplePath());
+            dataPrinter.printInfoMessage("Enter path like this: " + fileManager.getExamplePath());
             dataPrinter.printInfoMessage("");
             count += 3;
         }

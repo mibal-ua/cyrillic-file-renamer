@@ -65,4 +65,39 @@ public class LocalFileManager implements FileManager {
         Files.copy(sourceFile.toPath(),
             Path.of((resultingDirectory.toPath() + "/" + newName)));
     }
+
+    @Override
+    public String testAndGetCorrectPath(String userPath) {
+        if (userPath == null) {
+            return null;
+        }
+        if (new File(userPath).exists()) { //TODO make dependency on FileManager, without 'new File...'
+            return userPath;
+        }
+        if (userPath.length() == 0) {
+            return null; //TODO throw exception
+        }
+        if (userPath.charAt(0) != '/') {
+            userPath = "/" + userPath;
+        }
+        if (new File(userPath).exists()) {
+            return userPath;
+        }
+        return null; //TODO throw exception
+    }
+
+    @Override
+    public String getParentFolder(final String path) {
+        final String newPath = testAndGetCorrectPath(path);
+        if (newPath == null) {
+            return null;
+        }
+        return new File(newPath).getAbsoluteFile().getParent();
+    }
+
+    //TODO make variations with UNIX and WINDOWS examples depends on OS
+    @Override
+    public String getExamplePath() {
+        return "/Users/home/path/to/catalog/";
+    }
 }

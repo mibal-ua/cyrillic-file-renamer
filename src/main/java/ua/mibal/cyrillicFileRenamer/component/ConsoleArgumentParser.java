@@ -30,16 +30,22 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.OFFI
  */
 public class ConsoleArgumentParser {
 
+    private final FileManager fileManager;
+
     private String path;
 
     private Lang lang;
 
     private LetterStandard letterStandard;
 
+    public ConsoleArgumentParser(final FileManager fileManager) {
+        this.fileManager = fileManager;
+    }
+
     public void parse(String[] args) {
         for (final String arg : args) {
             if (arg.equalsIgnoreCase("this")) {
-                this.path = PathOperator.getParentFolder(System.getProperty("user.dir"));
+                this.path = fileManager.getParentFolder(System.getProperty("user.dir"));
             } else if (arg.equalsIgnoreCase(UA.name()) || arg.equalsIgnoreCase(RU.name())) {
                 lang = Lang.valueOf(arg.toUpperCase());
             } else if (arg.equalsIgnoreCase(OFFICIAL.name()) || arg.equalsIgnoreCase(EXTENDED.name())) {
