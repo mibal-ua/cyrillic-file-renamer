@@ -99,7 +99,7 @@ public class ConsoleDataPrinter implements DataPrinter {
         printInfoMessage(mainHeaderMessage + RESET);
 
         printInfoMessage("To see log, enter '/log'");
-        if (inputReader.read().equals("")) {
+        if (!inputReader.read().equals("/log")) {
             return;
         }
         printErrorMessage("");
