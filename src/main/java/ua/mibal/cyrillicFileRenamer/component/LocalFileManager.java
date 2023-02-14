@@ -33,11 +33,11 @@ public class LocalFileManager implements FileManager {
 
     private final String resultingDirName = "renamedToLatin";
 
-    private File resultingDir;
-
     private final String[] IGNORED_FILE_NAMES = {
         resultingDirName, "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", "cyrillic-file-renamer-"
     };
+
+    private File resultingDir;
 
     public LocalFileManager(final OS os) {
         this.pathExample = os.getPathExample();
@@ -80,11 +80,11 @@ public class LocalFileManager implements FileManager {
         if (userPath == null) {
             return null;
         }
-        if (new File(userPath).exists()) { //TODO make dependency on FileManager, without 'new File...'
+        if (new File(userPath).exists()) {
             return userPath;
         }
         if (userPath.length() == 0) {
-            return null; //TODO throw exception
+            return null;
         }
         if (userPath.charAt(0) != '/') {
             userPath = "/" + userPath;
@@ -92,11 +92,11 @@ public class LocalFileManager implements FileManager {
         if (new File(userPath).exists()) {
             return userPath;
         }
-        return null; //TODO throw exception
+        return null;
     }
 
     @Override
-    public String getParentFolder(final String path) {
+    public String getParentDir(final String path) {
         final String newPath = testAndGetCorrectPath(path);
         if (newPath == null) {
             return null;

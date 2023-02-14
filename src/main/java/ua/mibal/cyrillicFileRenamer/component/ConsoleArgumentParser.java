@@ -45,7 +45,7 @@ public class ConsoleArgumentParser {
     public void parse(String[] args) {
         for (final String arg : args) {
             if (arg.equalsIgnoreCase("this")) {
-                this.path = fileManager.getParentFolder(System.getProperty("user.dir"));
+                this.path = fileManager.getParentDir(System.getProperty("user.dir"));
             } else if (arg.equalsIgnoreCase(UA.name()) || arg.equalsIgnoreCase(RU.name())) {
                 lang = Lang.valueOf(arg.toUpperCase());
             } else if (arg.equalsIgnoreCase(OFFICIAL.name()) || arg.equalsIgnoreCase(EXTENDED.name())) {

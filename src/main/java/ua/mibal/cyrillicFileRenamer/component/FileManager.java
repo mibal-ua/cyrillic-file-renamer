@@ -28,13 +28,13 @@ public interface FileManager {
 
     File[] getFilesFromDirectory(String pathToCatalog);
 
-    void createResultingDirectory(String pathToCatalog);
+    void createResultingDirectory(String pathToCurrentDir);
 
     void createRenamedFile(File sourceFile, String newName) throws IOException;
 
     String testAndGetCorrectPath(String path);
 
-    String getParentFolder(String path);
+    String getParentDir(String path);
 
     String getPathExample();
 }
