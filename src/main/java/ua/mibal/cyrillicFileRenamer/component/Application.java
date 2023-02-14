@@ -19,7 +19,6 @@ package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.FIleNameDontContainCyrillicSymbolsException;
-import ua.mibal.cyrillicFileRenamer.model.exceptions.HiddenFileNameException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import static java.util.Objects.requireNonNull;
 import java.io.File;
@@ -58,10 +57,6 @@ public class Application {
 
         for (final File sourceFile : directoryFiles) {
             final String oldName = sourceFile.getName(); // with extension
-            if (fileManager.isIgnoredFile(oldName)) {
-                logList.put(oldName, new HiddenFileNameException());
-                continue;
-            }
             String newName;
             try {
                 newName = letterTranslator.translateName(oldName);

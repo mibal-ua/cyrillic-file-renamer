@@ -46,7 +46,7 @@ public class LocalFileManager implements FileManager {
     @Override
     public File[] getFilesFromDirectory(final String pathToCatalog) {
         final File directory = new File(pathToCatalog);
-        return directory.listFiles();
+        return directory.listFiles((dir, file) -> !isIgnoredFile(file));
     }
 
     @Override
