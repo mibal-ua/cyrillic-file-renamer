@@ -70,7 +70,7 @@ public class Application {
                 logList.put(oldName, e);
             }
         }
-        dataPrinter.printLog(directoryFiles.length, logList);
+        dataPrinter.outInfo(directoryFiles.length, logList);
         dataPrinter.exit();
     }
 }

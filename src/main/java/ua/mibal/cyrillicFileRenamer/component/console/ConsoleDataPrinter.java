@@ -29,7 +29,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * @author Mykhailo Balakhon
@@ -44,6 +43,8 @@ public class ConsoleDataPrinter implements DataPrinter {
     private final ExitHandler exitHandler;
 
     private final InputReader inputReader;
+
+    private Map<String, Exception> logList;
 
     public ConsoleDataPrinter(final InputReader inputReader, final ExitHandler exitHandler) {
         this.inputReader = requireNonNull(inputReader);
@@ -83,14 +84,39 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     @Override
     public void exit() {
-        System.out.println("Press any key to exit...");
-        new Scanner(System.in).nextLine();
+        printInfoMessage("Press any key to exit... ('/log')");
+        final Map<Class<? extends Exception>, List<String>> sortedLogList
+            = sortLogs(logList);
+        while (true) {
+            final String input = inputReader.read();
+            if (input.length() == 0 || input.charAt(0) != '/') {
+                exitHandler.exit();
+            }
+            if (input.equals("/log")) {
+                break;
+            }
+            clearLines(1);
+        }
+        clearLines(2);
+        sortedLogList.forEach((e, list) -> {
+            if (list.size() == 0) {
+                return;
+            }
+            printErrorMessage(e.getSimpleName() + ":");
+            for (int i = 0; i < list.size(); i++) {
+                final String message = list.get(i);
+                printErrorMessage(format("%s. %s", i + 1, message));
+            }
+            printErrorMessage("");
+        });
+        printInfoMessage("Press any key to exit...");
+        inputReader.read();
         exitHandler.exit();
     }
 
     @Override
-    public void printLog(final int dirFilesLength,
-                         final Map<String, Exception> logList) {
+    public void outInfo(final int dirFilesLength,
+                        final Map<String, Exception> logList) {
         final int countOfExceptions = logList.size();
         String mainHeaderMessage = BOLD;
         if (dirFilesLength == 0) {
@@ -104,24 +130,8 @@ public class ConsoleDataPrinter implements DataPrinter {
         }
         printInfoMessage("");
         printInfoMessage(mainHeaderMessage + RESET);
-
-        printInfoMessage("To see log, enter '/log'");
-        if (!inputReader.read().equals("/log")) {
-            return;
-        }
-        printErrorMessage("");
-        final Map<Class<? extends Exception>, List<String>> sortedLogList = sortLogs(logList);
-        sortedLogList.forEach((e, list) -> {
-            if (list.size() == 0) {
-                return;
-            }
-            printErrorMessage(e.getSimpleName() + ":");
-            for (int i = 0; i < list.size(); i++) {
-                final String message = list.get(i);
-                printErrorMessage(format("%s. %s", i + 1, message));
-            }
-            printErrorMessage("");
-        });
+        printInfoMessage("");
+        this.logList = logList;
     }
 
     private Map<Class<? extends Exception>, List<String>> sortLogs(final Map<String, Exception> logList) {
