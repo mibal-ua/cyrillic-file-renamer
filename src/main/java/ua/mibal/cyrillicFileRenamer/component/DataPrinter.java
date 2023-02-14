@@ -31,7 +31,7 @@ public interface DataPrinter {
 
     void printWelcomeMessage();
 
-    void printNonProcessedFiles(int directoryFilesLength, Map<String, Exception> logList);
+    void printLog(int dirFilesLength, Map<String, Exception> logList);
 
     void exit();
 

@@ -82,13 +82,13 @@ public class ConsoleDataPrinter implements DataPrinter {
     }
 
     @Override
-    public void printNonProcessedFiles(final int directoryFilesLength,
-                                       final Map<String, Exception> logList) {
+    public void printLog(final int dirFilesLength,
+                         final Map<String, Exception> logList) {
         final int countOfExceptions = logList.size();
         String mainHeaderMessage = BOLD;
-        if (directoryFilesLength == 0) {
+        if (dirFilesLength == 0) {
             mainHeaderMessage += "Directory is empty";
-        } else if (directoryFilesLength == countOfExceptions) {
+        } else if (dirFilesLength == countOfExceptions) {
             mainHeaderMessage += "All files are not renamed.";
         } else if (countOfExceptions == 0) {
             mainHeaderMessage += "Files renamed successfully.";
