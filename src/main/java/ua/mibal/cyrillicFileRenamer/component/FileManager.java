@@ -30,9 +30,9 @@ public interface FileManager {
 
     boolean isIgnoredFile(String fileName);
 
-    File createResultingDirectory(String pathToCatalog);
+    void createResultingDirectory(String pathToCatalog);
 
-    void createRenamedFile(File sourceFile, String newName, File resultingDirectory) throws IOException;
+    void createRenamedFile(File sourceFile, String newName) throws IOException;
 
     String testAndGetCorrectPath(String path);
 

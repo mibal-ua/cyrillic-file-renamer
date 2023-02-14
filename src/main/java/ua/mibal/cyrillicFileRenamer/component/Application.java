@@ -53,14 +53,11 @@ public class Application {
 
     public void start() {
         final File[] directoryFiles = fileManager.getFilesFromDirectory(pathToCatalog);
-        final File resultingDirectory = fileManager.createResultingDirectory(pathToCatalog);
+        fileManager.createResultingDirectory(pathToCatalog);
         final Map<String, Exception> logList = new HashMap<>();
 
         for (final File sourceFile : directoryFiles) {
             final String oldName = sourceFile.getName(); // with extension
-            if (oldName.equals(resultingDirectory.getName())) {
-                continue;
-            }
             if (fileManager.isIgnoredFile(oldName)) {
                 logList.put(oldName, new HiddenFileNameException());
                 continue;
@@ -73,12 +70,12 @@ public class Application {
                 continue;
             }
             try {
-                fileManager.createRenamedFile(sourceFile, newName, resultingDirectory);
+                fileManager.createRenamedFile(sourceFile, newName);
             } catch (IOException e) {
                 logList.put(oldName, e);
             }
         }
-        dataPrinter.printNonProcessedFiles(directoryFiles.length - 1, logList); // minus resultingDirectory
+        dataPrinter.printNonProcessedFiles(directoryFiles.length - 2, logList);
         dataPrinter.exit();
     }
 }

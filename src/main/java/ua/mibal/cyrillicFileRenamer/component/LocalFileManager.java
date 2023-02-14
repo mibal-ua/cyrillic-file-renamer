@@ -31,13 +31,17 @@ public class LocalFileManager implements FileManager {
 
     private final String pathExample;
 
+    private final String resultingDirName = "renamedToLatin";
+
+    private File resultingDir;
+
+    private final String[] IGNORED_FILE_NAMES = {
+        resultingDirName, "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", "cyrillic-file-renamer-"
+    };
+
     public LocalFileManager(final OS os) {
         this.pathExample = os.getPathExample();
     }
-
-    private final static String[] IGNORED_FILE_NAMES = {
-        "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", "cyrillic-file-renamer-"
-    };
 
     @Override
     public File[] getFilesFromDirectory(final String pathToCatalog) {
@@ -59,18 +63,17 @@ public class LocalFileManager implements FileManager {
     }
 
     @Override
-    public File createResultingDirectory(final String pathToCatalog) {
-        final File file = new File(pathToCatalog + "/renamedToLatin");
+    public void createResultingDirectory(final String pathToCurrentDir) {
+        final File file = new File(pathToCurrentDir + "/" + resultingDirName);
         file.mkdir();
-        return file;
+        resultingDir = file;
     }
 
     @Override
     public void createRenamedFile(final File sourceFile,
-                                  final String newName,
-                                  final File resultingDirectory) throws IOException {
+                                  final String newName) throws IOException {
         Files.copy(sourceFile.toPath(),
-            Path.of((resultingDirectory.toPath() + "/" + newName)));
+            Path.of((resultingDir.toPath() + "/" + newName)));
     }
 
     @Override
