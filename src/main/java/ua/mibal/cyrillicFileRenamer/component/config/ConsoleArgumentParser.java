@@ -15,7 +15,7 @@
  *
  */
 
-package ua.mibal.cyrillicFileRenamer.component;
+package ua.mibal.cyrillicFileRenamer.component.config;
 
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
