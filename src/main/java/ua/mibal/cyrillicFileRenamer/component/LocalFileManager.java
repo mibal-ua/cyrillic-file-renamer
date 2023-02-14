@@ -96,8 +96,8 @@ public class LocalFileManager implements FileManager {
     }
 
     @Override
-    public String getParentDir(final String path) {
-        final String newPath = testAndGetCorrectPath(path);
+    public String getParentDir(final String currentPath) {
+        final String newPath = testAndGetCorrectPath(currentPath);
         if (newPath == null) {
             return null;
         }

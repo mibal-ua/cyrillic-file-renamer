@@ -34,7 +34,7 @@ public interface FileManager {
 
     String testAndGetCorrectPath(String path);
 
-    String getParentDir(String path);
+    String getParentDir(String currentPath);
 
     String getPathExample();
 }
