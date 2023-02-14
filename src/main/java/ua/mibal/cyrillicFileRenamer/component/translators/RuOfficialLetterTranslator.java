@@ -17,7 +17,7 @@
 
 package ua.mibal.cyrillicFileRenamer.component.translators;
 
-import ua.mibal.cyrillicFileRenamer.model.exceptions.FIleNameDontContainCyrillicSymbolsException;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 
@@ -29,7 +29,7 @@ public class RuOfficialLetterTranslator extends LetterTranslator {
 
     @Override
     protected String translate(final String word, final int i, final String letter) throws IllegalLanguageException,
-        FIleNameDontContainCyrillicSymbolsException {
+        FileNameDontContainCyrillicSymbolsException {
         return convertFromOfficialru(letter);
     }
 
