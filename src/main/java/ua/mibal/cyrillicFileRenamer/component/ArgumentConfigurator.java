@@ -24,7 +24,7 @@ import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
  * @author Mykhailo Balakhon
  * @link t.me/mibal_ua
  */
-public interface ApplicationConfigurator {
+public interface ArgumentConfigurator {
 
     Lang configureLang();
 

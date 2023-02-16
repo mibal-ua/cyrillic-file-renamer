@@ -17,7 +17,7 @@
 
 package ua.mibal.cyrillicFileRenamer.component.config;
 
-import ua.mibal.cyrillicFileRenamer.component.ApplicationConfigurator;
+import ua.mibal.cyrillicFileRenamer.component.ArgumentConfigurator;
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
@@ -35,7 +35,7 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTE
  * @author Mykhailo Balakhon
  * @link t.me/mibal_ua
  */
-public class ConsoleApplicationConfigurator implements ApplicationConfigurator {
+public class ConsoleArgumentConfigurator implements ArgumentConfigurator {
 
 
     private final DataPrinter dataPrinter;
@@ -44,9 +44,9 @@ public class ConsoleApplicationConfigurator implements ApplicationConfigurator {
 
     private final FileManager fileManager;
 
-    public ConsoleApplicationConfigurator(final DataPrinter dataPrinter,
-                                          final InputReader inputReader,
-                                          final FileManager fileManager) {
+    public ConsoleArgumentConfigurator(final DataPrinter dataPrinter,
+                                       final InputReader inputReader,
+                                       final FileManager fileManager) {
         this.dataPrinter = dataPrinter;
         this.inputReader = inputReader;
         this.fileManager = fileManager;
