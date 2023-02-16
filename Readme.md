@@ -19,7 +19,7 @@ mvn clean package
 - Go to unzipped directory;
 - Run the app by double-click on the start script:
     - `start.cmd` for Windows;
-    - `start.sh` for MacOS or Linux;
+    - `start.sh` for macOS or Linux;
 - You can choose between Ukrainian `UA` and russian `RU` languages;
 - For use `this`-option scripts you must move folder with script to the folder with cyrillic files;
 <img width="503" alt="Screenshot 2023-02-14 at 20 36 00" src="https://user-images.githubusercontent.com/59470968/218839289-221f9bbe-99c6-4904-904a-f2b209275942.png">
