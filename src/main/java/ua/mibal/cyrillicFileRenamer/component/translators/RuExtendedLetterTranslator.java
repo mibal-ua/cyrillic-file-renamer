@@ -40,13 +40,13 @@ public class RuExtendedLetterTranslator extends LetterTranslator {
             } else if (isGolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1))) {
                 return translateSpecialSymbols(letter, RU);
             } else {
-                return convertFromru(letter);
+                return convertFromRu(letter);
             }
         } else if (i != 0 && letter.equalsIgnoreCase("И") &&
                    isShyplyachyy(word.charAt(i - 1))) {
             return Character.isUpperCase(letter.charAt(0)) ? "Y" : "y";
         } else {
-            return convertFromru(letter);
+            return convertFromRu(letter);
         }
     }
 }

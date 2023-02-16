@@ -15,7 +15,7 @@
  *
  */
 
-package ua.mibal.cyrillicFileRenamer.model.programMode;
+package ua.mibal.cyrillicFileRenamer.model;
 
 /**
  * @author Mykhailo Balakhon
