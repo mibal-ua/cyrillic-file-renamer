@@ -37,13 +37,13 @@ public class RuExtendedLetterTranslator extends LetterTranslator {
         if (isSpecialLetter(letter)) { // if lang ru and official - return false
             if (i == 0) {
                 return translateSpecialSymbols(letter, RU);
-            } else if (isGolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1))) {
+            } else if (isHolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1))) {
                 return translateSpecialSymbols(letter, RU);
             } else {
                 return convertFromRu(letter);
             }
         } else if (i != 0 && letter.equalsIgnoreCase("И") &&
-                   isShyplyachyy(word.charAt(i - 1))) {
+                   isShypliachyy(word.charAt(i - 1))) {
             return Character.isUpperCase(letter.charAt(0)) ? "Y" : "y";
         } else {
             return convertFromRu(letter);

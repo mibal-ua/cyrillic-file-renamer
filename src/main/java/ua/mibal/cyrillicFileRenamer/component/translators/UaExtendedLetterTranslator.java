@@ -33,7 +33,7 @@ public class UaExtendedLetterTranslator extends LetterTranslator {
         if (isSpecialLetter(letter)) {
             if (i == 0) {
                 return translateSpecialSymbols(letter, UA);
-            } else if ((isGolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1)))) {
+            } else if ((isHolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1)))) {
                 return translateSpecialSymbols(letter, UA);
             } else {
                 return convertFromUA(letter);

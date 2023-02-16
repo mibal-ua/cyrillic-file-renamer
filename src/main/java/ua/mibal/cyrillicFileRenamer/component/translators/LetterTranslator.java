@@ -25,9 +25,11 @@ import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import static java.lang.Character.UnicodeBlock;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toUpperCase;
+import static java.lang.String.valueOf;
 import static java.util.Map.entry;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -94,6 +96,14 @@ public abstract class LetterTranslator {
         "Я", "Ya"
     );
 
+    private final static List<String> holosni = List.of(
+        "А", "Е", "Є", "И", "І", "Ї", "О", "У", "Ю", "Я", "Ы", "Э"
+    );
+
+    private final static List<String> shypliachi = List.of(
+        "Ж", "Ш", "Щ"
+    );
+
     public String translateName(final String oldName)
         throws FileNameDontContainCyrillicSymbolsException, IllegalLanguageException {
         String[] result = getSeparateExtensionAndName(oldName);
@@ -105,7 +115,7 @@ public abstract class LetterTranslator {
             StringBuilder newWord = new StringBuilder();
             String newLetter;
             for (int i = 0; i < word.length(); i++) {
-                String letter = String.valueOf(word.charAt(i));
+                String letter = valueOf(word.charAt(i));
                 if (!charIsCyrillic(letter)) {
                     newLetter = letter;
                 } else {
@@ -129,8 +139,7 @@ public abstract class LetterTranslator {
         throws FileNameDontContainCyrillicSymbolsException, IllegalLanguageException;
 
     protected boolean isSpecialLetter(final String letter) {
-        final String newCh = specialLetters.get(letter.toUpperCase());
-        return newCh != null;
+        return specialLetters.containsKey(letter.toUpperCase());
     }
 
     private String[] getSeparateExtensionAndName(final String oldName) {
@@ -145,7 +154,7 @@ public abstract class LetterTranslator {
     private String[] getWordsFromName(final String oldName) {
         if (oldName.length() <= 1) {
             return oldName.length() == 1 ?
-                new String[] {String.valueOf(oldName.charAt(0))} :
+                new String[] {valueOf(oldName.charAt(0))} :
                 new String[] {""};
         }
         DynaStringArray dynaResult = new DynaStringArray();
@@ -153,7 +162,7 @@ public abstract class LetterTranslator {
         for (int i = 0; i < oldName.length(); i++) {
             boolean isThisABorder = false;
             char cha = oldName.charAt(i);
-            String ch = String.valueOf(cha);
+            String ch = valueOf(cha);
             for (final Border border : Border.values()) {
                 if (ch.equals(border.getBorder())) {
                     dynaResult.add(stringBuilder.append(ch).toString());
@@ -222,25 +231,15 @@ public abstract class LetterTranslator {
                ch.equals("'") || ch.equals("’");
     }
 
-    protected boolean isGolosnyy(char ch) {
-        char[] golosniChars = {
-            'А', 'Е', 'Є', 'И', 'І', 'Ї', 'О', 'У', 'Ю', 'Я', 'Ы', 'Э'
-        };
-        ch = toUpperCase(ch);
-        for (final char golosniyChar : golosniChars) {
-            if (ch == golosniyChar) {
-                return true;
-            }
-        }
-        return false;
+    protected boolean isHolosnyy(char ch) {
+        return holosni.contains(valueOf(ch).toUpperCase());
     }
 
     protected boolean isZnakMyakshenniaOrElse(final char ch) {
         return (ch == '\'' || ch == '’' || toUpperCase(ch) == 'Ь' || toUpperCase(ch) == 'Ъ');
     }
 
-    protected boolean isShyplyachyy(final char ch) {
-        final char cha = toUpperCase(ch);
-        return (cha == 'Ж' || cha == 'Ш' || cha == 'Щ');
+    protected boolean isShypliachyy(final char ch) {
+        return shypliachi.contains(valueOf(ch).toUpperCase());
     }
 }
