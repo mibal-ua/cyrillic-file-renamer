@@ -57,6 +57,12 @@ public abstract class LetterTranslator {
         "Ы", "Y"
     );
 
+    private final static Map<String, String> russianOfficialLetters = Map.of(
+        "Ё", "E",
+        "Й", "I",
+        "Ъ", "Ie"
+    );
+
     private final static Map<String, String> universalLetters = Map.ofEntries(
         entry("А", "A"),
         entry("Б", "B"),
@@ -156,10 +162,7 @@ public abstract class LetterTranslator {
         final String key = ch.toUpperCase();
         String newCh = russianLetters.get(key);
         if (newCh == null) {
-            newCh = universalLetters.get(key);
-            if (newCh == null) {
-                throw new IllegalLanguageException(ch, RU);
-            }
+            newCh = convertUniversal(ch, RU);
         }
         return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
     }
@@ -168,10 +171,7 @@ public abstract class LetterTranslator {
         final String key = ch.toUpperCase();
         String newCh = ukrainianLetters.get(key);
         if (newCh == null) {
-            newCh = universalLetters.get(key);
-            if (newCh == null) {
-                throw new IllegalLanguageException(ch, UA);
-            }
+            newCh = convertUniversal(ch, UA);
         }
         return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
     }
