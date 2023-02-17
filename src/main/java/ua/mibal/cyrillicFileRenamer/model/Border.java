@@ -37,8 +37,6 @@ public enum Border {
 
     DOT(".");
 
-    private final String border;
-
     private static String borders = "";
 
     static {
@@ -47,15 +45,17 @@ public enum Border {
         }
     }
 
+    private final String border;
+
     Border(final String border) {
         this.border = border;
     }
 
-    public String getBorder() {
-        return border;
-    }
-
     public static String getBorders() {
         return borders;
+    }
+
+    public String getBorder() {
+        return border;
     }
 }
