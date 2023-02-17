@@ -31,14 +31,24 @@ public class UaOfficialLetterTranslator extends LetterTranslator {
 
     @Override
     protected String translateWord(final String word) throws IllegalLanguageException {
-//        if (i == 0 && isSpecialLetter(letter)) {
-//            return translateSpecialSymbols(letter, UA);
-//        } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
-//                   String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
-//            return Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
-//        } else {
-//            return convertFromUA(letter);
-//        }
-        return word;
+        final StringBuilder newName = new StringBuilder();
+        for (int i = 0; i < word.length(); i++) {
+            final String letter = String.valueOf(word.charAt(i));
+            if (!charIsCyrillic(letter)) {
+                newName.append(letter);
+                continue;
+            }
+            String newLetter;
+            if (i == 0 && isSpecialLetter(letter)) {
+                newLetter = translateSpecialSymbols(letter);
+            } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
+                       String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
+                newLetter = Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
+            } else {
+                newLetter = convertFromUA(letter);
+            }
+            newName.append(newLetter);
+        }
+        return newName.toString();
     }
 }
