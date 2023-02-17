@@ -17,7 +17,6 @@
 
 package ua.mibal.cyrillicFileRenamer.component;
 
-import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 
 /**
@@ -25,8 +24,6 @@ import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
  * @link t.me/mibal_ua
  */
 public interface ArgumentConfigurator {
-
-    Lang configureLang();
 
     LetterStandard configureLetterStandard();
 
