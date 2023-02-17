@@ -17,7 +17,6 @@
 
 package ua.mibal.cyrillicFileRenamer.model.exceptions;
 
-import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import static java.lang.String.format;
 
 /**
@@ -26,7 +25,7 @@ import static java.lang.String.format;
  */
 public final class IllegalLanguageException extends Exception {
 
-    public IllegalLanguageException(final String symbol, final Lang lang) {
-        super(format("Name has illegal symbol '%s' but language is %s", symbol, lang));
+    public IllegalLanguageException(final String symbol) {
+        super(format("Name has illegal symbol '%s' but language is %s", symbol, "Ukrainian"));
     }
 }

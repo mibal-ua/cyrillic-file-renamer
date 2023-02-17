@@ -19,7 +19,6 @@ package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import static java.lang.String.valueOf;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 
 /**
  * @author Mykhailo Balakhon
@@ -31,7 +30,7 @@ public class UaExtendedLetterTranslator extends LetterTranslator {
     protected String translateWord(final String word) throws IllegalLanguageException {
         final StringBuilder newName = new StringBuilder();
         for (int i = 0; i < word.length(); i++) {
-            String letter = valueOf(word.charAt(i));
+            final String letter = valueOf(word.charAt(i));
             if (!charIsCyrillic(letter)) {
                 newName.append(letter);
                 continue;
@@ -39,9 +38,9 @@ public class UaExtendedLetterTranslator extends LetterTranslator {
             String newLetter;
             if (isSpecialLetter(letter)) {
                 if (i == 0) {
-                    newLetter = translateSpecialSymbols(letter, UA);
+                    newLetter = translateSpecialSymbols(letter);
                 } else if ((isHolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1)))) {
-                    newLetter = translateSpecialSymbols(letter, UA);
+                    newLetter = translateSpecialSymbols(letter);
                 } else {
                     newLetter = convertFromUA(letter);
                 }

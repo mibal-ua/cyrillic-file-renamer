@@ -18,10 +18,7 @@
 package ua.mibal.cyrillicFileRenamer.component.config;
 
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
-import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.OFFICIAL;
 
@@ -35,8 +32,6 @@ public class ConsoleArgumentParser {
 
     private String path;
 
-    private Lang lang;
-
     private LetterStandard letterStandard;
 
     public ConsoleArgumentParser(final FileManager fileManager) {
@@ -47,8 +42,6 @@ public class ConsoleArgumentParser {
         for (final String arg : args) {
             if (arg.equalsIgnoreCase("this")) {
                 this.path = fileManager.getParentDir(System.getProperty("user.dir"));
-            } else if (arg.equalsIgnoreCase(UA.name()) || arg.equalsIgnoreCase(RU.name())) {
-                lang = Lang.valueOf(arg.toUpperCase());
             } else if (arg.equalsIgnoreCase(OFFICIAL.name()) || arg.equalsIgnoreCase(EXTENDED.name())) {
                 letterStandard = LetterStandard.valueOf(arg.toUpperCase());
             } else {
@@ -63,9 +56,5 @@ public class ConsoleArgumentParser {
 
     public String getPath() {
         return path;
-    }
-
-    public Lang getLang() {
-        return lang;
     }
 }

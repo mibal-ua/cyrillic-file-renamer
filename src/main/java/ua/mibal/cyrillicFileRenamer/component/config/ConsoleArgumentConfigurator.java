@@ -21,14 +21,11 @@ import ua.mibal.cyrillicFileRenamer.component.ArgumentConfigurator;
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
-import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
 import static java.lang.String.format;
 import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.BOLD;
 import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.RESET;
 import static ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter.clearLines;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard.EXTENDED;
 
 /**
@@ -103,38 +100,6 @@ public class ConsoleArgumentConfigurator implements ArgumentConfigurator {
         }
         clearLines(count);
         return resultLetterStandard;
-    }
-
-    @Override
-    public Lang configureLang() {
-        dataPrinter.printInfoMessage("");
-        dataPrinter.printInfoMessage("Select language:");
-        int count = 2;
-        Lang resultLang;
-        while (true) {
-            dataPrinter.printInfoMessage("""
-                1 - UA
-                2 - RU
-                """);
-            final String userLang = inputReader.read().trim();
-            count += 4;
-            if (userLang.equals("1")) {
-                resultLang = UA;
-                break;
-            }
-            if (userLang.equals("2")) {
-                resultLang = RU;
-                break;
-            }
-            clearLines(count - 1);
-            count = 1;
-            dataPrinter.printInfoMessage(format(
-                "You enter unsupported language '%s'.", userLang
-            ));
-            count += 1;
-        }
-        clearLines(count);
-        return resultLang;
     }
 
     @Override

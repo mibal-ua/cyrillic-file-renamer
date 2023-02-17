@@ -20,14 +20,11 @@ package ua.mibal.cyrillicFileRenamer.component.translators;
 import ua.mibal.cyrillicFileRenamer.model.Border;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
-import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import static java.lang.Character.UnicodeBlock;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toUpperCase;
 import static java.lang.String.valueOf;
 import static java.util.Map.entry;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -162,47 +159,29 @@ public abstract class LetterTranslator {
         return oldName.split("([" + Border.getBorders() + "])");
     }
 
-    //TODO make convertFromRu and convertFromUA by one method
-    protected String convertFromRu(final String ch) throws IllegalLanguageException {
-        final String key = ch.toUpperCase();
-        String newCh = russianLetters.get(key);
-        if (newCh == null) {
-            newCh = convertUniversal(ch, RU);
-        }
-        return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
-    }
-
+    //TODO make convertFromUA and convertUniversal one method
     protected String convertFromUA(final String ch) throws IllegalLanguageException {
         final String key = ch.toUpperCase();
         String newCh = ukrainianLetters.get(key);
         if (newCh == null) {
-            newCh = convertUniversal(ch, UA);
+            newCh = convertUniversal(ch);
         }
         return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
     }
 
-    protected String convertFromOfficialRu(final String ch) throws IllegalLanguageException {
-        final String key = ch.toUpperCase();
-        String newCh = russianOfficialLetters.get(key);
-        if (newCh == null) {
-            newCh = convertFromRu(ch);
-        }
-        return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
-    }
-
-    protected String convertUniversal(final String ch, final Lang lang) throws IllegalLanguageException {
+    protected String convertUniversal(final String ch) throws IllegalLanguageException {
         final String key = ch.toUpperCase();
         final String newCh = universalLetters.get(key);
         if (newCh == null) {
-            throw new IllegalLanguageException(ch, lang);
+            throw new IllegalLanguageException(ch);
         }
         return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
     }
 
-    protected String translateSpecialSymbols(final String ch, final Lang lang) throws IllegalLanguageException {
+    protected String translateSpecialSymbols(final String ch) throws IllegalLanguageException {
         final String newCh = specialLetters.get(ch.toUpperCase());
         if (newCh == null) {
-            throw new IllegalLanguageException(ch, lang);
+            throw new IllegalLanguageException(ch);
         }
         return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
     }

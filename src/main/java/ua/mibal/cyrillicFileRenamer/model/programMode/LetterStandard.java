@@ -17,13 +17,27 @@
 
 package ua.mibal.cyrillicFileRenamer.model.programMode;
 
+import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
+import ua.mibal.cyrillicFileRenamer.component.translators.UaExtendedLetterTranslator;
+import ua.mibal.cyrillicFileRenamer.component.translators.UaOfficialLetterTranslator;
+
 /**
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
 public enum LetterStandard {
 
-    OFFICIAL,
+    OFFICIAL(new UaOfficialLetterTranslator()),
 
-    EXTENDED
+    EXTENDED(new UaExtendedLetterTranslator());
+
+    private final LetterTranslator letterTranslator;
+
+    LetterStandard(final LetterTranslator letterTranslator) {
+        this.letterTranslator = letterTranslator;
+    }
+
+    public LetterTranslator getLetterTranslator() {
+        return letterTranslator;
+    }
 }
