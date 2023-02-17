@@ -123,9 +123,6 @@ public abstract class LetterTranslator {
                 newName.add(translatedWord);
             }
         }
-//        if (newName.toString().equals(name)) {
-//            throw new FileNameDontContainCyrillicSymbolsException("File don't contain cyrillic symbols");
-//        }
         return newName.stream().reduce((prev, current) -> prev + current).get() + extension;
     }
 
