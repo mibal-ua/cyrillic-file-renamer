@@ -18,7 +18,6 @@
 package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.Border;
-import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import static java.lang.Character.UnicodeBlock;
@@ -110,16 +109,19 @@ public abstract class LetterTranslator {
         "Ж", "Ш", "Щ"
     );
 
-    public String translate(final String oldName)
-        throws FileNameDontContainCyrillicSymbolsException, IllegalLanguageException {
+    public String translate(final String oldName) throws IllegalLanguageException {
         final String name = getNameWithoutExtension(oldName);
         final String extension = getExtension(oldName);
 
         final String[] words = getWordsFromName(name);
         final List<String> newName = new ArrayList<>();
         for (final String word : words) {
-            final String translatedWord = translateWord(word);
-            newName.add(translatedWord);
+            if (!word.matches("^[^а-яёА-ЯЁ]*[а-яёА-ЯЁ].*")) { // Regex to find at least one cyrillic character
+                newName.add(word);
+            } else {
+                final String translatedWord = translateWord(word);
+                newName.add(translatedWord);
+            }
         }
 //        if (newName.toString().equals(name)) {
 //            throw new FileNameDontContainCyrillicSymbolsException("File don't contain cyrillic symbols");
@@ -127,8 +129,7 @@ public abstract class LetterTranslator {
         return newName.stream().reduce((prev, current) -> prev + current).get() + extension;
     }
 
-    protected abstract String translateWord(final String word)
-        throws FileNameDontContainCyrillicSymbolsException, IllegalLanguageException;
+    protected abstract String translateWord(final String word) throws IllegalLanguageException;
 
     protected boolean isSpecialLetter(final String letter) {
         return specialLetters.containsKey(letter.toUpperCase());
@@ -151,9 +152,6 @@ public abstract class LetterTranslator {
     }
 
     private String[] getWordsFromName(final String oldName) {
-//        for (int i = 0; i < oldName.length(); i++) {
-//
-//        }
         return oldName.split("([" + Border.getBorders() + "])");
     }
 
