@@ -34,18 +34,18 @@ public class UaOfficialLetterTranslator extends LetterTranslator {
         final StringBuilder newName = new StringBuilder();
         for (int i = 0; i < word.length(); i++) {
             final String letter = String.valueOf(word.charAt(i));
-            if (!charIsCyrillic(letter)) {
+            if (letterIsNotCyrillic(letter)) {
                 newName.append(letter);
                 continue;
             }
             String newLetter;
             if (i == 0 && isSpecialLetter(letter)) {
-                newLetter = translateSpecialSymbols(letter);
+                newLetter = convertSpecial(letter);
             } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
                        String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
                 newLetter = Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
             } else {
-                newLetter = convertFromUA(letter);
+                newLetter = convert(letter);
             }
             newName.append(newLetter);
         }

@@ -31,24 +31,24 @@ public class UaExtendedLetterTranslator extends LetterTranslator {
         final StringBuilder newName = new StringBuilder();
         for (int i = 0; i < word.length(); i++) {
             final String letter = valueOf(word.charAt(i));
-            if (!charIsCyrillic(letter)) {
+            if (letterIsNotCyrillic(letter)) {
                 newName.append(letter);
                 continue;
             }
             String newLetter;
             if (isSpecialLetter(letter)) {
                 if (i == 0) {
-                    newLetter = translateSpecialSymbols(letter);
-                } else if ((isHolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1)))) {
-                    newLetter = translateSpecialSymbols(letter);
+                    newLetter = convertSpecial(letter);
+                } else if ((isHolosnyy(word.charAt(i - 1)) || isZnakMiakshenniaOrOther(word.charAt(i - 1)))) {
+                    newLetter = convertSpecial(letter);
                 } else {
-                    newLetter = convertFromUA(letter);
+                    newLetter = convert(letter);
                 }
             } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
                        String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
                 newLetter = Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
             } else {
-                newLetter = convertFromUA(letter);
+                newLetter = convert(letter);
             }
             newName.append(newLetter);
         }

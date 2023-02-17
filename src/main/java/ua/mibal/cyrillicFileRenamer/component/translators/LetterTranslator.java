@@ -24,6 +24,7 @@ import static java.lang.Character.UnicodeBlock;
 import static java.lang.Character.isUpperCase;
 import static java.lang.Character.toUpperCase;
 import static java.lang.String.valueOf;
+import static java.text.MessageFormat.format;
 import static java.util.Map.entry;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,39 +36,30 @@ import java.util.Map;
  */
 public abstract class LetterTranslator {
 
-    private final static Map<String, String> ukrainianLetters = Map.of(
-        "Г", "H",
-        "Ґ", "G",
-        "Є", "Ie",
-        "И", "Y",
-        "І", "I",
-        "Ї", "I",
-        "Й", "I"
-    );
-
-    private final static Map<String, String> russianLetters = Map.of(
-        "Г", "G",
-        "Э", "E",
-        "Ё", "Yo",
-        "И", "I",
+    private final static Map<String, String> specialLetters = Map.of(
+        "Е", "Ye",
+        "Є", "Ye",
+        "Ї", "Yi",
         "Й", "Y",
-        "Ы", "Y"
+        "Ю", "Yu",
+        "Я", "Ya"
     );
 
-    private final static Map<String, String> russianOfficialLetters = Map.of(
-        "Ё", "E",
-        "Й", "I",
-        "Ъ", "Ie"
-    );
-
-    private final static Map<String, String> universalLetters = Map.ofEntries(
+    private final static Map<String, String> letters = Map.ofEntries(
         entry("А", "A"),
         entry("Б", "B"),
         entry("В", "V"),
+        entry("Г", "H"),
+        entry("Ґ", "G"),
         entry("Д", "D"),
         entry("Е", "E"),
+        entry("Є", "Ie"),
         entry("Ж", "Zh"),
         entry("З", "Z"),
+        entry("И", "Y"),
+        entry("І", "I"),
+        entry("Ї", "I"),
+        entry("Й", "I"),
         entry("К", "K"),
         entry("Л", "L"),
         entry("М", "M"),
@@ -90,26 +82,13 @@ public abstract class LetterTranslator {
         entry("Я", "Ia")
     );
 
-    private final static Map<String, String> specialLetters = Map.of(
-        "Е", "Ye",
-        "Є", "Ye",
-        "Ї", "Yi",
-        "Й", "Y",
-        "Ю", "Yu",
-        "Я", "Ya"
-    );
-
     private final static List<String> holosni = List.of(
-        "А", "Е", "Є", "И", "І", "Ї", "О", "У", "Ю", "Я", "Ы", "Э"
-    );
-
-    private final static List<String> shypliachi = List.of(
-        "Ж", "Ш", "Щ"
+        "А", "Е", "Є", "И", "І", "Ї", "О", "У", "Ю", "Я"
     );
 
     public String translate(final String oldName)
         throws IllegalLanguageException, FileNameDontContainCyrillicSymbolsException {
-        if (!containCyrillicSymbols(oldName)) {
+        if (!containCyrillicLetters(oldName)) {
             throw new FileNameDontContainCyrillicSymbolsException("File don't contain cyrillic symbols");
         }
         final String name = getNameWithoutExtension(oldName);
@@ -118,88 +97,78 @@ public abstract class LetterTranslator {
         final String[] words = getWordsFromName(name);
         final List<String> newName = new ArrayList<>();
         for (final String word : words) {
-            if (!containCyrillicSymbols(word)) {
+            if (!containCyrillicLetters(word)) {
                 newName.add(word);
             } else {
                 final String translatedWord = translateWord(word);
                 newName.add(translatedWord);
             }
         }
-        return newName.stream().reduce((prev, current) -> prev + current).get() + extension;
-    }
-
-    private boolean containCyrillicSymbols(final String string) {
-        final String regExp = "^[^а-яёА-ЯЁ]*[а-яёА-ЯЁ].*"; // Regex to find at least one cyrillic character
-        return string.matches(regExp);
+        return newName.stream()
+                   .reduce((prev, current) -> prev + current)
+                   .get() + extension;
     }
 
     protected abstract String translateWord(final String word) throws IllegalLanguageException;
+
+    protected String convert(final String ch) throws IllegalLanguageException {
+        final String key = ch.toUpperCase();
+        String newCh = letters.get(key);
+        if (newCh == null) {
+            throw new IllegalLanguageException(ch);
+        }
+        return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
+    }
+
+    protected String convertSpecial(final String letter) {
+        final String newCh = specialLetters.get(letter.toUpperCase());
+        if (newCh == null) {
+            throw new IllegalArgumentException(format(
+                "Transliterator can't process ''{0}'' letter ", letter
+            ));
+        }
+        return isUpperCase(letter.charAt(0)) ? newCh : newCh.toLowerCase();
+    }
+
+    private String[] getWordsFromName(final String name) {
+        return name.split("([" + Border.getBorders() + "])");
+    }
+
+    private String getNameWithoutExtension(final String fullName) {
+        int index = fullName.lastIndexOf(".");
+        if (index == -1) {
+            return fullName;
+        }
+        return fullName.substring(0, index);
+    }
+
+    private String getExtension(final String fullName) {
+        int index = fullName.lastIndexOf(".");
+        if (index == -1) {
+            return "";
+        }
+        return fullName.substring(index);
+    }
+
+    private boolean containCyrillicLetters(final String string) {
+        final String regExp = "^[^а-яёА-ЯЁ]*[а-яёА-ЯЁ].*"; // Regex to find at least one cyrillic character
+        return string.matches(regExp);
+    }
 
     protected boolean isSpecialLetter(final String letter) {
         return specialLetters.containsKey(letter.toUpperCase());
     }
 
-    private String getNameWithoutExtension(final String oldName) {
-        int index = oldName.lastIndexOf(".");
-        if (index == -1) {
-            return oldName;
-        }
-        return oldName.substring(0, index);
+    protected boolean letterIsNotCyrillic(final String letter) {
+        return !UnicodeBlock.of(letter.charAt(0)).equals(UnicodeBlock.CYRILLIC) &&
+               !letter.equals("'") && !letter.equals("’");
     }
 
-    private String getExtension(final String oldName) {
-        int index = oldName.lastIndexOf(".");
-        if (index == -1) {
-            return "";
-        }
-        return oldName.substring(index);
-    }
-
-    private String[] getWordsFromName(final String oldName) {
-        return oldName.split("([" + Border.getBorders() + "])");
-    }
-
-    //TODO make convertFromUA and convertUniversal one method
-    protected String convertFromUA(final String ch) throws IllegalLanguageException {
-        final String key = ch.toUpperCase();
-        String newCh = ukrainianLetters.get(key);
-        if (newCh == null) {
-            newCh = convertUniversal(ch);
-        }
-        return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
-    }
-
-    protected String convertUniversal(final String ch) throws IllegalLanguageException {
-        final String key = ch.toUpperCase();
-        final String newCh = universalLetters.get(key);
-        if (newCh == null) {
-            throw new IllegalLanguageException(ch);
-        }
-        return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
-    }
-
-    protected String translateSpecialSymbols(final String ch) throws IllegalLanguageException {
-        final String newCh = specialLetters.get(ch.toUpperCase());
-        if (newCh == null) {
-            throw new IllegalLanguageException(ch);
-        }
-        return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
-    }
-
-    protected boolean charIsCyrillic(final String ch) {
-        return UnicodeBlock.of(ch.charAt(0)).equals(UnicodeBlock.CYRILLIC) ||
-               ch.equals("'") || ch.equals("’");
-    }
-
-    protected boolean isHolosnyy(char ch) {
+    protected boolean isHolosnyy(final char ch) {
         return holosni.contains(valueOf(ch).toUpperCase());
     }
 
-    protected boolean isZnakMyakshenniaOrElse(final char ch) {
-        return (ch == '\'' || ch == '’' || toUpperCase(ch) == 'Ь' || toUpperCase(ch) == 'Ъ');
-    }
-
-    protected boolean isShypliachyy(final char ch) {
-        return shypliachi.contains(valueOf(ch).toUpperCase());
+    protected boolean isZnakMiakshenniaOrOther(final char ch) {
+        return (ch == '\'' || ch == '’' || toUpperCase(ch) == 'Ь');
     }
 }
