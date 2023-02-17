@@ -18,6 +18,7 @@
 package ua.mibal.cyrillicFileRenamer.component;
 
 import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import static java.util.Objects.requireNonNull;
 import java.io.File;
@@ -59,7 +60,7 @@ public class Application {
             String newName;
             try {
                 newName = letterTranslator.translate(oldName);
-            } catch (IllegalLanguageException e) {
+            } catch (IllegalLanguageException | FileNameDontContainCyrillicSymbolsException e) {
                 logList.put(oldName, e);
                 continue;
             }
