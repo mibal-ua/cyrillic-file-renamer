@@ -18,6 +18,7 @@
 package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.Border;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
 import static java.lang.Character.UnicodeBlock;
@@ -109,14 +110,18 @@ public abstract class LetterTranslator {
         "Ж", "Ш", "Щ"
     );
 
-    public String translate(final String oldName) throws IllegalLanguageException {
+    public String translate(final String oldName)
+        throws IllegalLanguageException, FileNameDontContainCyrillicSymbolsException {
+        if (!containCyrillicSymbols(oldName)) {
+            throw new FileNameDontContainCyrillicSymbolsException("File don't contain cyrillic symbols");
+        }
         final String name = getNameWithoutExtension(oldName);
         final String extension = getExtension(oldName);
 
         final String[] words = getWordsFromName(name);
         final List<String> newName = new ArrayList<>();
         for (final String word : words) {
-            if (!word.matches("^[^а-яёА-ЯЁ]*[а-яёА-ЯЁ].*")) { // Regex to find at least one cyrillic character
+            if (!containCyrillicSymbols(word)) {
                 newName.add(word);
             } else {
                 final String translatedWord = translateWord(word);
@@ -124,6 +129,11 @@ public abstract class LetterTranslator {
             }
         }
         return newName.stream().reduce((prev, current) -> prev + current).get() + extension;
+    }
+
+    private boolean containCyrillicSymbols(final String string) {
+        final String regExp = "^[^а-яёА-ЯЁ]*[а-яёА-ЯЁ].*"; // Regex to find at least one cyrillic character
+        return string.matches(regExp);
     }
 
     protected abstract String translateWord(final String word) throws IllegalLanguageException;
