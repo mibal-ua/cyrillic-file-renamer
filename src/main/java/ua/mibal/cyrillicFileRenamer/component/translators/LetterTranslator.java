@@ -150,38 +150,8 @@ public abstract class LetterTranslator {
         return new String[] {oldName.substring(0, index), oldName.substring(index)};
     }
 
-    //TODO return List
     private String[] getWordsFromName(final String oldName) {
-        if (oldName.length() <= 1) {
-            return oldName.length() == 1 ?
-                new String[] {valueOf(oldName.charAt(0))} :
-                new String[] {""};
-        }
-        DynaStringArray dynaResult = new DynaStringArray();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < oldName.length(); i++) {
-            boolean isThisABorder = false;
-            char cha = oldName.charAt(i);
-            String ch = valueOf(cha);
-            for (final Border border : Border.values()) {
-                if (ch.equals(border.getBorder())) {
-                    dynaResult.add(stringBuilder.append(ch).toString());
-                    stringBuilder = new StringBuilder();
-                    isThisABorder = true;
-                }
-            }
-            if (!isThisABorder) {
-                if ((i != (oldName.length() - 1)) && isUpperCase(oldName.charAt(i + 1))) {
-                    dynaResult.add(stringBuilder.append(ch).toString());
-                    stringBuilder = new StringBuilder();
-                } else {
-                    stringBuilder.append(ch);
-                }
-            }
-
-        }
-        dynaResult.add(stringBuilder.toString());
-        return dynaResult.toArray();
+        return oldName.split("([" + Border.getBorders() + "])");
     }
 
     //TODO make convertFromRu and convertFromUA by one method

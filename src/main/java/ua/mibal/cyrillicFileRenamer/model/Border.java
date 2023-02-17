@@ -39,11 +39,23 @@ public enum Border {
 
     private final String border;
 
+    private static String borders = "";
+
+    static {
+        for (final Border value : values()) {
+            borders += value.getBorder();
+        }
+    }
+
     Border(final String border) {
         this.border = border;
     }
 
     public String getBorder() {
         return border;
+    }
+
+    public static String getBorders() {
+        return borders;
     }
 }
