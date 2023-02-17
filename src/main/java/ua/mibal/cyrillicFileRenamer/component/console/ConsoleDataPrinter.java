@@ -19,10 +19,12 @@ package ua.mibal.cyrillicFileRenamer.component.console;
 
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -137,10 +139,17 @@ public class ConsoleDataPrinter implements DataPrinter {
         final Map<Class<? extends Exception>, List<String>> map = new HashMap<>();
 
         map.put(IllegalLanguageException.class, new ArrayList<>());
+        map.put(FileNameDontContainCyrillicSymbolsException.class, new ArrayList<>());
+        map.put(FileAlreadyExistsException.class, new ArrayList<>());
         map.put(IOException.class, new ArrayList<>());
 
         logList.forEach((fileName, e) -> {
-            map.get(e.getClass()).add(fileName + ": " + e.getMessage());
+            final Class<? extends Exception> clazz = e.getClass();
+            if (clazz == IllegalLanguageException.class) {
+                map.get(clazz).add(fileName + ": " + e.getMessage());
+            } else {
+                map.get(clazz).add(fileName);
+            }
         });
         return Collections.unmodifiableMap(map);
     }
