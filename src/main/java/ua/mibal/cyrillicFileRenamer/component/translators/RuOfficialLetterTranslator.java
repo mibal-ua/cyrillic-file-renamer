@@ -17,9 +17,7 @@
 
 package ua.mibal.cyrillicFileRenamer.component.translators;
 
-import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 
 /**
  * @author Mykhailo Balakhon
@@ -28,21 +26,12 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 public class RuOfficialLetterTranslator extends LetterTranslator {
 
     @Override
-    protected String translateWord(final String word) throws IllegalLanguageException,
-        FileNameDontContainCyrillicSymbolsException {
-//        return convertFromOfficialru(letter);
-        return word;
-    }
-
-    private String convertFromOfficialru(final String ch) throws IllegalLanguageException {
-        String result = switch (ch.toUpperCase()) {
-            case "Г" -> "G";
-            case "Ё", "Э" -> "E";
-            case "И", "Й" -> "I";
-            case "Ы" -> "Y";
-            case "Ъ" -> "Ie";
-            default -> convertUniversal(ch, RU);
-        };
-        return Character.isUpperCase(ch.charAt(0)) ? result : result.toLowerCase();
+    protected String translateWord(final String word) throws IllegalLanguageException {
+        final StringBuilder resultWord = new StringBuilder();
+        for (int i = 0; i < word.length(); i++) {
+            final String letter = String.valueOf(word.charAt(i));
+            resultWord.append(convertFromOfficialRu(letter));
+        }
+        return resultWord.toString();
     }
 }

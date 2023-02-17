@@ -176,6 +176,15 @@ public abstract class LetterTranslator {
         return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
     }
 
+    protected String convertFromOfficialRu(final String ch) throws IllegalLanguageException {
+        final String key = ch.toUpperCase();
+        String newCh = russianOfficialLetters.get(key);
+        if (newCh == null) {
+            newCh = convertFromRu(ch);
+        }
+        return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
+    }
+
     protected String convertUniversal(final String ch, final Lang lang) throws IllegalLanguageException {
         final String key = ch.toUpperCase();
         final String newCh = universalLetters.get(key);
