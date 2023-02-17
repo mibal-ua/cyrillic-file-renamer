@@ -59,7 +59,7 @@ public class Application {
             final String oldName = sourceFile.getName(); // with extension
             String newName;
             try {
-                newName = letterTranslator.translateName(oldName);
+                newName = letterTranslator.translate(oldName);
             } catch (FileNameDontContainCyrillicSymbolsException | IllegalLanguageException e) {
                 logList.put(oldName, e);
                 continue;

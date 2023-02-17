@@ -19,6 +19,7 @@ package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
+import static java.lang.String.valueOf;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 
 /**
@@ -28,21 +29,32 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 public class UaExtendedLetterTranslator extends LetterTranslator {
 
     @Override
-    protected String translate(final String word, final int i, final String letter) throws
+    protected String translateWord(final String word) throws
         FileNameDontContainCyrillicSymbolsException, IllegalLanguageException {
-        if (isSpecialLetter(letter)) {
-            if (i == 0) {
-                return translateSpecialSymbols(letter, UA);
-            } else if ((isHolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1)))) {
-                return translateSpecialSymbols(letter, UA);
-            } else {
-                return convertFromUA(letter);
+        final StringBuilder newName = new StringBuilder();
+        for (int i = 0; i < word.length(); i++) {
+            String letter = valueOf(word.charAt(i));
+            if (!charIsCyrillic(letter)) {
+                newName.append(letter);
+                continue;
             }
-        } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
-                   String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
-            return Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
-        } else {
-            return convertFromUA(letter);
+            String newLetter;
+            if (isSpecialLetter(letter)) {
+                if (i == 0) {
+                    newLetter = translateSpecialSymbols(letter, UA);
+                } else if ((isHolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1)))) {
+                    newLetter = translateSpecialSymbols(letter, UA);
+                } else {
+                    newLetter = convertFromUA(letter);
+                }
+            } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
+                       String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
+                newLetter = Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
+            } else {
+                newLetter = convertFromUA(letter);
+            }
+            newName.append(newLetter);
         }
+        return newName.toString();
     }
 }

@@ -18,7 +18,6 @@
 package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.Border;
-import ua.mibal.cyrillicFileRenamer.model.DynaStringArray;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.Lang;
@@ -29,6 +28,7 @@ import static java.lang.String.valueOf;
 import static java.util.Map.entry;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -104,53 +104,50 @@ public abstract class LetterTranslator {
         "Ж", "Ш", "Щ"
     );
 
-    public String translateName(final String oldName)
+    public String translate(final String oldName)
         throws FileNameDontContainCyrillicSymbolsException, IllegalLanguageException {
-        String[] result = getSeparateExtensionAndName(oldName);
-        String name = result[0];
-        String extension = result[1];
-        String[] words = getWordsFromName(name);
-        DynaStringArray newNameArray = new DynaStringArray(words.length);
+        final String name = getNameWithoutExtension(oldName);
+        final String extension = getExtension(oldName);
+
+        final String[] words = getWordsFromName(name);
+        final List<String> newName = new ArrayList<>();
         for (final String word : words) {
-            StringBuilder newWord = new StringBuilder();
-            String newLetter;
-            for (int i = 0; i < word.length(); i++) {
-                String letter = valueOf(word.charAt(i));
-                if (!charIsCyrillic(letter)) {
-                    newLetter = letter;
-                } else {
-                    newLetter = translate(word, i, letter);
-                }
-                newWord.append(newLetter);
-            }
-            newNameArray.add(newWord.toString());
+            final String translatedWord = translateWord(word);
+            newName.add(translatedWord);
         }
-        StringBuilder newName = new StringBuilder();
-        for (final String word : newNameArray.toArray()) {
-            newName.append(word);
-        }
-        if (newName.toString().equals(name)) {
-            throw new FileNameDontContainCyrillicSymbolsException("File don't contain cyrillic symbols");
-        }
-        return newName.append(extension).toString();
+//        if (newName.toString().equals(name)) {
+//            throw new FileNameDontContainCyrillicSymbolsException("File don't contain cyrillic symbols");
+//        }
+        return newName.stream().reduce((prev, current) -> prev + current).get() + extension;
     }
 
-    protected abstract String translate(final String word, final int i, final String letter)
+    protected abstract String translateWord(final String word)
         throws FileNameDontContainCyrillicSymbolsException, IllegalLanguageException;
 
     protected boolean isSpecialLetter(final String letter) {
         return specialLetters.containsKey(letter.toUpperCase());
     }
 
-    private String[] getSeparateExtensionAndName(final String oldName) {
+    private String getNameWithoutExtension(final String oldName) {
         int index = oldName.lastIndexOf(".");
         if (index == -1) {
-            return new String[] {oldName, ""};
+            return oldName;
         }
-        return new String[] {oldName.substring(0, index), oldName.substring(index)};
+        return oldName.substring(0, index);
+    }
+
+    private String getExtension(final String oldName) {
+        int index = oldName.lastIndexOf(".");
+        if (index == -1) {
+            return "";
+        }
+        return oldName.substring(index);
     }
 
     private String[] getWordsFromName(final String oldName) {
+//        for (int i = 0; i < oldName.length(); i++) {
+//
+//        }
         return oldName.split("([" + Border.getBorders() + "])");
     }
 
@@ -196,7 +193,7 @@ public abstract class LetterTranslator {
         return isUpperCase(ch.charAt(0)) ? newCh : newCh.toLowerCase();
     }
 
-    private boolean charIsCyrillic(final String ch) {
+    protected boolean charIsCyrillic(final String ch) {
         return UnicodeBlock.of(ch.charAt(0)).equals(UnicodeBlock.CYRILLIC) ||
                ch.equals("'") || ch.equals("’");
     }

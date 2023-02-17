@@ -19,7 +19,6 @@ package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 
 /**
  * @author Mykhailo Balakhon
@@ -32,21 +31,24 @@ public class RuExtendedLetterTranslator extends LetterTranslator {
     }
 
     @Override
-    protected String translate(final String word, final int i, final String letter) throws
+    public String translateWord(final String word) throws
         FileNameDontContainCyrillicSymbolsException, IllegalLanguageException {
-        if (isSpecialLetter(letter)) { // if lang ru and official - return false
-            if (i == 0) {
-                return translateSpecialSymbols(letter, RU);
-            } else if (isHolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1))) {
-                return translateSpecialSymbols(letter, RU);
-            } else {
-                return convertFromRu(letter);
-            }
-        } else if (i != 0 && letter.equalsIgnoreCase("И") &&
-                   isShypliachyy(word.charAt(i - 1))) {
-            return Character.isUpperCase(letter.charAt(0)) ? "Y" : "y";
-        } else {
-            return convertFromRu(letter);
-        }
+
+//        if (isSpecialLetter(letter)) { // if lang ru and official - return false
+//            if (i == 0) {
+//                return translateSpecialSymbols(letter, RU);
+//            } else if (isHolosnyy(word.charAt(i - 1)) || isZnakMyakshenniaOrElse(word.charAt(i - 1))) {
+//                return translateSpecialSymbols(letter, RU);
+//            } else {
+//                return convertFromRu(letter);
+//            }
+//        } else if (i != 0 && letter.equalsIgnoreCase("И") &&
+//                   isShypliachyy(word.charAt(i - 1))) {
+//            return Character.isUpperCase(letter.charAt(0)) ? "Y" : "y";
+//        } else {
+//            return convertFromRu(letter);
+//        }
+
+    return word;
     }
 }

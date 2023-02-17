@@ -28,9 +28,10 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.RU;
 public class RuOfficialLetterTranslator extends LetterTranslator {
 
     @Override
-    protected String translate(final String word, final int i, final String letter) throws IllegalLanguageException,
+    protected String translateWord(final String word) throws IllegalLanguageException,
         FileNameDontContainCyrillicSymbolsException {
-        return convertFromOfficialru(letter);
+//        return convertFromOfficialru(letter);
+        return word;
     }
 
     private String convertFromOfficialru(final String ch) throws IllegalLanguageException {

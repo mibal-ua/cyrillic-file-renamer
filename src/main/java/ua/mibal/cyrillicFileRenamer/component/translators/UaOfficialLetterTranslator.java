@@ -19,7 +19,6 @@ package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
-import static ua.mibal.cyrillicFileRenamer.model.programMode.Lang.UA;
 
 /**
  * @author Mykhailo Balakhon
@@ -32,15 +31,16 @@ public class UaOfficialLetterTranslator extends LetterTranslator {
     }
 
     @Override
-    protected String translate(final String word, final int i, final String letter) throws
+    protected String translateWord(final String word) throws
         FileNameDontContainCyrillicSymbolsException, IllegalLanguageException {
-        if (i == 0 && isSpecialLetter(letter)) {
-            return translateSpecialSymbols(letter, UA);
-        } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
-                   String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
-            return Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
-        } else {
-            return convertFromUA(letter);
-        }
+//        if (i == 0 && isSpecialLetter(letter)) {
+//            return translateSpecialSymbols(letter, UA);
+//        } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
+//                   String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
+//            return Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
+//        } else {
+//            return convertFromUA(letter);
+//        }
+        return word;
     }
 }
