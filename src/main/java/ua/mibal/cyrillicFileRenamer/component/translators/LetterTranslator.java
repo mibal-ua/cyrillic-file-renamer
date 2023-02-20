@@ -121,7 +121,7 @@ public abstract class LetterTranslator {
                    .get() + extension;
     }
 
-    protected abstract String translateWord(final String word) throws IllegalLanguageException;
+    abstract String translateWord(final String word) throws IllegalLanguageException;
 
     protected String convert(final String ch) throws IllegalLanguageException {
         final String key = ch.toUpperCase();

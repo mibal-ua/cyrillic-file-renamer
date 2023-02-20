@@ -23,7 +23,7 @@ import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public class UaOfficialLetterTranslator extends LetterTranslator {
+public final class UaOfficialLetterTranslator extends LetterTranslator {
 
     public UaOfficialLetterTranslator() {
         super();

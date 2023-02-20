@@ -24,7 +24,7 @@ import static java.lang.String.valueOf;
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public class UaExtendedLetterTranslator extends LetterTranslator {
+public final class UaExtendedLetterTranslator extends LetterTranslator {
 
     @Override
     protected String translateWord(final String word) throws IllegalLanguageException {
