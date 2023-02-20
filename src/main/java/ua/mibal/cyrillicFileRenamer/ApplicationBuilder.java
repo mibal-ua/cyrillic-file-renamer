@@ -49,7 +49,7 @@ public class ApplicationBuilder {
 
     private final FileManager fileManager = new LocalFileManager(OSDetector.detectOS());
 
-    private final ArgumentConfigurator configurator =
+    private final ArgumentConfigurator argumentConfigurator =
         new ConsoleArgumentConfigurator(dataPrinter, inputReader, fileManager);
 
     public ApplicationBuilder(final String[] args) {
@@ -65,14 +65,13 @@ public class ApplicationBuilder {
 
     public Application build() {
         if (currentPath == null) {
-            currentPath = configurator.configureCurrentPath();
+            currentPath = argumentConfigurator.configureCurrentPath();
         }
         dataPrinter.printInfoMessage("Path: " + currentPath);
         if (letterStandard == null) {
-            letterStandard = configurator.configureLetterStandard();
+            letterStandard = argumentConfigurator.configureLetterStandard();
         }
         dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard);
-
         return new Application(
             dataPrinter,
             fileManager,
