@@ -107,7 +107,7 @@ public abstract class LetterTranslator {
         final String name = getNameWithoutExtension(oldName);
         final String extension = getExtension(oldName);
 
-        final String[] words = getWordsFromName(name);
+        final List<String> words = getWordsFromName(name);
         final List<String> newName = new ArrayList<>();
         for (final String word : words) {
             if (notContainCyrillicLetters(word)) {
@@ -143,7 +143,7 @@ public abstract class LetterTranslator {
         return isUpperCase(letter.charAt(0)) ? newCh : newCh.toLowerCase();
     }
 
-    private String[] getWordsFromName(final String name) {
+    private List<String> getWordsFromName(final String name) {
         final List<String> result = new ArrayList<>();
         final StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < name.length(); i++) {
@@ -156,7 +156,7 @@ public abstract class LetterTranslator {
                 stringBuilder.append(letter);
             }
         }
-        return result.toArray(new String[] {});
+        return List.copyOf(result);
     }
 
     private String getNameWithoutExtension(final String fullName) {
