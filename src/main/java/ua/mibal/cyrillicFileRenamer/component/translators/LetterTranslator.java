@@ -86,6 +86,15 @@ public abstract class LetterTranslator {
         "А", "Е", "Є", "И", "І", "Ї", "О", "У", "Ю", "Я"
     );
 
+    private static boolean isBorder(final char letter) {
+        for (final Border value : Border.values()) {
+            if (String.valueOf(letter).equals(value.getBorder())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String translate(final String oldName)
         throws IllegalLanguageException, FileNameDontContainCyrillicSymbolsException {
         if (!containCyrillicLetters(oldName)) {
@@ -131,7 +140,19 @@ public abstract class LetterTranslator {
     }
 
     private String[] getWordsFromName(final String name) {
-        return name.split("([" + Border.getBorders() + "])");
+        final List<String> result = new ArrayList<>();
+        final StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < name.length(); i++) {
+            final char letter = name.charAt(i);
+            if (isBorder(letter)) {
+                stringBuilder.append(letter);
+                result.add(stringBuilder.toString());
+                stringBuilder.setLength(0);
+            } else {
+                stringBuilder.append(letter);
+            }
+        }
+        return result.toArray(new String[] {});
     }
 
     private String getNameWithoutExtension(final String fullName) {
