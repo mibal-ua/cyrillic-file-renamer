@@ -98,28 +98,26 @@ public abstract class LetterTranslator {
         return false;
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public String translate(final String oldName)
         throws IllegalLanguageException, FileNameDontContainCyrillicSymbolsException {
         if (notContainCyrillicLetters(oldName)) {
-            throw new FileNameDontContainCyrillicSymbolsException("File don't contain cyrillic symbols");
+            throw new FileNameDontContainCyrillicSymbolsException(
+                "File don't contain cyrillic symbols");
         }
         final String name = getNameWithoutExtension(oldName);
         final String extension = getExtension(oldName);
 
         final List<String> words = getWordsFromName(name);
-        final List<String> newName = new ArrayList<>();
+        final StringBuilder newName = new StringBuilder();
         for (final String word : words) {
             if (notContainCyrillicLetters(word)) {
-                newName.add(word);
+                newName.append(word);
             } else {
                 final String translatedWord = translateWord(word);
-                newName.add(translatedWord);
+                newName.append(translatedWord);
             }
         }
-        return newName.stream()
-                   .reduce((prev, current) -> prev + current)
-                   .get() + extension;
+        return newName + extension;
     }
 
     abstract String translateWord(final String word) throws IllegalLanguageException;
