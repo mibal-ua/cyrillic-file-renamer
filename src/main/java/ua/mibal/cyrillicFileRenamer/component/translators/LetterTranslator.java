@@ -100,7 +100,7 @@ public abstract class LetterTranslator {
 
     public String translate(final String oldName)
         throws IllegalLanguageException, FileNameDontContainCyrillicSymbolsException {
-        if (!containCyrillicLetters(oldName)) {
+        if (notContainCyrillicLetters(oldName)) {
             throw new FileNameDontContainCyrillicSymbolsException("File don't contain cyrillic symbols");
         }
         final String name = getNameWithoutExtension(oldName);
@@ -109,7 +109,7 @@ public abstract class LetterTranslator {
         final String[] words = getWordsFromName(name);
         final List<String> newName = new ArrayList<>();
         for (final String word : words) {
-            if (!containCyrillicLetters(word)) {
+            if (notContainCyrillicLetters(word)) {
                 newName.add(word);
             } else {
                 final String translatedWord = translateWord(word);
@@ -174,8 +174,8 @@ public abstract class LetterTranslator {
         return fullName.substring(index);
     }
 
-    private boolean containCyrillicLetters(final String string) {
-        return string.matches(REG_EXP);
+    private boolean notContainCyrillicLetters(final String string) {
+        return !string.matches(REG_EXP);
     }
 
     protected boolean isSpecialLetter(final String letter) {
