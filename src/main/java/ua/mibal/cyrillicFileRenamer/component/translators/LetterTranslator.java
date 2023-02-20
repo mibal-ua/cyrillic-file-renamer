@@ -98,6 +98,7 @@ public abstract class LetterTranslator {
         return false;
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public String translate(final String oldName)
         throws IllegalLanguageException, FileNameDontContainCyrillicSymbolsException {
         if (notContainCyrillicLetters(oldName)) {
