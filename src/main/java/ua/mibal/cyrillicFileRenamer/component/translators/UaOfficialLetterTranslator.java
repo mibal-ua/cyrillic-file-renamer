@@ -18,6 +18,8 @@
 package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
+import static java.lang.Character.isUpperCase;
+import static java.lang.String.valueOf;
 
 /**
  * @author Mykhailo Balakhon
@@ -42,9 +44,11 @@ public final class UaOfficialLetterTranslator extends LetterTranslator {
             String newLetter;
             if (i == 0 && isSpecialLetter(letter)) {
                 newLetter = convertSpecial(letter);
-            } else if (i != 0 && letter.equalsIgnoreCase("Г") &&
-                       String.valueOf(word.charAt(i - 1)).equalsIgnoreCase("З")) {
-                newLetter = Character.isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
+            } else if (i != 0 &&
+                       letter.equalsIgnoreCase("Г") &&
+                       valueOf(word.charAt(i - 1))
+                           .equalsIgnoreCase("З")) {
+                newLetter = isUpperCase(letter.charAt(0)) ? "Gh" : "gh";
             } else {
                 newLetter = convert(letter);
             }
