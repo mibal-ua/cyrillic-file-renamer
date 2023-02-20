@@ -29,8 +29,9 @@ public final class UaExtendedLetterTranslator extends LetterTranslator {
     @Override
     protected String translateWord(final String word) throws IllegalLanguageException {
         final StringBuilder newName = new StringBuilder();
+        String letter;
         for (int i = 0; i < word.length(); i++) {
-            final String letter = valueOf(word.charAt(i));
+            letter = valueOf(word.charAt(i));
             if (letterIsNotCyrillic(letter)) {
                 newName.append(letter);
                 continue;
