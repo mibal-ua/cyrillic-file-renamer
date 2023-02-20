@@ -39,7 +39,8 @@ public class UaExtendedLetterTranslator extends LetterTranslator {
             if (isSpecialLetter(letter)) {
                 if (i == 0) {
                     newLetter = convertSpecial(letter);
-                } else if ((isHolosnyy(word.charAt(i - 1)) || isZnakMiakshenniaOrOther(word.charAt(i - 1)))) {
+                } else if ((isHolosnyy(word.charAt(i - 1)) ||
+                            isZnakMiakshennia(word.charAt(i - 1)))) {
                     newLetter = convertSpecial(letter);
                 } else {
                     newLetter = convert(letter);

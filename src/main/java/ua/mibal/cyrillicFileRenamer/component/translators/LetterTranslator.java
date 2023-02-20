@@ -191,7 +191,7 @@ public abstract class LetterTranslator {
         return holosni.contains(valueOf(ch).toUpperCase());
     }
 
-    protected boolean isZnakMiakshenniaOrOther(final char ch) {
+    protected boolean isZnakMiakshennia(final char ch) {
         return (ch == '\'' || ch == '’' || toUpperCase(ch) == 'Ь');
     }
 }
