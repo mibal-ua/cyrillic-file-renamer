@@ -36,6 +36,9 @@ import java.util.Map;
  */
 public abstract class LetterTranslator {
 
+    // Regex to find at least one cyrillic character
+    public static final String REG_EXP = "^[^а-яёА-ЯЁ]*[а-яёА-ЯЁ].*";
+
     private final static Map<String, String> specialLetters = Map.of(
         "Е", "Ye",
         "Є", "Ye",
@@ -172,8 +175,7 @@ public abstract class LetterTranslator {
     }
 
     private boolean containCyrillicLetters(final String string) {
-        final String regExp = "^[^а-яёА-ЯЁ]*[а-яёА-ЯЁ].*"; // Regex to find at least one cyrillic character
-        return string.matches(regExp);
+        return string.matches(REG_EXP);
     }
 
     protected boolean isSpecialLetter(final String letter) {
