@@ -11,8 +11,6 @@ The program supports only the Ukrainian language
 because russia and byelorussia started a war against
 Ukraine.
 
----------------------------------------------------------------------
-
 ## Build instructions
 
 - Build distributions using Maven tool:
