@@ -72,7 +72,7 @@ public class ConsoleDataPrinter implements DataPrinter {
         if (os == OS.WINDOWS) {
             BOLD = "";
             RESET = "";
-            EMOJI = "";
+            EMOJI = " ";
             GO_TO_PREVIOUS_LINE_ESC = "";
             CLEAR_CURRENT_LINE_ESC = "";
             WELCOME_MESSAGE = format("""
