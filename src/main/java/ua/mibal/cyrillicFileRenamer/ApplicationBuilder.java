@@ -30,6 +30,7 @@ import ua.mibal.cyrillicFileRenamer.component.config.ConsoleArgumentParser;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleInputReader;
 import ua.mibal.cyrillicFileRenamer.model.programMode.LetterStandard;
+import ua.mibal.cyrillicFileRenamer.model.programMode.OS;
 
 /**
  * @author Mykhailo Balakhon
@@ -45,9 +46,11 @@ public class ApplicationBuilder {
 
     private final ExitHandler exitHandler = () -> System.exit(0);
 
-    private final DataPrinter dataPrinter = new ConsoleDataPrinter(inputReader, exitHandler);
+    private final OS os = OSDetector.detectOS();
 
-    private final FileManager fileManager = new LocalFileManager(OSDetector.detectOS());
+    private final DataPrinter dataPrinter = new ConsoleDataPrinter(inputReader, exitHandler, os);
+
+    private final FileManager fileManager = new LocalFileManager(os);
 
     private final ArgumentConfigurator argumentConfigurator =
         new ConsoleArgumentConfigurator(dataPrinter, inputReader, fileManager);

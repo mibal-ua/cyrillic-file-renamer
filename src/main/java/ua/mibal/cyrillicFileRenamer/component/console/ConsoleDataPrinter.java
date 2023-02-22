@@ -21,6 +21,7 @@ import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
+import ua.mibal.cyrillicFileRenamer.model.programMode.OS;
 import static java.lang.String.format;
 import static java.util.Objects.requireNonNull;
 import java.io.IOException;
@@ -37,9 +38,25 @@ import java.util.Map;
  */
 public class ConsoleDataPrinter implements DataPrinter {
 
-    public final static String BOLD = "\u001B[1m";
+    public static String BOLD = "\033[1m";
 
-    public final static String RESET = "\u001B[0m";
+    public static String RESET = "\033[0m";
+
+    private static String EMOJI = "❤";
+
+    private static String GO_TO_PREVIOUS_LINE_ESC = "\033[F";
+
+    private static String CLEAR_CURRENT_LINE_ESC = "\033[2K";
+
+    private static String WELCOME_MESSAGE = format("""
+                            
+            ----------------------||%s The Cyrillic file renamer v2.0 %s||----------------------
+            -                               made with love %s                               -
+            - #StandWithUkraine                                                            -
+            - version: 2.0                                                                 -
+            - author: @mibal_ua                                                            -
+            --------------------------------------------------------------------------------""",
+        BOLD, RESET, EMOJI);
 
     private final ExitHandler exitHandler;
 
@@ -47,15 +64,33 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     private Map<String, Exception> logList;
 
-    public ConsoleDataPrinter(final InputReader inputReader, final ExitHandler exitHandler) {
+    public ConsoleDataPrinter(final InputReader inputReader,
+                              final ExitHandler exitHandler,
+                              final OS os) {
         this.inputReader = requireNonNull(inputReader);
         this.exitHandler = requireNonNull(exitHandler);
+        if (os == OS.WINDOWS) {
+            BOLD = "";
+            RESET = "";
+            EMOJI = "";
+            GO_TO_PREVIOUS_LINE_ESC = "";
+            CLEAR_CURRENT_LINE_ESC = "";
+            WELCOME_MESSAGE = format("""
+                                    
+                    ----------------------||%s The Cyrillic file renamer v2.0 %s||----------------------
+                    -                               made with love %s                               -
+                    - #StandWithUkraine                                                            -
+                    - version: 2.0                                                                 -
+                    - author: @mibal_ua                                                            -
+                    --------------------------------------------------------------------------------""",
+                BOLD, RESET, EMOJI);
+        }
     }
 
     public static void clearLines(final int count) {
         for (int i = 0; i < count; i++) {
-            System.out.print("\033[F"); // go to previous line
-            System.out.print("\033[2K"); // clear current line
+            System.out.print(GO_TO_PREVIOUS_LINE_ESC);
+            System.out.print(CLEAR_CURRENT_LINE_ESC);
         }
     }
 
@@ -71,16 +106,7 @@ public class ConsoleDataPrinter implements DataPrinter {
 
     @Override
     public void printWelcomeMessage() {
-        final String message = format("""
-                                
-                ----------------------||%s The Cyrillic file renamer v2.0 %s||----------------------
-                -                               made with love ❤                               -
-                - #StandWithUkraine                                                            -
-                - version: 2.0                                                                 -
-                - author: @mibal_ua                                                            -
-                --------------------------------------------------------------------------------""",
-            BOLD, RESET);
-        printInfoMessage(message);
+        printInfoMessage(WELCOME_MESSAGE);
     }
 
     @Override
