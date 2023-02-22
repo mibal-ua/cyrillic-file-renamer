@@ -17,9 +17,9 @@
 
 package ua.mibal.cyrillicFileRenamer.model.programMode;
 
+import ua.mibal.cyrillicFileRenamer.component.translators.ExtendedLetterTranslator;
 import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
-import ua.mibal.cyrillicFileRenamer.component.translators.UaExtendedLetterTranslator;
-import ua.mibal.cyrillicFileRenamer.component.translators.UaOfficialLetterTranslator;
+import ua.mibal.cyrillicFileRenamer.component.translators.OfficialLetterTranslator;
 
 /**
  * @author Mykhailo Balakhon
@@ -27,9 +27,9 @@ import ua.mibal.cyrillicFileRenamer.component.translators.UaOfficialLetterTransl
  */
 public enum LetterStandard {
 
-    OFFICIAL(new UaOfficialLetterTranslator()),
+    OFFICIAL(new OfficialLetterTranslator()),
 
-    EXTENDED(new UaExtendedLetterTranslator());
+    EXTENDED(new ExtendedLetterTranslator());
 
     private final LetterTranslator letterTranslator;
 
