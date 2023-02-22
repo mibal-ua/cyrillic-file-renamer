@@ -37,22 +37,10 @@ public enum Border {
 
     DOT(".");
 
-    private static String borders = "";
-
-    static {
-        for (final Border value : values()) {
-            borders += value.getBorder();
-        }
-    }
-
     private final String border;
 
     Border(final String border) {
         this.border = border;
-    }
-
-    public static String getBorders() {
-        return borders;
     }
 
     public String getBorder() {
