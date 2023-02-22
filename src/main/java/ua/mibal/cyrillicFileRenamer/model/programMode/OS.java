@@ -25,7 +25,7 @@ public enum OS {
 
     UNIX("/Users/home/path/to/catalog/"),
 
-    WINDOWS("/Users/home/path/to/catalog/");
+    WINDOWS("C:\\Users\\home\\path\\to\\catalog\\");
 
     private final String pathExample;
 
