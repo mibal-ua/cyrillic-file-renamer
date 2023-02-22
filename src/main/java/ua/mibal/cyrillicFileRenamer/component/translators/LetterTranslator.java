@@ -154,6 +154,7 @@ public abstract class LetterTranslator {
                 stringBuilder.append(letter);
             }
         }
+        result.add(stringBuilder.toString());
         return List.copyOf(result);
     }
 
