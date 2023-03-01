@@ -21,7 +21,7 @@ mvn clean package
 - Go to `target` dir;
 - Use the following archives:
     - Windows `cyrillic-file-renamer-${project.version}-windows.zip`
-    - MacOS `cyrillic-file-renamer-${project.version}-macos.tar.gz`
+    - macOS `cyrillic-file-renamer-${project.version}-macos.tar.gz`
     - Linux `cyrillic-file-renamer-${project.version}-linux.tar.gz`
 
 ## Run instructions
