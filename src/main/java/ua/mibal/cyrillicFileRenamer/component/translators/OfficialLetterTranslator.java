@@ -25,7 +25,7 @@ import static java.lang.String.valueOf;
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public final class OfficialLetterTranslator extends LetterTranslator {
+public final class OfficialLetterTranslator extends AbstractLetterTranslator {
 
     public OfficialLetterTranslator() {
         super();

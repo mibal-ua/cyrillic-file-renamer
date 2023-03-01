@@ -17,8 +17,8 @@
 
 package ua.mibal.cyrillicFileRenamer.model.programMode;
 
+import ua.mibal.cyrillicFileRenamer.component.translators.AbstractLetterTranslator;
 import ua.mibal.cyrillicFileRenamer.component.translators.ExtendedLetterTranslator;
-import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
 import ua.mibal.cyrillicFileRenamer.component.translators.OfficialLetterTranslator;
 
 /**
@@ -31,13 +31,13 @@ public enum LetterStandard {
 
     EXTENDED(new ExtendedLetterTranslator());
 
-    private final LetterTranslator letterTranslator;
+    private final AbstractLetterTranslator letterTranslator;
 
-    LetterStandard(final LetterTranslator letterTranslator) {
+    LetterStandard(final AbstractLetterTranslator letterTranslator) {
         this.letterTranslator = letterTranslator;
     }
 
-    public LetterTranslator getLetterTranslator() {
+    public AbstractLetterTranslator getLetterTranslator() {
         return letterTranslator;
     }
 }

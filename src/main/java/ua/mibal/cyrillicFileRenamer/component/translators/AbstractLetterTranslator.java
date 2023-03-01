@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Mykhailo Balakhon
  * @link https://t.me/mibal_ua
  */
-public abstract class LetterTranslator {
+public abstract class AbstractLetterTranslator {
 
     // Regex to find at least one cyrillic character
     public static final String REG_EXP = "^[^а-яёА-ЯЁ]*[а-яёА-ЯЁ].*";

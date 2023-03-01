@@ -17,7 +17,7 @@
 
 package ua.mibal.cyrillicFileRenamer.component;
 
-import ua.mibal.cyrillicFileRenamer.component.translators.LetterTranslator;
+import ua.mibal.cyrillicFileRenamer.component.translators.AbstractLetterTranslator;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import static java.util.Objects.requireNonNull;
@@ -38,12 +38,12 @@ public class Application {
 
     private final String pathToCatalog;
 
-    private final LetterTranslator letterTranslator;
+    private final AbstractLetterTranslator letterTranslator;
 
     public Application(final DataPrinter dataPrinter,
                        final FileManager fileManager,
                        final String pathToCatalog,
-                       final LetterTranslator letterTranslator) {
+                       final AbstractLetterTranslator letterTranslator) {
         this.dataPrinter = requireNonNull(dataPrinter);
         this.fileManager = requireNonNull(fileManager);
         this.pathToCatalog = requireNonNull(pathToCatalog);
