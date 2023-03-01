@@ -27,7 +27,7 @@ import static ua.mibal.cyrillicFileRenamer.model.programMode.OS.WINDOWS;
  */
 public class OSDetector {
 
-    public static OS detectOS() {
+    public static OS detect() {
         final String osName = System.getProperty("os.name").toLowerCase();
         if (osName.contains("win")) {
             return WINDOWS;

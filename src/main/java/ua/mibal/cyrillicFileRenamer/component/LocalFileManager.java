@@ -69,8 +69,8 @@ public class LocalFileManager implements FileManager {
     }
 
     @Override
-    public void createRenamedFile(final File sourceFile,
-                                  final String newName) throws IOException {
+    public void copyRenamedFile(final File sourceFile,
+                                final String newName) throws IOException {
         Files.copy(sourceFile.toPath(),
             Path.of((resultingDir.toPath() + "/" + newName)));
     }

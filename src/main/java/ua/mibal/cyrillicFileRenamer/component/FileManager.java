@@ -30,7 +30,7 @@ public interface FileManager {
 
     void createResultingDirectory(String pathToCurrentDir);
 
-    void createRenamedFile(File sourceFile, String newName) throws IOException;
+    void copyRenamedFile(File sourceFile, String newName) throws IOException;
 
     String testAndGetCorrectPath(String path);
 

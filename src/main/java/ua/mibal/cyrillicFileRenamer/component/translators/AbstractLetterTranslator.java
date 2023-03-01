@@ -18,7 +18,7 @@
 package ua.mibal.cyrillicFileRenamer.component.translators;
 
 import ua.mibal.cyrillicFileRenamer.model.Border;
-import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.DontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import static java.lang.Character.UnicodeBlock;
 import static java.lang.Character.isUpperCase;
@@ -99,9 +99,9 @@ public abstract class AbstractLetterTranslator {
     }
 
     public String translate(final String oldName)
-        throws IllegalLanguageException, FileNameDontContainCyrillicSymbolsException {
+        throws IllegalLanguageException, DontContainCyrillicSymbolsException {
         if (notContainCyrillicLetters(oldName)) {
-            throw new FileNameDontContainCyrillicSymbolsException(
+            throw new DontContainCyrillicSymbolsException(
                 "File don't contain cyrillic symbols");
         }
         final String name = getNameWithoutExtension(oldName);

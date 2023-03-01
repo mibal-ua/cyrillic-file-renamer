@@ -46,7 +46,7 @@ public class ApplicationBuilder {
 
     private final ExitHandler exitHandler = () -> System.exit(0);
 
-    private final OS os = OSDetector.detectOS();
+    private final OS os = OSDetector.detect();
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter(inputReader, exitHandler, os);
 
@@ -68,13 +68,14 @@ public class ApplicationBuilder {
 
     public Application build() {
         if (currentPath == null) {
-            currentPath = argumentConfigurator.configureCurrentPath();
+            currentPath = argumentConfigurator.configurePath();
         }
         dataPrinter.printInfoMessage("Path: " + currentPath);
         if (letterStandard == null) {
             letterStandard = argumentConfigurator.configureLetterStandard();
         }
         dataPrinter.printInfoMessage("Transliteration standard: " + letterStandard);
+
         return new Application(
             dataPrinter,
             fileManager,

@@ -103,7 +103,7 @@ public class ConsoleArgumentConfigurator implements ArgumentConfigurator {
     }
 
     @Override
-    public String configureCurrentPath() {
+    public String configurePath() {
         dataPrinter.printInfoMessage("");
         dataPrinter.printInfoMessage("Enter path to catalog with files:");
         int count = 2;

@@ -19,7 +19,7 @@ package ua.mibal.cyrillicFileRenamer.component.console;
 
 import ua.mibal.cyrillicFileRenamer.component.DataPrinter;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
-import ua.mibal.cyrillicFileRenamer.model.exceptions.FileNameDontContainCyrillicSymbolsException;
+import ua.mibal.cyrillicFileRenamer.model.exceptions.DontContainCyrillicSymbolsException;
 import ua.mibal.cyrillicFileRenamer.model.exceptions.IllegalLanguageException;
 import ua.mibal.cyrillicFileRenamer.model.programMode.OS;
 import static java.lang.String.format;
@@ -165,7 +165,7 @@ public class ConsoleDataPrinter implements DataPrinter {
         final Map<Class<? extends Exception>, List<String>> map = new HashMap<>();
 
         map.put(IllegalLanguageException.class, new ArrayList<>());
-        map.put(FileNameDontContainCyrillicSymbolsException.class, new ArrayList<>());
+        map.put(DontContainCyrillicSymbolsException.class, new ArrayList<>());
         map.put(FileAlreadyExistsException.class, new ArrayList<>());
         map.put(IOException.class, new ArrayList<>());
 

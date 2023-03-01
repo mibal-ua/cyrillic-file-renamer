@@ -27,6 +27,6 @@ public interface ArgumentConfigurator {
 
     LetterStandard configureLetterStandard();
 
-    String configureCurrentPath();
+    String configurePath();
 
 }
