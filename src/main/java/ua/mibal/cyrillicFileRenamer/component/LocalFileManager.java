@@ -31,9 +31,9 @@ public class LocalFileManager implements FileManager {
 
     private final String pathExample;
 
-    private final String resultingDirName = "renamedToLatin";
+    private final static String resultingDirName = "renamedToLatin";
 
-    private final String[] IGNORED_FILE_NAMES = {
+    private final static String[] IGNORED_FILE_NAMES = {
         resultingDirName, "Thumbs.db", "$RECYCLE.BIN", "desktop.ini", "cyrillic-file-renamer-"
     };
 
