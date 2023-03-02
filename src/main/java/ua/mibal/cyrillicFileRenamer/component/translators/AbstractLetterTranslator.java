@@ -40,7 +40,6 @@ public abstract class AbstractLetterTranslator {
     public static final String REG_EXP = "^[^а-яёА-ЯЁ]*[а-яёА-ЯЁ].*";
 
     private final static Map<String, String> specialLetters = Map.of(
-        "Е", "Ye",
         "Є", "Ye",
         "Ї", "Yi",
         "Й", "Y",
