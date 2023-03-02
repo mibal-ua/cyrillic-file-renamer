@@ -51,10 +51,13 @@ class OfficialLetterTranslator_UnitTest {
         "А,A", "Б,B", "В,V", "Г,H", "Ґ,G", "Д,D", "Е,E", "Є,Ye,", "Ж,Zh", "З,Z",
         "І,I", "Ї,Yi", "Й,Y", "К,K", "Л,L", "М,M", "Н,N", "О,O", "П,P", "Р,R", "С,S",
         "Т,T", "У,U", "Ф,F", "Х,Kh", "Ц,Ts", "Ч,Ch", "Ш,Sh", "Щ,Shch", "Ю,Yu", "Я,Ya",
+
         // special
         "ПЄ,PIe", "ПЇ,PI", "ПЙ,PI", "ПЮ,PIu", "ПЯ,PIa", "МЬ,M",
+
         // special cases
         "ЗГ,ZGh"})
+
         // https://zakon.rada.gov.ua/laws/show/55-2010-%D0%BF
     void translateWord_should_translate_according_to_official_regulations(final String arg,
                                                                           final String excepted)
