@@ -58,7 +58,7 @@ class ExtendedLetterTranslator_UnitTest {
         // Special cases
         "ЗГ,ZGh" /* not "ZH" */,
         /*
-            the next 2 test is about: if previous letter is 'Holosna',
+            the next 2 test: if previous letter is 'Holosna',
             then we use special form of next letter
          */
         "СІМ'Я,SIMYa" /* not "SIMIa" */,
