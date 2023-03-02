@@ -45,7 +45,9 @@ public class ConsoleArgumentParser {
             } else if (arg.equalsIgnoreCase(OFFICIAL.name()) || arg.equalsIgnoreCase(EXTENDED.name())) {
                 letterStandard = LetterStandard.valueOf(arg.toUpperCase());
             } else {
-                this.path = arg;
+                if (this.path == null) {
+                    this.path = arg;
+                }
             }
         }
     }
