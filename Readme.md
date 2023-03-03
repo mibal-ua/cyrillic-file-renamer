@@ -32,8 +32,10 @@ mvn clean package
 - Run the app by double-click on the start script:
     - `start.cmd` for Windows;
     - `start.sh` for macOS or Linux;
+- For use `this`-option scripts you must move folder with script to the folder with cyrillic files;
+   <img width="503" alt="Screenshot 2023-02-14 at 20 36 00" src="https://user-images.githubusercontent.com/59470968/218839289-221f9bbe-99c6-4904-904a-f2b209275942.png">
 
-## Arguments manual
+## Custom arguments manual
 
 For using custom args in Terminal, use following info:
 
@@ -50,6 +52,3 @@ For using custom args in Terminal, use following info:
 
 - `java -jar cyrillic-file-renamer-${version}-${myOS}.jar /Users/admin/path/to/ OFFICIAL`
 - `jre/bin/java -jar cyrillic-file-renamer-${version}-${myOS}.jar extended this`
-
-4. For use `this`-option scripts you must move folder with script to the folder with cyrillic files;
-   <img width="503" alt="Screenshot 2023-02-14 at 20 36 00" src="https://user-images.githubusercontent.com/59470968/218839289-221f9bbe-99c6-4904-904a-f2b209275942.png">
