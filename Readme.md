@@ -35,7 +35,7 @@ mvn clean package
 
 ## Arguments manual
 
-For using custom args in terminal, use following info:
+For using custom args in Terminal, use following info:
 
 1. Args are divided into 2 types:
     - Path: `/Users/admin/path/to/dir` or `this`;
