@@ -50,5 +50,9 @@ For using custom args in Terminal, use following info:
 
 3. Correct args usage:
 
-- `java -jar cyrillic-file-renamer-${version}-${myOS}.jar /Users/admin/path/to/ OFFICIAL`
-- `jre/bin/java -jar cyrillic-file-renamer-${version}-${myOS}.jar extended this`
+```bash
+java -jar cyrillic-file-renamer-${version}-${myOS}.jar /Users/admin/path/to/ OFFICIAL
+```
+```bash
+jre/bin/java -jar cyrillic-file-renamer-${version}-${myOS}.jar extended this
+```
