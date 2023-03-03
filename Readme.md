@@ -33,7 +33,7 @@ mvn clean package
     - `start.cmd` for Windows;
     - `start.sh` for macOS or Linux;
 
-## Arguments
+## Arguments manual
 
 For using custom args in terminal, use following info:
 
