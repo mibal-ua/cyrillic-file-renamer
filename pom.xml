@@ -21,7 +21,7 @@
 
     <groupId>ua.mibal</groupId>
     <artifactId>cyrillic-file-renamer</artifactId>
-    <version>2.0-SNAPSHOT</version>
+    <version>2.0</version>
 
     <url>https://t.me/mibal_ua</url>
     <organization>
