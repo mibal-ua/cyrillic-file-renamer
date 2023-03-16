@@ -24,7 +24,7 @@ import ua.mibal.cyrillicFileRenamer.component.DataPrinter.ExitHandler;
 import ua.mibal.cyrillicFileRenamer.component.FileManager;
 import ua.mibal.cyrillicFileRenamer.component.InputReader;
 import ua.mibal.cyrillicFileRenamer.component.LocalFileManager;
-import ua.mibal.cyrillicFileRenamer.component.OSDetector;
+import ua.mibal.cyrillicFileRenamer.component.OsDetector;
 import ua.mibal.cyrillicFileRenamer.component.config.ConsoleArgumentConfigurator;
 import ua.mibal.cyrillicFileRenamer.component.config.ConsoleArgumentParser;
 import ua.mibal.cyrillicFileRenamer.component.console.ConsoleDataPrinter;
@@ -46,7 +46,7 @@ public class ApplicationBuilder {
 
     private final ExitHandler exitHandler = () -> System.exit(0);
 
-    private final OS os = OSDetector.detect();
+    private final OS os = OsDetector.detect();
 
     private final DataPrinter dataPrinter = new ConsoleDataPrinter(inputReader, exitHandler, os);
 
